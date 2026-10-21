@@ -1260,12 +1260,6 @@ const fullHtml = `<!DOCTYPE html>
                     <span>Sign in with Google Account</span>
                 </button>
 
-                <div style="margin-top: 8px; text-align: center;">
-                    <a href="/signup" style="font-size: 0.8rem; color: #2563eb; text-decoration: none; font-weight: 500;">
-                        <i class="fas fa-external-link-alt" style="font-size: 0.72rem;"></i> Open Full Google Sign-in Page (/signup)
-                    </a>
-                </div>
-
                 <div id="modalAuthStatus" style="font-size: 0.8rem; color: #2563eb; display: none; margin-top: 4px;"></div>
 
                 <div style="font-size: 0.74rem; color: #94a3b8; display: flex; align-items: center; justify-content: center; gap: 5px;">
@@ -2338,13 +2332,17 @@ const fullHtml = `<!DOCTYPE html>
                 setModalAuthStatus('<i class="fas fa-spinner fa-spin"></i> Triggering Google One-Tap...');
                 google.accounts.id.prompt();
             } else {
-                // Navigate to dedicated signup endpoint
-                window.location.href = '/signup';
+                const studentEmail = prompt("Enter your institutional @juetguna.in Google Email Address:");
+                if (studentEmail && studentEmail.includes('@')) {
+                    const defaultName = studentEmail.split('@')[0].toUpperCase();
+                    const studentName = prompt("Enter your Full Name:", defaultName) || defaultName;
+                    submitLabAuthAndComplete({ name: studentName.trim(), email: studentEmail.trim().toLowerCase() });
+                }
             }
         }
 
         function goToSignup() {
-            window.location.href = '/signup';
+            triggerDirectGoogleAuth();
         }
 
         async function completeLogin({ name, email, roll, picture }) {

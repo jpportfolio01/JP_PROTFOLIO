@@ -29,9 +29,12 @@ app.post('/signup', authController.loginOrRegister);
 app.post('/api/signup', authController.loginOrRegister);
 
 if (hasStatic) {
-  // Routes for /signup (GET serves page)
+  // Redirect /signup directly to the SQL Virtual Lab (no separate intermediate signup page)
   app.get('/signup', (req, res) => {
-    res.sendFile(path.join(staticPath, 'signup.html'));
+    res.redirect('/sql-practice.html');
+  });
+  app.get('/signup.html', (req, res) => {
+    res.redirect('/sql-practice.html');
   });
 
   // Direct Virtual Lab requests to SQL Practice
