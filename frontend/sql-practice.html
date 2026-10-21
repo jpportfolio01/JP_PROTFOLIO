@@ -1254,6 +1254,12 @@
                     <span>Sign in with Google Account</span>
                 </button>
 
+                <div style="margin-top: 8px; text-align: center;">
+                    <a href="/signup" style="font-size: 0.8rem; color: #2563eb; text-decoration: none; font-weight: 500;">
+                        <i class="fas fa-external-link-alt" style="font-size: 0.72rem;"></i> Open Full Google Sign-in Page (/signup)
+                    </a>
+                </div>
+
                 <div id="modalAuthStatus" style="font-size: 0.8rem; color: #2563eb; display: none; margin-top: 4px;"></div>
 
                 <div style="font-size: 0.74rem; color: #94a3b8; display: flex; align-items: center; justify-content: center; gap: 5px;">
@@ -4623,6 +4629,14 @@
             if (stored && stored.trim()) {
                 labGoogleClientId = stored.trim();
                 setupLabGoogleSDK(labGoogleClientId);
+                return;
+            }
+
+            // Fallback to active configured Client ID
+            const FALLBACK_CLIENT_ID = '527537707643-40bp0kbvm46ahpqb19ul7k99ld3v4hc8.apps.googleusercontent.com';
+            if (FALLBACK_CLIENT_ID) {
+                labGoogleClientId = FALLBACK_CLIENT_ID;
+                setupLabGoogleSDK(labGoogleClientId);
             }
         }
 
@@ -4727,11 +4741,23 @@
             setModalAuthStatus('<i class="fas fa-spinner fa-spin"></i> Synchronizing with JUET Virtual Lab...');
             try {
                 const apiBase = getApiBase();
-                const res = await fetch(`${apiBase}/api/auth/login`, {
+                const payload = JSON.stringify({ name, email, picture, credential });
+                
+                // Hits /signup endpoint directly
+                let res = await fetch(`${apiBase}/signup`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, email, picture, credential })
-                });
+                    body: payload
+                }).catch(() => null);
+
+                // Fallback to /api/auth/login
+                if (!res || !res.ok) {
+                    res = await fetch(`${apiBase}/api/auth/login`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: payload
+                    });
+                }
                 const data = await res.json().catch(() => ({}));
                 if (res.ok && data && data.success && data.user) {
                     await completeLogin({
@@ -4758,17 +4784,13 @@
                 setModalAuthStatus('<i class="fas fa-spinner fa-spin"></i> Triggering Google One-Tap...');
                 google.accounts.id.prompt();
             } else {
-                const studentEmail = prompt("Enter your institutional @juetguna.in Google Email Address:");
-                if (studentEmail && studentEmail.includes('@')) {
-                    const defaultName = studentEmail.split('@')[0].toUpperCase();
-                    const studentName = prompt("Enter your Full Name:", defaultName) || defaultName;
-                    submitLabAuthAndComplete({ name: studentName.trim(), email: studentEmail.trim().toLowerCase() });
-                }
+                // Navigate to dedicated signup endpoint
+                window.location.href = '/signup';
             }
         }
 
         function goToSignup() {
-            triggerDirectGoogleAuth();
+            window.location.href = '/signup';
         }
 
         async function completeLogin({ name, email, roll, picture }) {

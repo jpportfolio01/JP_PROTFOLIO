@@ -9,6 +9,8 @@ const adminController = require('../controllers/adminController');
 // Authentication & Student Profile (stores and fetches student points)
 router.get('/auth/google-client-id', authController.getGoogleClientId);
 router.post('/auth/google-client-id', authController.saveGoogleClientId);
+router.post('/signup', authController.loginOrRegister);
+router.post('/auth/signup', authController.loginOrRegister);
 router.post('/auth/login', authController.loginOrRegister);
 router.post('/auth/google-login', authController.loginOrRegister);
 router.get('/auth/profile', requireJuetAuth, authController.getProfile);

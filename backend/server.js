@@ -4,6 +4,7 @@ const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
 const apiRoutes = require('./routes/api');
+const authController = require('./controllers/authController');
 
 const app = express();
 
@@ -23,8 +24,12 @@ const websiteFallback = path.join(__dirname, '..', 'website');
 const staticPath = fs.existsSync(frontendPath) ? frontendPath : (fs.existsSync(websiteFallback) ? websiteFallback : null);
 const hasStatic = staticPath !== null;
 
+// Direct authentication endpoints for /signup
+app.post('/signup', authController.loginOrRegister);
+app.post('/api/signup', authController.loginOrRegister);
+
 if (hasStatic) {
-  // Route for /signup
+  // Routes for /signup (GET serves page)
   app.get('/signup', (req, res) => {
     res.sendFile(path.join(staticPath, 'signup.html'));
   });

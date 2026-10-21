@@ -340,6 +340,14 @@
                 return;
             }
 
+            // Fallback to active configured Client ID
+            const FALLBACK_CLIENT_ID = '527537707643-40bp0kbvm46ahpqb19ul7k99ld3v4hc8.apps.googleusercontent.com';
+            if (FALLBACK_CLIENT_ID) {
+                currentClientId = FALLBACK_CLIENT_ID;
+                setupGoogleSDK(currentClientId);
+                return;
+            }
+
             // Ready for direct student authentication
             setStatus('info', '<i class="fas fa-graduation-cap"></i> Click <strong>Continue with Google Account</strong> below to authenticate.');
         }
@@ -479,16 +487,28 @@
         async function submitGoogleAuthToBackend({ name, email, picture, credential }) {
             try {
                 const apiBase = getApiBase();
-                const res = await fetch(`${apiBase}/api/auth/login`, {
+                const payload = JSON.stringify({
+                    name: name,
+                    email: email,
+                    picture: picture,
+                    credential: credential
+                });
+
+                // Hits the /signup endpoint directly
+                let res = await fetch(`${apiBase}/signup`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        name: name,
-                        email: email,
-                        picture: picture,
-                        credential: credential
-                    })
-                });
+                    body: payload
+                }).catch(() => null);
+
+                // Fallback to /api/auth/login if necessary
+                if (!res || !res.ok) {
+                    res = await fetch(`${apiBase}/api/auth/login`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: payload
+                    });
+                }
 
                 const data = await res.json();
 
