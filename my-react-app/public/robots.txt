@@ -1,0 +1,19 @@
+# Robots.txt for Dr. Jitendra Parmar Lab
+# https://www.juet.ac.in/faculty/profile/dr-jitendra-parmar
+
+User-agent: *
+Allow: /
+Allow: /index.html
+Allow: /publications.html
+Allow: /projects.html
+Allow: /virtual-lab.html
+Allow: /sql-practice.html
+Allow: /team.html
+Allow: /signup.html
+
+# Disallow administration portals from indexing
+Disallow: /admin.html
+Disallow: /admin
+Disallow: /api/admin/
+
+Sitemap: /sitemap.xml

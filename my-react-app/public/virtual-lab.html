@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JUET Virtual Lab | Dr. Jitendra Parmar - Interactive SQL & CS Labs</title>
+    <meta name="title" content="JUET Virtual Lab | Dr. Jitendra Parmar - Interactive SQL & CS Labs">
+    <meta name="description" content="Explore JUET Virtual Lab platforms created by Dr. Jitendra Parmar at Jaypee University of Engineering and Technology, Guna. Featuring interactive in-browser SQL practice, relational database playgrounds, and automated query evaluation.">
+    <meta name="keywords" content="Jitendra Parmar Virtual Lab, Dr. Jitendra Parmar Lab, JUET Virtual Lab, SQL Virtual Lab, JUET Guna Virtual Lab, Interactive SQL Practice, SQL Grading Engine, Computer Science Virtual Lab">
+    <meta name="author" content="Dr. Jitendra Parmar">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+
+    <!-- Favicon: Dr. Jitendra Parmar Photo -->
+    <link rel="icon" type="image/png" href="dr_parmar.png">
+    <link rel="apple-touch-icon" href="dr_parmar.png">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Dr. Jitendra Parmar Academic Portfolio">
+    <meta property="og:title" content="JUET Virtual Lab | Dr. Jitendra Parmar - Interactive SQL & CS Labs">
+    <meta property="og:description" content="Explore JUET Virtual Lab educational platforms created by Dr. Jitendra Parmar at JUET Guna. Interactive SQL practice and grading.">
+    <meta property="og:image" content="dr_parmar.png">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="JUET Virtual Lab | Dr. Jitendra Parmar - Interactive SQL & CS Labs">
+    <meta name="twitter:description" content="Explore JUET Virtual Lab platforms created by Dr. Jitendra Parmar at JUET Guna.">
+    <meta name="twitter:image" content="dr_parmar.png">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalApplication",
+      "name": "JUET Virtual Lab - Dr. Jitendra Parmar Lab",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "All modern web browsers",
+      "description": "Interactive virtual laboratory platforms for database systems, SQL query practice, and computer science engineering at JUET Guna.",
+      "author": {
+        "@type": "Person",
+        "name": "Dr. Jitendra Parmar",
+        "jobTitle": "Assistant Professor (Senior Grade)",
+        "affiliation": "Jaypee University of Engineering and Technology (JUET), Guna"
+      }
+    }
+    </script>
+    <!-- Immediate Forward to SQL Practice Virtual Lab -->
+    <script>
+        window.location.replace("sql-practice.html");
+    </script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="publications.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="vlabData.js"></script>
+    <style>
+        .vlab-page {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top left, rgba(37, 99, 235, 0.08), transparent 36rem),
+                radial-gradient(circle at top right, rgba(16, 185, 129, 0.07), transparent 32rem),
+                #f8fafc;
+            padding-top: 105px;
+            padding-bottom: 70px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        .vlab-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 0 20px;
+        }
+        .vlab-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(16, 185, 129, 0.12);
+            color: #059669;
+            font-size: 0.82rem;
+            font-weight: 700;
+            padding: 5px 14px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #10b981;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            animation: pulse-dot 1.8s infinite;
+        }
+        @keyframes pulse-dot {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        /* Ongoing / Completed Tab Selector */
+        .status-toggle-wrapper {
+            max-width: 650px;
+            margin: 0 auto 36px;
+            padding: 6px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            display: flex;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+            gap: 6px;
+        }
+        .status-tab-btn {
+            flex: 1;
+            padding: 12px 18px;
+            border-radius: 10px;
+            border: none;
+            background: transparent;
+            color: #475569;
+            font-size: 0.92rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.22s ease;
+        }
+        .status-tab-btn:hover {
+            background: #f8fafc;
+            color: #0f172a;
+        }
+        .status-tab-btn.active-ongoing {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+        .status-tab-btn.active-completed {
+            background: linear-gradient(135deg, #059669, #047857);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+        }
+        .status-tab-btn.active-all {
+            background: #0f172a;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.25);
+        }
+        .badge-count {
+            font-size: 0.74rem;
+            padding: 2px 7px;
+            border-radius: 12px;
+            font-weight: 700;
+            background: rgba(0, 0, 0, 0.08);
+        }
+        .status-tab-btn.active-ongoing .badge-count,
+        .status-tab-btn.active-completed .badge-count,
+        .status-tab-btn.active-all .badge-count {
+            background: rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+        }
+
+        /* Virtual Lab Tiles Grid */
+        .vlab-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 28px;
+        }
+        .vlab-tile {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+        .vlab-tile:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.09);
+            border-color: #cbd5e1;
+        }
+        .vlab-tile.featured-completed {
+            border: 2px solid #10b981;
+        }
+        .vlab-tile.featured-ongoing {
+            border: 2px solid #3b82f6;
+        }
+
+        .tile-hero-preview {
+            padding: 20px 24px;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .terminal-preview-code {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: #38bdf8;
+            line-height: 1.45;
+        }
+
+        .vlab-tile-content {
+            padding: 24px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .tile-status-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        .status-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.74rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+        .chip-completed {
+            background: #ecfdf5;
+            color: #047857;
+            border: 1px solid #a7f3d0;
+        }
+        .chip-ongoing {
+            background: #eff6ff;
+            color: #1d4ed8;
+            border: 1px solid #bfdbfe;
+        }
+        .vlab-tile-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 10px;
+            line-height: 1.35;
+        }
+        .vlab-tile-desc {
+            font-size: 0.92rem;
+            color: #475569;
+            line-height: 1.6;
+            margin-bottom: 18px;
+            flex: 1;
+        }
+
+        .meta-group {
+            margin-bottom: 14px;
+        }
+        .meta-label {
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .meta-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .meta-tag {
+            background: #f1f5f9;
+            color: #1e293b;
+            font-size: 0.76rem;
+            font-weight: 600;
+            padding: 3px 9px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+        .meta-tech {
+            background: #f8fafc;
+            color: #2563eb;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.74rem;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 6px;
+            border: 1px solid #dbeafe;
+        }
+
+        .tile-action-row {
+            padding: 16px 24px;
+            background: #f8fafc;
+            border-top: 1px solid #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .btn-vlab-launch {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.92rem;
+            padding: 10px 18px;
+            border-radius: 8px;
+            transition: all 0.22s ease;
+            box-shadow: 0 3px 10px rgba(5, 150, 105, 0.25);
+            width: 100%;
+            text-align: center;
+        }
+        .btn-vlab-launch:hover {
+            background: linear-gradient(135deg, #047857 0%, #065f46 100%);
+            box-shadow: 0 5px 14px rgba(5, 150, 105, 0.35);
+            transform: translateY(-1px);
+            color: #ffffff;
+        }
+        .btn-vlab-ongoing {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: #f1f5f9;
+            color: #475569;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.88rem;
+            padding: 10px 16px;
+            border-radius: 8px;
+            width: 100%;
+            border: 1px solid #cbd5e1;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-vlab-ongoing:hover {
+            background: #e2e8f0;
+            color: #1e293b;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html" style="text-decoration: none; color: inherit;">
+                    <h2>Dr. Jitendra Parmar</h2>
+                </a>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="index.html#about" class="nav-link">About</a>
+                <a href="publications.html" class="nav-link">Publications</a>
+                <a href="projects.html" class="nav-link">AnveshanAI</a>
+                <a href="virtual-lab.html" class="nav-link" style="color: #667eea; font-weight: 700;">Virtual Lab</a>
+                <a href="team.html" class="nav-link">Team</a>
+                <a href="index.html#contact" class="nav-link">Contact</a>
+            </div>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Virtual Lab Page -->
+    <main class="vlab-page">
+        <header class="vlab-header">
+            <div class="vlab-kicker">
+                <span class="pulse-dot"></span> JUET VIRTUAL LAB INITIATIVE
+            </div>
+            <h1>Virtual Lab Projects</h1>
+            <p class="publications-subtitle">
+                Interactive learning environments, cloud-based query evaluation platforms, and automated grading sandboxes created for undergraduate and postgraduate computer science curriculum.
+            </p>
+        </header>
+
+        <!-- Ongoing vs Completed Project Options / Tabs -->
+        <div class="status-toggle-wrapper">
+            <button class="status-tab-btn active-all" id="tab-all" onclick="selectStatusFilter('all', this)">
+                <i class="fas fa-layer-group"></i> All Lab Projects <span class="badge-count">6</span>
+            </button>
+            <button class="status-tab-btn" id="tab-ongoing" onclick="selectStatusFilter('ongoing', this)">
+                <i class="fas fa-sync-alt fa-spin"></i> Ongoing Projects <span class="badge-count">3</span>
+            </button>
+            <button class="status-tab-btn" id="tab-completed" onclick="selectStatusFilter('completed', this)">
+                <i class="fas fa-check-circle"></i> Completed Projects <span class="badge-count">3</span>
+            </button>
+        </div>
+
+        <!-- Virtual Lab Tiles Grid -->
+        <section class="vlab-grid" id="vlab-tiles-grid">
+
+            <!-- COMPLETED 1: SQL PRACTICE VIRTUAL LAB -->
+            <div class="vlab-tile featured-completed" data-status="completed">
+                <div class="tile-hero-preview">
+                    <div style="font-size: 0.74rem; color: #94a3b8; font-weight: 600; display:flex; justify-content:space-between;">
+                        <span>JUET SQL Sandbox Engine</span>
+                        <span style="color: #10b981;"><i class="fas fa-check-circle"></i> Production Ready</span>
+                    </div>
+                    <div class="terminal-preview-code">
+                        <span style="color: #f43f5e;">SELECT</span> e.emp_name, d.dept_name, <br>
+                        &nbsp;&nbsp;<span style="color: #f43f5e;">DENSE_RANK() OVER</span>(<span style="color: #f43f5e;">ORDER BY</span> salary <span style="color: #f43f5e;">DESC</span>)<br>
+                        <span style="color: #f43f5e;">FROM</span> employees e <span style="color: #f43f5e;">JOIN</span> departments d;
+                    </div>
+                </div>
+                <div class="vlab-tile-content">
+                    <div class="tile-status-row">
+                        <span class="status-chip chip-completed"><i class="fas fa-check"></i> Completed Project</span>
+                        <span style="font-size:0.75rem; color:#64748b; font-weight:600;">75 Queries &bull; 5 Modules</span>
+                    </div>
+                    <h3 class="vlab-tile-title">SQL Practice Virtual Lab</h3>
+                    <p class="vlab-tile-desc">
+                        Full-scale interactive SQL learning platform featuring 5 topic-wise modules (DDL/DML, Aggregations, Multi-table JOINs, Subqueries, and Window Functions / CTEs). Features real-time parallel output comparison, dynamic schema inspection with sample data previews, and persistent scoring via <strong>@juetguna.in</strong> student authentication.
+                    </p>
+                    <div class="meta-group">
+                        <div class="meta-label"><i class="fas fa-book-reader"></i> Topic-Wise Learning Modules</div>
+                        <div class="meta-tags">
+                            <span class="meta-tag">1. DDL & DML Basics (15)</span>
+                            <span class="meta-tag">2. Aggregations (15)</span>
+                            <span class="meta-tag">3. Relational JOINs (15)</span>
+                            <span class="meta-tag">4. Subqueries & Logic (15)</span>
+                            <span class="meta-tag">5. Window Functions & CTEs (15)</span>
+                        </div>
+                    </div>
+                    <div class="meta-group">
+                        <div class="meta-label"><i class="fas fa-code"></i> Tech Stack & Architecture</div>
+                        <div class="meta-tags">
+                            <span class="meta-tech">SQLite</span>
+                            <span class="meta-tech">AlaSQL</span>
+                            <span class="meta-tech">Node.js</span>
+                            <span class="meta-tech">Express</span>
+                            <span class="meta-tech">WebAssembly</span>
+                            <span class="meta-tech">REST API</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="tile-action-row">
+                    <a href="sql-practice.html" class="btn-vlab-launch">
+                        <i class="fas fa-play-circle"></i> Launch SQL Practice Lab &rarr;
+                    </a>
+                </div>
+            </div>
+
+            <!-- COMPLETED 2: Enterprise Relational Schema Sandbox -->
+            <div class="vlab-tile" data-status="completed">
+                <div class="vlab-tile-content" style="padding-top: 24px;">
+                    <div class="tile-status-row">
+                        <span class="status-chip chip-completed"><i class="fas fa-check"></i> Completed Project</span>
+                        <span style="font-size:0.75rem; color:#64748b; font-weight:600;">Multi-Table Schema</span>
+                    </div>
+                    <h3 class="vlab-tile-title">Enterprise Relational Schema Simulator</h3>
+                    <p class="vlab-tile-desc">
+                        Interactive multi-entity database modeling environment representing real-world healthcare and corporate relational topologies. Enables students to observe primary and foreign key constraints, entity integrity, and cascading operations in an isolated sandbox.
+                    </p>
+                    <div class="meta-group">
+                        <div class="meta-label"><i class="fas fa-book-reader"></i> Curriculum Focus</div>
+                        <div class="meta-tags">
+                            <span class="meta-tag">Relational Modeling</span>
+                            <span class="meta-tag">ER Diagram Mapping</span>
+                            <span class="meta-tag">Referential Integrity</span>
+                            <span class="meta-tag">Normalization (1NF-BCNF)</span>
+                        </div>
+                    </div>
+                    <div class="meta-group">
+                        <div class="meta-label"><i class="fas fa-code"></i> Tech Stack</div>
+                        <div class="meta-tags">
+                            <span class="meta-tech">Relational SQL</span>
+                            <span class="meta-tech">CSS Grid</span>
+                            <span class="meta-tech">JavaScript (ES6+)</span>
+                            <span class="meta-tech">SQLite</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="tile-action-row">
+                    <a href="sql-practice.html" class="btn-vlab-ongoing" style="background:#ecfdf5; color:#047857; border-color:#a7f3d0;">
+                        <i class="fas fa-external-link-alt"></i> Available in SQL Lab &rarr;
+                    </a>
+                </div>
+            </div>
+
+            <!-- COMPLETED 3: Automated Grading Microservice -->
+            <div class="vlab-tile" data-status="completed">
+                <div class="vlab-tile-content" style="padding-top: 24px;">
+                    <div class="tile-status-row">
+                        <span class="status-chip chip-completed"><i class="fas fa-check"></i> Completed Project</span>
+                        <span style="font-size:0.75rem; color:#64748b; font-weight:600;">Backend Evaluator</span>
+                    </div>
+                    <h3 class="vlab-tile-title">Automated Code Evaluation & Grading Engine</h3>
+                    <p class="vlab-tile-desc">
+                        Server-side automated grading microservice that securely executes student SQL queries in sandboxed in-memory database instances, computes cell-level diff comparisons against reference benchmarks, and logs student performance metrics into SQLite.
+                    </p>
+                    <div class="meta-group">
+                        <div class="meta-label"><i class="fas fa-book-reader"></i> Core Capabilities</div>
+                        <div class="meta-tags">
+                            <span class="meta-tag">Automated Grading</span>
+                            <span class="meta-tag">Memory Sandboxing</span>
+                            <span class="meta-tag">Student Audit Trail</span>
+                            <span class="meta-tag">Instant Feedback</span>
+                        </div>
+                    </div>
+                    <div class="meta-group">
+                        <div class="meta-label"><i class="fas fa-code"></i> Tech Stack</div>
+                        <div class="meta-tags">
+                            <span class="meta-tech">Node.js</span>
+                            <span class="meta-tech">node:sqlite</span>
+                            <span class="meta-tech">Express</span>
+                            <span class="meta-tech">CORS</span>
+                            <span class="meta-tech">JSON Storage</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="tile-action-row">
+                    <button class="btn-vlab-ongoing" onclick="alert('Engine Active: Powers backend/controllers/sqlController.js with 75 verified modules!')">
+                        <i class="fas fa-server"></i> Active Service Details
+                    </button>
+                </div>
+            </div>
+
+            <!-- ONGOING 1: Query Execution Plan Visualizer -->
+            <div class="vlab-tile featured-ongoing" data-status="ongoing">
+                <div class="vlab-tile-content" style="padding-top: 24px;">
+                    <div class="tile-status-row">
+                        <span class="status-chip chip-ongoing"><i class="fas fa-sync-alt fa-spin"></i> Ongoing Project</span>
+                        <span style="font-size:0.75rem; color:#2563eb; font-weight:600;">Phase 2 Initiative</span>
+                    </div>
+                    <h3 class="vlab-tile-title">DBMS Query Execution Plan & Cost Visualizer</h3>
+                    <p class="vlab-tile-desc">
+                        Developing an interactive D3.js physical query plan visualizer that decomposes user queries into Relational Algebra AST trees, illustrating table scans, index lookups, hash joins, and cost-based optimization formulas in real-time.
+                    </p>
+                    <div class="meta-group">
+                        <div class="meta-label"><i class="fas fa-book-reader"></i> Learning Objectives</div>
+                        <div class="meta-tags">
+                            <span class="meta-tag">Query Optimization</span>
+                            <span class="meta-tag">Cost Estimation</span>
+                            <span class="meta-tag">Index Scans vs Table Scans</span>
+                            <span class="meta-tag">Join Algorithms (Hash/Merge)</span>
+                        </div>
+                    </div>
+                    <div class="meta-group">
+                        <div class="meta-label"><i class="fas fa-code"></i> Planned Tech Stack</div>
+                        <div class="meta-tags">
+                            <span class="meta-tech">D3.js</span>
+                            <span class="meta-tech">SQL Parser</span>
+                            <span class="meta-tech">WebAssembly</span>
+                            <span class="meta-tech">Python AST</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="tile-action-row">
+                    <button class="btn-vlab-ongoing" onclick="alert('DBMS Query Optimizer Visualizer is currently under active development for Semester II classes under Dr. Jitendra Parmar.')">
+                        <i class="fas fa-tools"></i> View Development Progress
+                    </button>
+                </div>
+            </div>
+
+            <!-- ONGOING 2: AI Error Diagnosis Tutor -->
+            <div class="vlab-tile" data-status="ongoing">
+                <div class="vlab-tile-content" style="padding-top: 24px;">
+                    <div class="tile-status-row">
+                        <span class="status-chip chip-ongoing"><i class="fas fa-sync-alt fa-spin"></i> Ongoing Project</span>
+                        <span style="font-size:0.75rem; color:#2563eb; font-weight:600;">NLP + Pedagogy</span>
+                    </div>
+                    <h3 class="vlab-tile-title">AI SQL Error Diagnostic & Remediation Tutor</h3>
+                    <p class="vlab-tile-desc">
+                        An intelligent automated pedagogical tutor that interprets cryptic SQL syntax and runtime error codes, generating step-by-step guidance and conceptual hints tailored to undergraduate students without giving away direct solutions.
+                    </p>
+                    <div class="meta-group">
+                        <div class="meta-label"><i class="fas fa-book-reader"></i> Pedagogical Focus</div>
+                        <div class="meta-tags">
+                            <span class="meta-tag">Intelligent Tutoring Systems (ITS)</span>
+                            <span class="meta-tag">Syntax Error Explanation</span>
+                            <span class="meta-tag">Socratic Guided Hints</span>
+                        </div>
+                    </div>
+                    <div class="meta-group">
+                        <div class="meta-label"><i class="fas fa-code"></i> Planned Tech Stack</div>
+                        <div class="meta-tags">
+                            <span class="meta-tech">Python</span>
+                            <span class="meta-tech">LangChain</span>
+                            <span class="meta-tech">FastAPI</span>
+                            <span class="meta-tech">HuggingFace</span>
+                            <span class="meta-tech">SQLite</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="tile-action-row">
+                    <button class="btn-vlab-ongoing" onclick="alert('AI Diagnostic Tutor is being piloted with research students under Dr. Parmar to analyze student query errors.')">
+                        <i class="fas fa-robot"></i> Research Specs
+                    </button>
+                </div>
+            </div>
+
+            <!-- ONGOING 3: Distributed Transactions & Locking -->
+            <div class="vlab-tile" data-status="ongoing">
+                <div class="vlab-tile-content" style="padding-top: 24px;">
+                    <div class="tile-status-row">
+                        <span class="status-chip chip-ongoing"><i class="fas fa-sync-alt fa-spin"></i> Ongoing Project</span>
+                        <span style="font-size:0.75rem; color:#2563eb; font-weight:600;">Concurrency Control</span>
+                    </div>
+                    <h3 class="vlab-tile-title">ACID Concurrency & 2-Phase Locking Simulator</h3>
+                    <p class="vlab-tile-desc">
+                        A visual transaction scheduling simulator demonstrating concurrent transaction anomalies (Dirty Reads, Non-Repeatable Reads, Phantom Reads), Two-Phase Locking (2PL), and dynamic Deadlock Detection using Wait-For Graphs.
+                    </p>
+                    <div class="meta-group">
+                        <div class="meta-label"><i class="fas fa-book-reader"></i> Core Syllabus Topics</div>
+                        <div class="meta-tags">
+                            <span class="meta-tag">ACID Properties</span>
+                            <span class="meta-tag">Serializability</span>
+                            <span class="meta-tag">2-Phase Locking (2PL)</span>
+                            <span class="meta-tag">Deadlock Resolution</span>
+                        </div>
+                    </div>
+                    <div class="meta-group">
+                        <div class="meta-label"><i class="fas fa-code"></i> Planned Tech Stack</div>
+                        <div class="meta-tags">
+                            <span class="meta-tech">Canvas API</span>
+                            <span class="meta-tech">WebSockets</span>
+                            <span class="meta-tech">JavaScript</span>
+                            <span class="meta-tech">Distributed Systems</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="tile-action-row">
+                    <button class="btn-vlab-ongoing" onclick="alert('Concurrency Simulator prototype scheduled for release in upcoming lab cycle.')">
+                        <i class="fas fa-lock"></i> Prototype Overview
+                    </button>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2026 Dr. Jitendra Parmar. Department of CSE, JUET Guna. All rights reserved.</p>
+                <div class="social-links">
+                    <a href="https://scholar.google.com/citations?user=toHDoiwAAAAJ&hl=en&authuser=1" target="_blank" title="Google Scholar"><i class="fas fa-graduation-cap"></i></a>
+                    <a href="https://www.researchgate.net/profile/Jitendra-Parmar-9?ev=hdr_xprf" target="_blank" title="ResearchGate"><i class="fab fa-researchgate"></i></a>
+                    <a href="https://www.juet.ac.in/faculty/profile/dr-jitendra-parmar" target="_blank" title="JUET Profile"><i class="fas fa-university"></i></a>
+                    <a href="https://www.linkedin.com/in/dr-jitendra-parmar-phd-2bb8a499" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="mailto:jitendra.parmar@juet.ac.in" title="Email"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let currentFilterStatus = 'all';
+        let vlabProjectsList = [];
+
+        async function initVlabs() {
+            // Check API first
+            try {
+                const res = await fetch('/api/admin/vlab-projects');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.success && Array.isArray(data.vlabProjects) && data.vlabProjects.length > 0) {
+                        vlabProjectsList = data.vlabProjects;
+                        renderVlabs(vlabProjectsList);
+                        return;
+                    }
+                }
+            } catch(e) {}
+
+            // Check localStorage
+            const cached = localStorage.getItem('juet_admin_vlabs');
+            if (cached) {
+                try {
+                    const parsed = JSON.parse(cached);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        vlabProjectsList = parsed;
+                        renderVlabs(vlabProjectsList);
+                        return;
+                    }
+                } catch(e) {}
+            }
+
+            // Fallback from vlabData.js
+            if (typeof VLAB_PROJECTS !== 'undefined' && Array.isArray(VLAB_PROJECTS) && VLAB_PROJECTS.length > 0) {
+                vlabProjectsList = VLAB_PROJECTS;
+            }
+            renderVlabs(vlabProjectsList);
+        }
+
+        function renderVlabs(vlabs) {
+            const grid = document.getElementById('vlab-tiles-grid');
+            if (!grid) return;
+
+            const ongoingCount = vlabs.filter(v => v.status === 'ongoing').length;
+            const completedCount = vlabs.filter(v => v.status === 'completed').length;
+
+            const allBadge = document.querySelector('#tab-all .badge-count');
+            const ongoingBadge = document.querySelector('#tab-ongoing .badge-count');
+            const completedBadge = document.querySelector('#tab-completed .badge-count');
+            if (allBadge) allBadge.textContent = vlabs.length;
+            if (ongoingBadge) ongoingBadge.textContent = ongoingCount;
+            if (completedBadge) completedBadge.textContent = completedCount;
+
+            grid.innerHTML = vlabs.map(v => {
+                const isCompleted = v.status === 'completed';
+                const curChips = Array.isArray(v.curriculumTags) ? v.curriculumTags.map(t => `<span class="meta-tag">${escapeHtml(t)}</span>`).join('') : '';
+                const techChips = Array.isArray(v.techTags) ? v.techTags.map(t => `<span class="meta-tech">${escapeHtml(t)}</span>`).join('') : '';
+
+                if (isCompleted) {
+                    return `
+                        <div class="vlab-tile featured-completed" data-status="completed">
+                            <div class="tile-hero-preview">
+                                <div style="font-size: 0.74rem; color: #94a3b8; font-weight: 600; display:flex; justify-content:space-between;">
+                                    <span>JUET Simulator Engine</span>
+                                    <span style="color: #10b981;"><i class="fas fa-check-circle"></i> Production Ready</span>
+                                </div>
+                                <div class="terminal-preview-code">
+                                    ${escapeHtml(v.codeSnippet || 'SELECT * FROM table;')}
+                                </div>
+                            </div>
+                            <div class="vlab-tile-content">
+                                <div class="tile-status-row">
+                                    <span class="status-chip chip-completed"><i class="fas fa-check"></i> ${escapeHtml(v.statusLabel || 'Completed Project')}</span>
+                                    <span style="font-size:0.75rem; color:#64748b; font-weight:600;">${escapeHtml(v.subHeader || '')}</span>
+                                </div>
+                                <h3 class="vlab-tile-title">${escapeHtml(v.title)}</h3>
+                                <p class="vlab-tile-desc">${escapeHtml(v.desc)}</p>
+                                ${curChips ? `
+                                    <div class="meta-group">
+                                        <div class="meta-label"><i class="fas fa-book-reader"></i> Curriculum Topics</div>
+                                        <div class="meta-tags">${curChips}</div>
+                                    </div>
+                                ` : ''}
+                                ${techChips ? `
+                                    <div class="meta-group">
+                                        <div class="meta-label"><i class="fas fa-code"></i> Platform Architecture</div>
+                                        <div class="meta-tags">${techChips}</div>
+                                    </div>
+                                ` : ''}
+                            </div>
+                            <div class="tile-action-row">
+                                <a href="${escapeHtml(v.launchUrl || 'sql-practice.html')}" class="btn-vlab-launch">
+                                    <i class="fas fa-play"></i> ${escapeHtml(v.launchText || 'Launch Virtual Lab →')}
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    return `
+                        <div class="vlab-tile" data-status="ongoing">
+                            <div class="vlab-tile-content" style="padding-top: 24px;">
+                                <div class="tile-status-row">
+                                    <span class="status-chip chip-ongoing"><i class="fas fa-sync-alt fa-spin"></i> ${escapeHtml(v.statusLabel || 'Ongoing Project')}</span>
+                                    <span style="font-size:0.75rem; color:#2563eb; font-weight:600;">${escapeHtml(v.subHeader || 'In Active Development')}</span>
+                                </div>
+                                <h3 class="vlab-tile-title">${escapeHtml(v.title)}</h3>
+                                <p class="vlab-tile-desc">${escapeHtml(v.desc)}</p>
+                                ${v.codeSnippet ? `
+                                    <div class="terminal-preview-code" style="margin-bottom: 14px; border-radius: 8px;">
+                                        ${escapeHtml(v.codeSnippet)}
+                                    </div>
+                                ` : ''}
+                                ${curChips ? `
+                                    <div class="meta-group">
+                                        <div class="meta-label"><i class="fas fa-book-reader"></i> Core Syllabus Topics</div>
+                                        <div class="meta-tags">${curChips}</div>
+                                    </div>
+                                ` : ''}
+                                ${techChips ? `
+                                    <div class="meta-group">
+                                        <div class="meta-label"><i class="fas fa-code"></i> Planned Tech Stack</div>
+                                        <div class="meta-tags">${techChips}</div>
+                                    </div>
+                                ` : ''}
+                            </div>
+                            <div class="tile-action-row">
+                                <a href="${escapeHtml(v.launchUrl || 'javascript:void(0)')}" class="btn-vlab-ongoing" ${v.launchUrl && v.launchUrl !== 'javascript:void(0)' ? '' : `onclick="alert('${escapeHtml(v.title)} prototype is in active development with research scholars.')"`}>
+                                    <i class="fas fa-flask"></i> ${escapeHtml(v.launchText || 'Prototype Overview →')}
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                }
+            }).join('');
+
+            applyVlabFilter();
+        }
+
+        function escapeHtml(text) {
+            if (text === null || text === undefined) return '';
+            return String(text)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function selectStatusFilter(status, btn) {
+            currentFilterStatus = status;
+            document.querySelectorAll('.status-tab-btn').forEach(b => {
+                b.className = 'status-tab-btn';
+            });
+
+            if (status === 'ongoing') btn.className = 'status-tab-btn active-ongoing';
+            else if (status === 'completed') btn.className = 'status-tab-btn active-completed';
+            else btn.className = 'status-tab-btn active-all';
+
+            applyVlabFilter();
+        }
+
+        function applyVlabFilter() {
+            const tiles = document.querySelectorAll('.vlab-tile');
+            tiles.forEach(tile => {
+                const s = tile.getAttribute('data-status');
+                if (currentFilterStatus === 'all' || s === currentFilterStatus) {
+                    tile.style.display = 'flex';
+                } else {
+                    tile.style.display = 'none';
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initVlabs();
+        });
+    </script>
+</body>
+</html>

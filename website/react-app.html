@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr. Jitendra Parmar - React App & Virtual Lab</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- React & ReactDOM UMD -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- In-memory SQL engine -->
+    <script src="alasql.min.js"></script>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b;">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const HOSPITAL_DB = {
+            province_names: [
+                { province_id: 'ON', province_name: 'Ontario' },
+                { province_id: 'BC', province_name: 'British Columbia' },
+                { province_id: 'AB', province_name: 'Alberta' },
+                { province_id: 'QC', province_name: 'Quebec' },
+                { province_id: 'NS', province_name: 'Nova Scotia' },
+                { province_id: 'MB', province_name: 'Manitoba' }
+            ],
+            doctors: [
+                { doctor_id: 1, first_name: 'Claude', last_name: 'Monet', specialty: 'Cardiology' },
+                { doctor_id: 2, first_name: 'Georgia', last_name: 'O-Keeffe', specialty: 'Neurology' },
+                { doctor_id: 3, first_name: 'Vincent', last_name: 'van Gogh', specialty: 'Pediatrics' },
+                { doctor_id: 4, first_name: 'Pablo', last_name: 'Picasso', specialty: 'Orthopedics' },
+                { doctor_id: 5, first_name: 'Frida', last_name: 'Kahlo', specialty: 'General Surgery' }
+            ],
+            patients: [
+                { patient_id: 1, first_name: 'Donald', last_name: 'Waterfield', gender: 'M', birth_date: '1963-02-12', city: 'Toronto', province_id: 'ON', allergies: 'Penicillin', height: 156, weight: 65 },
+                { patient_id: 2, first_name: 'Mickey', last_name: 'Bannister', gender: 'M', birth_date: '1995-05-18', city: 'Hamilton', province_id: 'ON', allergies: null, height: 185, weight: 88 },
+                { patient_id: 3, first_name: 'Jocelyn', last_name: 'Stronach', gender: 'F', birth_date: '1984-11-22', city: 'Vancouver', province_id: 'BC', allergies: 'Sulfa', height: 162, weight: 58 },
+                { patient_id: 4, first_name: 'Daphne', last_name: 'Phelps', gender: 'F', birth_date: '1976-08-30', city: 'Calgary', province_id: 'AB', allergies: 'Penicillin', height: 170, weight: 72 },
+                { patient_id: 5, first_name: 'Wallace', last_name: 'Browning', gender: 'M', birth_date: '1959-01-15', city: 'Ottawa', province_id: 'ON', allergies: null, height: 178, weight: 81 },
+                { patient_id: 6, first_name: 'Alice', last_name: 'Wonder', gender: 'F', birth_date: '2001-04-10', city: 'Montreal', province_id: 'QC', allergies: 'Aspirin', height: 165, weight: 55 },
+                { patient_id: 7, first_name: 'Robert', last_name: 'Smith', gender: 'M', birth_date: '1988-09-05', city: 'Toronto', province_id: 'ON', allergies: null, height: 192, weight: 95 },
+                { patient_id: 8, first_name: 'Elena', last_name: 'Rostova', gender: 'F', birth_date: '1992-12-03', city: 'Vancouver', province_id: 'BC', allergies: null, height: 168, weight: 62 },
+                { patient_id: 9, first_name: 'Karan', last_name: 'Sharma', gender: 'M', birth_date: '1999-07-21', city: 'Edmonton', province_id: 'AB', allergies: 'Dust', height: 174, weight: 70 },
+                { patient_id: 10, first_name: 'Aisha', last_name: 'Khan', gender: 'F', birth_date: '1997-03-14', city: 'Victoria', province_id: 'BC', allergies: 'Penicillin', height: 160, weight: 54 }
+            ],
+            admissions: [
+                { patient_id: 1, admission_date: '2023-01-10', discharge_date: '2023-01-15', diagnosis: 'Hypertension', attending_doctor_id: 1 },
+                { patient_id: 2, admission_date: '2023-02-04', discharge_date: '2023-02-08', diagnosis: 'Fractured Rib', attending_doctor_id: 4 },
+                { patient_id: 3, admission_date: '2023-03-12', discharge_date: '2023-03-18', diagnosis: 'Migraine', attending_doctor_id: 2 },
+                { patient_id: 4, admission_date: '2023-04-01', discharge_date: '2023-04-05', diagnosis: 'Appendicitis', attending_doctor_id: 5 },
+                { patient_id: 5, admission_date: '2023-05-20', discharge_date: '2023-05-26', diagnosis: 'Hypertension', attending_doctor_id: 1 },
+                { patient_id: 7, admission_date: '2023-06-11', discharge_date: '2023-06-16', diagnosis: 'Concussion', attending_doctor_id: 2 },
+                { patient_id: 8, admission_date: '2023-07-08', discharge_date: '2023-07-12', diagnosis: 'Asthma', attending_doctor_id: 3 },
+                { patient_id: 9, admission_date: '2023-08-19', discharge_date: '2023-08-25', diagnosis: 'Appendicitis', attending_doctor_id: 5 }
+            ]
+        };
+
+        const CHALLENGES = [
+            {
+                id: 'q1',
+                category: 'basics',
+                title: 'Select All Patients',
+                difficulty: 'Easy',
+                points: 10,
+                description: 'Retrieve all columns from the patients table use limit 1.',
+                initialCode: '-- Write your SQL here\nSELECT * FROM patients;',
+                expectedQuery: 'SELECT * FROM patients LIMIT 1;'
+            },
+            {
+                id: 'q2',
+                category: 'basics',
+                title: 'Filter by Province id',
+                difficulty: 'Easy',
+                points: 10,
+                description: "Get first_name, last_name, and city of patients from Ontario ('ON').",
+                initialCode: "-- Write your SQL here\nSELECT first_name, last_name, city\nFROM patients\nWHERE province_id = 'ON';",
+                expectedQuery: "SELECT first_name, last_name, city FROM patients WHERE province_id = 'ON';"
+            },
+            {
+                id: 'q3',
+                category: 'basics',
+                title: 'Distinct Cities',
+                difficulty: 'Easy',
+                points: 10,
+                description: 'List unique city names from the patients table.',
+                initialCode: '-- Write your SQL here\nSELECT DISTINCT city FROM patients;',
+                expectedQuery: 'SELECT DISTINCT city FROM patients;'
+            },
+            {
+                id: 'q4',
+                category: 'basics',
+                title: 'Sort by Height',
+                difficulty: 'Easy',
+                points: 10,
+                description: "List patients' first_name and height, sorted by height in descending order.",
+                initialCode: '-- Write your SQL here\nSELECT first_name, height\nFROM patients\nORDER BY height DESC;',
+                expectedQuery: 'SELECT first_name, height FROM patients ORDER BY height DESC;'
+            },
+            {
+                id: 'q5',
+                category: 'basics',
+                title: 'Patients with Allergies',
+                difficulty: 'Easy',
+                points: 10,
+                description: "Show first_name, last_name, and allergies of patients who have allergies to 'Penicillin'.",
+                initialCode: "-- Write your SQL here\nSELECT first_name, last_name, allergies\nFROM patients\nWHERE allergies = 'Penicillin';",
+                expectedQuery: "SELECT first_name, last_name, allergies FROM patients WHERE allergies = 'Penicillin';"
+            },
+            {
+                id: 'q6',
+                category: 'aggregations',
+                title: 'Total Patients per Province',
+                difficulty: 'Medium',
+                points: 20,
+                description: 'Show province_id and total number of patients from each province as total_patients.',
+                initialCode: '-- Write your SQL here\nSELECT province_id, COUNT(*) AS total_patients\nFROM patients\nGROUP BY province_id;',
+                expectedQuery: 'SELECT province_id, COUNT(*) AS total_patients FROM patients GROUP BY province_id;'
+            },
+            {
+                id: 'q7',
+                category: 'aggregations',
+                title: 'Average Weight by Gender',
+                difficulty: 'Medium',
+                points: 20,
+                description: 'Calculate average weight for each gender rounded to 2 decimal places as avg_weight.',
+                initialCode: '-- Write your SQL here\nSELECT gender, ROUND(AVG(weight), 2) AS avg_weight\nFROM patients\nGROUP BY gender;',
+                expectedQuery: 'SELECT gender, ROUND(AVG(weight), 2) AS avg_weight FROM patients GROUP BY gender;'
+            },
+            {
+                id: 'q8',
+                category: 'joins',
+                title: 'Patient Admissions with Doctor',
+                difficulty: 'Medium',
+                points: 25,
+                description: "Show patient's first_name, last_name, and their attending doctor's specialty.",
+                initialCode: '-- Write your SQL here\nSELECT p.first_name, p.last_name, d.specialty\nFROM patients p\nJOIN admissions a ON p.patient_id = a.patient_id\nJOIN doctors d ON a.attending_doctor_id = d.doctor_id;',
+                expectedQuery: 'SELECT p.first_name, p.last_name, d.specialty FROM patients p JOIN admissions a ON p.patient_id = a.patient_id JOIN doctors d ON a.attending_doctor_id = d.doctor_id;'
+            }
+        ];
+
+        function SqlPracticeApp({ onBack }) {
+            const [currentIdx, setCurrentIdx] = useState(0);
+            const [code, setCode] = useState(CHALLENGES[0].initialCode);
+            const [result, setResult] = useState(null);
+            const [isCorrect, setIsCorrect] = useState(null);
+            const [message, setMessage] = useState('');
+            const [user, setUser] = useState(() => JSON.parse(localStorage.getItem('juet_sql_user') || 'null'));
+            const [solved, setSolved] = useState(() => JSON.parse(localStorage.getItem('juet_sql_solved') || '[]'));
+            const [points, setPoints] = useState(() => parseInt(localStorage.getItem('juet_sql_points') || '0', 10));
+            const [showLogin, setShowLogin] = useState(false);
+            const [loginForm, setLoginForm] = useState({ name: '', email: '', roll: '' });
+            const [emailError, setEmailError] = useState('');
+
+            useEffect(() => {
+                if (window.alasql) {
+                    try {
+                        window.alasql('CREATE TABLE IF NOT EXISTS province_names');
+                        window.alasql.tables.province_names.data = JSON.parse(JSON.stringify(HOSPITAL_DB.province_names));
+                        window.alasql('CREATE TABLE IF NOT EXISTS doctors');
+                        window.alasql.tables.doctors.data = JSON.parse(JSON.stringify(HOSPITAL_DB.doctors));
+                        window.alasql('CREATE TABLE IF NOT EXISTS patients');
+                        window.alasql.tables.patients.data = JSON.parse(JSON.stringify(HOSPITAL_DB.patients));
+                        window.alasql('CREATE TABLE IF NOT EXISTS admissions');
+                        window.alasql.tables.admissions.data = JSON.parse(JSON.stringify(HOSPITAL_DB.admissions));
+                    } catch(e) {
+                        console.error(e);
+                    }
+                }
+            }, []);
+
+            const current = CHALLENGES[currentIdx];
+
+            const handleSelect = (idx) => {
+                setCurrentIdx(idx);
+                setCode(CHALLENGES[idx].initialCode);
+                setResult(null);
+                setIsCorrect(null);
+                setMessage('');
+            };
+
+            const handleRun = () => {
+                if (!user) {
+                    setShowLogin(true);
+                    return;
+                }
+                const trimmed = code.trim();
+                if (!trimmed) {
+                    setIsCorrect(false);
+                    setMessage('Please write an SQL query to execute.');
+                    return;
+                }
+                try {
+                    const userOut = window.alasql(trimmed);
+                    const expectedOut = window.alasql(current.expectedQuery);
+                    
+                    // Simple compare
+                    const match = JSON.stringify(userOut) === JSON.stringify(expectedOut);
+                    setIsCorrect(match);
+                    setResult(userOut);
+
+                    if (match) {
+                        if (!solved.includes(current.id)) {
+                            const newSolved = [...solved, current.id];
+                            const newPts = points + current.points;
+                            setSolved(newSolved);
+                            setPoints(newPts);
+                            localStorage.setItem('juet_sql_solved', JSON.stringify(newSolved));
+                            localStorage.setItem('juet_sql_points', newPts.toString());
+                            setMessage(`Success! Correct Answer. Query returned ${userOut.length} rows. +${current.points} Points Awarded!`);
+                        } else {
+                            setMessage(`Success! Correct Answer. Query returned ${userOut.length} rows.`);
+                        }
+                    } else {
+                        setMessage(`Output mismatch: Returned ${userOut.length} rows, expected ${expectedOut.length} rows.`);
+                    }
+                } catch(err) {
+                    setIsCorrect(false);
+                    setMessage(`SQL Syntax Error: ${err.message || err}`);
+                    setResult(null);
+                }
+            };
+
+            const handleAuth = (e) => {
+                e.preventDefault();
+                let email = (loginForm.email || '').trim().toLowerCase();
+                if (!email.includes('@')) email += '@juetguna.in';
+                if (!email.endsWith('@juetguna.in')) {
+                    setEmailError('Email must end with @juetguna.in');
+                    return;
+                }
+                setEmailError('');
+                const extracted = email.split('@')[0].toUpperCase();
+                const newUser = { name: (loginForm.name || '').trim(), email: email, roll: extracted };
+                setUser(newUser);
+                localStorage.setItem('juet_sql_user', JSON.stringify(newUser));
+                setShowLogin(false);
+            };
+
+            return (
+                <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', background: '#f8fafc' }}>
+                    {/* Top bar */}
+                    <div style={{ height: '56px', background: '#ffffff', borderBottom: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 16px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                            <button onClick={onBack} style={{ width: '32px', height: '32px', borderRadius: '6px', border: '1px solid #e2e8f0', background: '#ffffff', cursor: 'pointer' }}>
+                                <i className="fas fa-chevron-left"></i>
+                            </button>
+                            <div style={{ width: '32px', height: '32px', background: '#2563eb', borderRadius: '8px', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <i className="fas fa-database"></i>
+                            </div>
+                            <div>
+                                <div style={{ fontSize: '0.95rem', fontWeight: 700 }}>SQL Practice - SQL Practice Online</div>
+                                <div style={{ fontSize: '0.72rem', color: '#64748b' }}>JUET Virtual Lab &bull; 🔥 {solved.length} &bull; 🏆 {points} pts</div>
+                            </div>
+                        </div>
+
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                            <div style={{ background: '#ecfdf5', color: '#059669', padding: '4px 12px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 600 }}>
+                                ● 32 practicing
+                            </div>
+                            {user ? (
+                                <div style={{ fontSize: '0.82rem', background: '#f1f5f9', padding: '4px 10px', borderRadius: '20px' }}>
+                                    👤 {user.name} ({user.email})
+                                </div>
+                            ) : (
+                                <button onClick={() => setShowLogin(true)} style={{ border: '1px solid #2563eb', color: '#2563eb', background: 'transparent', padding: '5px 12px', borderRadius: '6px', cursor: 'pointer', fontWeight: 600 }}>Log in</button>
+                            )}
+                            <div style={{ border: '1px solid #cbd5e1', padding: '6px 12px', borderRadius: '6px', fontSize: '0.84rem' }}>
+                                🗄️ hospital.sql ▾
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* 3 Columns */}
+                    <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+                        {/* Sidebar Left */}
+                        <div style={{ width: '280px', background: '#ffffff', borderRight: '1px solid #e2e8f0', overflowY: 'auto', padding: '12px' }}>
+                            <div style={{ fontWeight: 700, fontSize: '0.78rem', color: '#475569', marginBottom: '8px' }}>CHALLENGES</div>
+                            {CHALLENGES.map((c, i) => (
+                                <div key={c.id} onClick={() => handleSelect(i)} style={{
+                                    padding: '10px',
+                                    borderRadius: '8px',
+                                    cursor: 'pointer',
+                                    marginBottom: '6px',
+                                    background: i === currentIdx ? '#eff6ff' : 'transparent',
+                                    border: i === currentIdx ? '1px solid #bfdbfe' : '1px solid transparent'
+                                }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <span style={{ fontSize: '0.85rem', fontWeight: 600, color: i === currentIdx ? '#1d4ed8' : '#1e293b' }}>
+                                            {solved.includes(c.id) && '✅ '} {c.title}
+                                        </span>
+                                        <span style={{ fontSize: '0.68rem', fontWeight: 700, background: '#dcfce7', color: '#15803d', padding: '2px 6px', borderRadius: '4px' }}>{c.difficulty}</span>
+                                    </div>
+                                    <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '4px' }}>{c.description}</div>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Middle Editor */}
+                        <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <h1 style={{ fontSize: '1.3rem', fontWeight: 700 }}>{current.title}</h1>
+                                <span style={{ background: '#dcfce7', color: '#15803d', padding: '3px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 700 }}>{current.difficulty}</span>
+                            </div>
+                            <div style={{ background: '#ffffff', padding: '12px', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '0.92rem' }}>
+                                {current.description}
+                            </div>
+
+                            {/* Editor */}
+                            <div style={{ background: '#ffffff', border: '1px solid #cbd5e1', borderRadius: '8px', overflow: 'hidden' }}>
+                                <div style={{ height: '36px', background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 12px', fontSize: '0.75rem', fontWeight: 700 }}>
+                                    <span>&lt;/&gt; EDITOR</span>
+                                    <span onClick={() => setCode(current.initialCode)} style={{ cursor: 'pointer', color: '#64748b' }}>Reset Code</span>
+                                </div>
+                                <textarea
+                                    value={code}
+                                    onChange={(e) => setCode(e.target.value)}
+                                    style={{ width: '100%', height: '120px', border: 'none', padding: '12px', fontFamily: 'monospace', fontSize: '0.9rem', outline: 'none', boxSizing: 'border-box' }}
+                                />
+                                <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '10px 14px', borderTop: '1px solid #f1f5f9' }}>
+                                    <button onClick={handleRun} style={{ background: '#2563eb', color: '#fff', border: 'none', padding: '8px 18px', borderRadius: '6px', fontWeight: 600, cursor: 'pointer' }}>
+                                        ▶ Run Query
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Result */}
+                            <div style={{ background: '#ffffff', border: '1px solid #cbd5e1', borderRadius: '8px', minHeight: '180px', padding: '14px' }}>
+                                <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b', marginBottom: '8px' }}>&gt;_ QUERY RESULT</div>
+                                {isCorrect !== null && (
+                                    <div style={{
+                                        padding: '10px 14px',
+                                        borderRadius: '6px',
+                                        marginBottom: '10px',
+                                        fontSize: '0.85rem',
+                                        fontWeight: 600,
+                                        background: isCorrect ? '#ecfdf5' : '#fef2f2',
+                                        color: isCorrect ? '#065f46' : '#991b1b'
+                                    }}>
+                                        {message}
+                                    </div>
+                                )}
+                                {result && result.length > 0 ? (
+                                    <div style={{ overflowX: 'auto' }}>
+                                        <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'monospace', fontSize: '0.8rem' }}>
+                                            <thead>
+                                                <tr style={{ background: '#f8fafc', borderBottom: '2px solid #cbd5e1' }}>
+                                                    {Object.keys(result[0]).map(c => <th key={c} style={{ padding: '6px 10px', textAlign: 'left' }}>{c}</th>)}
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {result.map((row, i) => (
+                                                    <tr key={i} style={{ borderBottom: '1px solid #e2e8f0' }}>
+                                                        {Object.keys(result[0]).map(c => <td key={c} style={{ padding: '6px 10px' }}>{row[c] !== null ? row[c] : 'NULL'}</td>)}
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                ) : (
+                                    <div style={{ textAlign: 'center', color: '#94a3b8', padding: '30px 0' }}>
+                                        ▦ Run your query to see results
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Sidebar Right */}
+                        <div style={{ width: '260px', background: '#ffffff', borderLeft: '1px solid #e2e8f0', overflowY: 'auto', padding: '14px' }}>
+                            <div style={{ fontWeight: 700, fontSize: '0.78rem', color: '#475569', marginBottom: '12px' }}>DATABASE SCHEMA</div>
+                            <div style={{ border: '1px solid #e2e8f0', borderRadius: '8px', padding: '10px', marginBottom: '10px' }}>
+                                <div style={{ fontWeight: 700, color: '#2563eb', fontSize: '0.85rem' }}>田 patients</div>
+                                <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '6px', fontFamily: 'monospace' }}>
+                                    patient_id (PK)<br />first_name, last_name<br />gender, birth_date, city<br />province_id, allergies<br />height, weight
+                                </div>
+                            </div>
+                            <div style={{ border: '1px solid #e2e8f0', borderRadius: '8px', padding: '10px', marginBottom: '10px' }}>
+                                <div style={{ fontWeight: 700, color: '#10b981', fontSize: '0.85rem' }}>田 doctors</div>
+                                <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '6px', fontFamily: 'monospace' }}>
+                                    doctor_id (PK)<br />first_name, last_name<br />specialty
+                                </div>
+                            </div>
+                            <div style={{ border: '1px solid #e2e8f0', borderRadius: '8px', padding: '10px' }}>
+                                <div style={{ fontWeight: 700, color: '#f59e0b', fontSize: '0.85rem' }}>田 admissions</div>
+                                <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '6px', fontFamily: 'monospace' }}>
+                                    patient_id (FK)<br />admission_date, discharge_date<br />diagnosis<br />attending_doctor_id (FK)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Login Modal */}
+                    {showLogin && (
+                        <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(15, 23, 42, 0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <div style={{ background: '#ffffff', borderRadius: '14px', width: '90%', maxWidth: '420px', padding: '24px', textAlign: 'center' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                                    <h3 style={{ fontSize: '1.15rem', fontWeight: 700, margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        <i className="fab fa-google" style={{ color: '#4285F4' }}></i> JUET Student Sign-In
+                                    </h3>
+                                    {user && (
+                                        <button onClick={() => setShowLogin(false)} style={{ background: 'none', border: 'none', fontSize: '1.2rem', color: '#94a3b8', cursor: 'pointer' }}>&times;</button>
+                                    )}
+                                </div>
+                                <p style={{ fontSize: '0.82rem', color: '#475569', marginBottom: '16px', background: '#eff6ff', borderLeft: '3px solid #2563eb', padding: '10px 12px', borderRadius: '6px', textAlign: 'left' }}>
+                                    Institutional access requires signing in strictly via your official <strong>@juetguna.in</strong> Gmail account.
+                                </p>
+                                <button type="button" onClick={() => { window.location.href = "/signup"; }} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', width: '100%', padding: '12px', background: '#fff', border: '1px solid #dadce0', borderRadius: '8px', fontWeight: 600, fontSize: '0.92rem', cursor: 'pointer', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}>
+                                    <svg style={{ width: '20px', height: '20px' }} viewBox="0 0 48 48">
+                                        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                                        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                                        <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+                                        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                                    </svg>
+                                    Sign in with Gmail (@juetguna.in)
+                                </button>
+                                <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '14px' }}>
+                                    <i className="fas fa-lock"></i> Only institutional @juetguna.in Gmail authentication allowed
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        function PortfolioApp() {
+            const [view, setView] = useState('portfolio');
+
+            if (view === 'sql-practice') {
+                return <SqlPracticeApp onBack={() => setView('portfolio')} />;
+            }
+
+            return (
+                <div>
+                    {/* Header */}
+                    <nav style={{ position: 'fixed', top: 0, width: '100%', height: '68px', background: 'rgba(255, 255, 255, 0.98)', backdropFilter: 'blur(10px)', borderBottom: '1px solid #e5e7eb', boxShadow: '0 1px 2px rgba(0, 0, 0, 0.03)', display: 'flex', alignItems: 'center', zIndex: 100 }}>
+                        <div style={{ maxWidth: '1200px', width: '100%', margin: '0 auto', padding: '0 24px', display: 'flex', justifySelf: 'stretch', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <h2 style={{ fontSize: '1.15rem', fontWeight: 600, color: '#1a1a1a', margin: 0, letterSpacing: '-0.01em', lineHeight: 1 }}>Dr. Jitendra Parmar</h2>
+                            <div style={{ display: 'flex', gap: '2.2rem', alignItems: 'center', fontSize: '0.95rem', fontWeight: 500 }}>
+                                <a href="#home" style={{ textDecoration: 'none', color: '#2b2b2b' }}>Home</a>
+                                <a href="#about" style={{ textDecoration: 'none', color: '#2b2b2b' }}>About</a>
+                                <a href="publications.html" style={{ textDecoration: 'none', color: '#2b2b2b' }}>Publications</a>
+                                <a href="#projects" style={{ textDecoration: 'none', color: '#2b2b2b' }}>Projects</a>
+                                <button onClick={() => {
+                                    const el = document.getElementById('virtual-lab');
+                                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                                }} style={{
+                                    background: 'none',
+                                    border: 'none',
+                                    padding: 0,
+                                    color: '#2b2b2b',
+                                    fontFamily: 'inherit',
+                                    fontSize: '0.95rem',
+                                    fontWeight: 500,
+                                    cursor: 'pointer'
+                                }}>
+                                    Virtual Lab
+                                </button>
+                                <a href="team.html" style={{ textDecoration: 'none', color: '#2b2b2b' }}>Team</a>
+                                <a href="#contact" style={{ textDecoration: 'none', color: '#2b2b2b' }}>Contact</a>
+                            </div>
+                        </div>
+                    </nav>
+
+                    {/* Hero */}
+                    <section id="home" style={{ padding: '120px 20px 70px', maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '40px', alignItems: 'center' }}>
+                        <div>
+                            <h1 style={{ fontSize: '3rem', fontWeight: 800, color: '#1e293b', marginBottom: '8px' }}>Dr. Jitendra Parmar</h1>
+                            <p style={{ fontSize: '1.2rem', fontWeight: 600, color: '#4f46e5', marginBottom: '8px' }}>Assistant Professor (Senior Grade)</p>
+                            <p style={{ fontSize: '1rem', color: '#64748b', lineHeight: 1.6, marginBottom: '20px' }}>
+                                Department of Computer Science & Engineering<br />
+                                Jaypee University of Engineering and Technology (JUET), Guna, MP
+                            </p>
+                            <div style={{ display: 'flex', gap: '12px', marginBottom: '24px' }}>
+                                <button onClick={() => setView('sql-practice')} style={{ background: '#2563eb', color: '#fff', border: 'none', padding: '12px 24px', borderRadius: '8px', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <i className="fas fa-terminal"></i> Open SQL Practice Lab
+                                </button>
+                                <a href="#contact" style={{ border: '1px solid #cbd5e1', padding: '12px 20px', borderRadius: '8px', textDecoration: 'none', color: '#334155', fontWeight: 600 }}>Get in Touch</a>
+                            </div>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'center' }}>
+                            <div style={{ width: '300px', height: '360px', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 12px 28px rgba(0,0,0,0.1)' }}>
+                                <img src="dr_parmar.png" alt="Dr. Jitendra Parmar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={e => { e.target.src = 'new_profile.jpg'; }} />
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Virtual Lab */}
+                    <section id="virtual-lab" style={{ padding: '80px 20px', background: '#f1f5f9' }}>
+                        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+                            <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+                                <h2 style={{ fontSize: '2rem', fontWeight: 800 }}>Virtual Lab & Engineering Projects</h2>
+                                <p style={{ color: '#64748b' }}>Interactive simulation environments developed under Dr. Jitendra Parmar</p>
+                            </div>
+
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}>
+                                {/* Completed Project: SQL Practice */}
+                                <div style={{ background: '#ffffff', borderRadius: '14px', border: '2px solid #2563eb', padding: '24px', display: 'flex', flexDirection: 'column' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                                        <span style={{ background: '#ecfdf5', color: '#059669', padding: '3px 8px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 700 }}>
+                                            Completed Project
+                                        </span>
+                                        <span style={{ fontSize: '0.75rem', color: '#64748b' }}>124K+ Runs &bull; 32 Live</span>
+                                    </div>
+                                    <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '8px' }}>SQL PRACTICE</h3>
+                                    <p style={{ color: '#64748b', fontSize: '0.9rem', flex: 1, marginBottom: '16px' }}>
+                                        Interactive SQL editor with automated grading against expected outputs, @juetguna.in student tracking with points stored in SQLite database, and Hospital schema.
+                                    </p>
+                                    <button onClick={() => setView('sql-practice')} style={{ background: '#2563eb', color: '#fff', border: 'none', padding: '10px 18px', borderRadius: '8px', fontWeight: 600, cursor: 'pointer' }}>
+                                        Launch SQL Practice Lab &rarr;
+                                    </button>
+                                </div>
+
+                                {/* Ongoing Project 1 */}
+                                <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '24px' }}>
+                                    <span style={{ background: '#eff6ff', color: '#2563eb', padding: '3px 8px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 700 }}>
+                                        Current Project
+                                    </span>
+                                    <h3 style={{ fontSize: '1.2rem', fontWeight: 700, margin: '12px 0 8px' }}>Open-World ML Benchmark Studio</h3>
+                                    <p style={{ color: '#64748b', fontSize: '0.9rem' }}>
+                                        Platform for evaluating novel and unseen class identification in open-world machine learning systems.
+                                    </p>
+                                </div>
+
+                                {/* Ongoing Project 2 */}
+                                <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e2e8f0', padding: '24px' }}>
+                                    <span style={{ background: '#eff6ff', color: '#2563eb', padding: '3px 8px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 700 }}>
+                                        Current Project
+                                    </span>
+                                    <h3 style={{ fontSize: '1.2rem', fontWeight: 700, margin: '12px 0 8px' }}>NLP Code Smell & Defect Classifier</h3>
+                                    <p style={{ color: '#64748b', fontSize: '0.9rem' }}>
+                                        Automated detection of software architectural smells using AST transformer representations.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* About */}
+                    <section id="about" style={{ padding: '80px 20px', maxWidth: '1000px', margin: '0 auto' }}>
+                        <h2 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '16px' }}>About Me</h2>
+                        <p style={{ color: '#334155', lineHeight: 1.7, fontSize: '1rem', marginBottom: '16px' }}>
+                            Dr. Jitendra Parmar is an Assistant Professor (SG) at JUET Guna, holding a Ph.D. from MNIT Jaipur with publications in top SCI-Q1 venues including ACM Computing Surveys (IF: 30.4). His research focuses on Open-World Machine Learning and Intelligent Systems.
+                        </p>
+                    </section>
+
+                    {/* Publications */}
+                    <section id="publications" style={{ padding: '80px 20px', background: '#f8fafc' }}>
+                        <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+                            <h2 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '20px' }}>Selected Publications</h2>
+                            <div style={{ background: '#ffffff', padding: '20px', borderRadius: '10px', border: '1px solid #e2e8f0', marginBottom: '16px' }}>
+                                <span style={{ background: '#dbeafe', color: '#1e40af', padding: '3px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 700 }}>SCI-Q1 | IF: 30.4</span>
+                                <h3 style={{ fontSize: '1.1rem', margin: '8px 0' }}>Open-world machine learning: Applications, challenges, and opportunities</h3>
+                                <p style={{ color: '#64748b', fontSize: '0.85rem' }}>ACM Computing Surveys, vol. 55, no. 10, 2023.</p>
+                            </div>
+                            <div style={{ background: '#ffffff', padding: '20px', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+                                <span style={{ background: '#dbeafe', color: '#1e40af', padding: '3px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 700 }}>SCI-Q1 | IF: 8.1</span>
+                                <h3 style={{ fontSize: '1.1rem', margin: '8px 0' }}>A machine learning based framework to identify unseen classes in open-world text classification</h3>
+                                <p style={{ color: '#64748b', fontSize: '0.85rem' }}>Information Processing & Management, 2023.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Contact */}
+                    <section id="contact" style={{ padding: '60px 20px', textAlign: 'center', background: '#ffffff' }}>
+                        <h2 style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: '12px' }}>Contact</h2>
+                        <p style={{ color: '#64748b', marginBottom: '8px' }}>Jaypee University of Engineering and Technology (JUET), Guna, MP</p>
+                        <p><a href="mailto:jitendra.parmar@juet.ac.in" style={{ color: '#2563eb', fontWeight: 600 }}>jitendra.parmar@juet.ac.in</a></p>
+                    </section>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<PortfolioApp />);
+    </script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGradAnanya" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f43f5e" />
+      <stop offset="100%" stop-color="#fb7185" />
+    </linearGradient>
+  </defs>
+  <rect width="200" height="200" rx="100" fill="url(#bgGradAnanya)" />
+  <!-- Shoulders -->
+  <path d="M40 200 C40 145 70 135 100 135 C130 135 160 145 160 200 Z" fill="#881337" />
+  <path d="M85 145 L100 170 L115 145 Z" fill="#fff1f2" />
+  <!-- Neck -->
+  <rect x="88" y="115" width="24" height="25" rx="5" fill="#f5c28e" />
+  <!-- Face -->
+  <ellipse cx="100" cy="85" rx="34" ry="40" fill="#fcd34d" />
+  <!-- Short chic bob hair -->
+  <path d="M60 82 C58 50 142 50 140 82 C142 120 130 135 125 135 C122 135 122 100 122 82 C115 62 85 62 78 82 C78 100 78 135 75 135 C70 135 58 120 60 82 Z" fill="#1c1917" />
+  <!-- Eyes -->
+  <ellipse cx="87" cy="85" rx="3.5" ry="4.5" fill="#1c1917" />
+  <ellipse cx="113" cy="85" rx="3.5" ry="4.5" fill="#1c1917" />
+  <circle cx="88" cy="83.5" r="1.2" fill="#ffffff" />
+  <circle cx="114" cy="83.5" r="1.2" fill="#ffffff" />
+  <!-- Eyebrows -->
+  <path d="M80 77 Q87 74 93 77" stroke="#1c1917" stroke-width="2" stroke-linecap="round" fill="none" />
+  <path d="M107 77 Q113 74 120 77" stroke="#1c1917" stroke-width="2" stroke-linecap="round" fill="none" />
+  <!-- Nose -->
+  <path d="M100 87 L98 94 L102 94" stroke="#d97706" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+  <!-- Smile -->
+  <path d="M92 103 Q100 110 108 103" stroke="#e11d48" stroke-width="2.2" stroke-linecap="round" fill="none" />
+  <!-- Cheeks -->
+  <circle cx="82" cy="94" r="4.5" fill="#fda4af" opacity="0.6" />
+  <circle cx="118" cy="94" r="4.5" fill="#fda4af" opacity="0.6" />
+</svg>

@@ -1,0 +1,150 @@
+[
+  {
+    "id": "vlab-1",
+    "title": "SQL Practice Virtual Lab",
+    "status": "completed",
+    "statusLabel": "Completed Project",
+    "subHeader": "75 Queries • 5 Modules",
+    "codeSnippet": "SELECT e.emp_name, d.dept_name, \n  DENSE_RANK() OVER(ORDER BY salary DESC)\nFROM employees e JOIN departments d;",
+    "desc": "Full-scale interactive SQL learning platform featuring 5 topic-wise modules (DDL/DML, Aggregations, Multi-table JOINs, Subqueries, and Window Functions / CTEs). Features real-time parallel output comparison, dynamic schema inspection with sample data previews, and persistent scoring via @juetguna.in student authentication.",
+    "curriculumTags": [
+      "1. DDL & DML Basics (15)",
+      "2. Aggregations (15)",
+      "3. Relational JOINs (15)",
+      "4. Subqueries & Logic (15)",
+      "5. Window Functions & CTEs (15)"
+    ],
+    "techTags": [
+      "SQLite",
+      "AlaSQL",
+      "Node.js",
+      "Express",
+      "WebAssembly",
+      "REST API"
+    ],
+    "launchUrl": "sql-practice.html",
+    "launchText": "Launch SQL Practice Lab →",
+    "isFeatured": true
+  },
+  {
+    "id": "vlab-2",
+    "title": "Enterprise Relational Schema Simulator",
+    "status": "completed",
+    "statusLabel": "Completed Project",
+    "subHeader": "Multi-Table Schema",
+    "codeSnippet": "",
+    "desc": "Interactive multi-entity database modeling environment representing real-world healthcare and corporate relational topologies. Enables students to observe primary and foreign key constraints, entity integrity, and cascading operations in an isolated sandbox.",
+    "curriculumTags": [
+      "Relational Modeling",
+      "ER Diagram Mapping",
+      "Referential Integrity",
+      "Normalization (1NF-BCNF)"
+    ],
+    "techTags": [
+      "Relational SQL",
+      "CSS Grid",
+      "JavaScript (ES6+)",
+      "SQLite"
+    ],
+    "launchUrl": "sql-practice.html",
+    "launchText": "Available in SQL Lab →",
+    "isFeatured": false
+  },
+  {
+    "id": "vlab-3",
+    "title": "Automated Code Evaluation & Grading Engine",
+    "status": "completed",
+    "statusLabel": "Completed Project",
+    "subHeader": "Backend Evaluator",
+    "codeSnippet": "",
+    "desc": "Server-side automated grading microservice that securely executes student SQL queries in sandboxed in-memory database instances, computes cell-level diff comparisons against reference benchmarks, and logs student performance metrics into SQLite.",
+    "curriculumTags": [
+      "Automated Grading",
+      "Memory Sandboxing",
+      "Student Audit Trail",
+      "Instant Feedback"
+    ],
+    "techTags": [
+      "Node.js",
+      "node:sqlite",
+      "Express",
+      "CORS",
+      "JSON Storage"
+    ],
+    "launchUrl": "sql-practice.html",
+    "launchText": "Active Service Details",
+    "isFeatured": false
+  },
+  {
+    "id": "vlab-4",
+    "title": "DBMS Query Execution Plan & Cost Visualizer",
+    "status": "ongoing",
+    "statusLabel": "Ongoing Project",
+    "subHeader": "Phase 2 Initiative",
+    "codeSnippet": "",
+    "desc": "Developing an interactive D3.js physical query plan visualizer that decomposes user queries into Relational Algebra AST trees, illustrating table scans, index lookups, hash joins, and cost-based optimization formulas in real-time.",
+    "curriculumTags": [
+      "Query Optimization",
+      "Cost Estimation",
+      "Index Scans vs Table Scans",
+      "Join Algorithms (Hash/Merge)"
+    ],
+    "techTags": [
+      "D3.js",
+      "SQL Parser",
+      "WebAssembly",
+      "Python AST"
+    ],
+    "launchUrl": "#",
+    "launchText": "View Development Progress",
+    "isFeatured": true
+  },
+  {
+    "id": "vlab-5",
+    "title": "AI SQL Error Diagnostic & Remediation Tutor",
+    "status": "ongoing",
+    "statusLabel": "Ongoing Project",
+    "subHeader": "NLP + Pedagogy",
+    "codeSnippet": "",
+    "desc": "An intelligent automated pedagogical tutor that interprets cryptic SQL syntax and runtime error codes, generating step-by-step guidance and conceptual hints tailored to undergraduate students without giving away direct solutions.",
+    "curriculumTags": [
+      "Intelligent Tutoring Systems (ITS)",
+      "Syntax Error Explanation",
+      "Socratic Guided Hints"
+    ],
+    "techTags": [
+      "Python",
+      "LangChain",
+      "FastAPI",
+      "HuggingFace",
+      "SQLite"
+    ],
+    "launchUrl": "#",
+    "launchText": "Research Specs",
+    "isFeatured": false
+  },
+  {
+    "id": "vlab-6",
+    "title": "ACID Concurrency & 2-Phase Locking Simulator",
+    "status": "ongoing",
+    "statusLabel": "Ongoing Project",
+    "subHeader": "Concurrency Control",
+    "codeSnippet": "",
+    "desc": "An interactive transaction scheduling sandbox simulating concurrent read/write locks, deadlocks, dirty reads, and 2-Phase Locking (2PL) protocols under varying isolation levels.",
+    "curriculumTags": [
+      "ACID Properties",
+      "Serializability",
+      "Deadlock Detection",
+      "2-Phase Locking (2PL)"
+    ],
+    "techTags": [
+      "WebSockets",
+      "JavaScript (ES6)",
+      "HTML5 Canvas",
+      "SQLite"
+    ],
+    "launchUrl": "#",
+    "launchText": "Simulator Architecture",
+    "isFeatured": false
+  }
+]

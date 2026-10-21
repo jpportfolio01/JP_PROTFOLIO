@@ -1,0 +1,115 @@
+{
+  "scholars": [
+    {
+      "id": "sch-1",
+      "name": "Pooja Sharma",
+      "role": "Ph.D. Research Scholar",
+      "dept": "Department of CSE, JUET Guna",
+      "photo": "images/team/pooja_sharma.svg",
+      "focus": "Unseen Class Detection & Novelty Recognition in Open-World NLP",
+      "desc": "Investigating Extreme Value Theory (EVT) and open-world deep representation learning for recognizing unseen classes in streaming textual data without catastrophic degradation of known concepts.",
+      "background": "M.Tech in Computer Science & Engineering (Honors) • B.Tech CSE",
+      "tags": [
+        "Open-World ML",
+        "Out-of-Distribution",
+        "NLP Transformers",
+        "EVT Models"
+      ],
+      "joined": "Joined: 2023 • Full-Time",
+      "scholarUrl": "https://scholar.google.com",
+      "linkedinUrl": "https://linkedin.com",
+      "email": "pooja.sharma.phd@juetguna.in"
+    },
+    {
+      "id": "sch-2",
+      "name": "Abhishek Kumar Soni",
+      "role": "Ph.D. Research Scholar",
+      "dept": "Department of CSE, JUET Guna",
+      "photo": "images/team/abhishek_soni.svg",
+      "focus": "Continual Deep Learning & Automated Code Smell Detection",
+      "desc": "Formulating Graph Neural Network (GNN) and AST-based neural architectures for continual software intelligence, refactoring recommendations, and anti-pattern identification across evolving code repositories.",
+      "background": "M.Tech in Software Engineering • B.Tech in Information Technology",
+      "tags": [
+        "Continual Learning",
+        "Software Smells",
+        "Code Intelligence",
+        "Graph Neural Nets"
+      ],
+      "joined": "Joined: 2024 • Institute Fellow",
+      "scholarUrl": "https://scholar.google.com",
+      "linkedinUrl": "https://linkedin.com",
+      "email": "abhishek.soni.phd@juetguna.in"
+    },
+    {
+      "id": "sch_1792579567532",
+      "name": "dssfdg",
+      "role": "Ph.D. hj Scholar",
+      "dept": "Department of CSE, JUET Guna",
+      "photo": "images/team/Pasted_20-10-2026_at_10_04_46_png_1792579565979.png",
+      "focus": "dfvdg",
+      "desc": "sdscfv",
+      "background": "dcx",
+      "tags": [
+        "dsc"
+      ],
+      "joined": "sdc",
+      "scholarUrl": "dsc",
+      "linkedinUrl": "cds",
+      "email": "ds"
+    }
+  ],
+  "members": [
+    {
+      "id": "mem-1",
+      "name": "Aditya Gupta",
+      "role": "Lead Student Researcher & Developer",
+      "dept": "B.Tech CSE • JUET Guna",
+      "photo": "images/team/aditya_gupta.svg",
+      "areaTitle": "Intelligent Virtual Lab Architecture & In-Browser SQL Execution Engines",
+      "areaSummary": "Designed the client-side AlaSQL sandbox, real-time query validator, and automated scoring telemetry for JUET Virtual Lab.",
+      "techStack": "Full-Stack & In-Memory DB",
+      "githubUrl": "https://github.com",
+      "linkedinUrl": "https://linkedin.com",
+      "email": "211b055@juetguna.in"
+    },
+    {
+      "id": "mem-2",
+      "name": "Neha Choudhary",
+      "role": "Undergraduate Research Assistant",
+      "dept": "B.Tech CSE • JUET Guna",
+      "photo": "images/team/neha_choudhary.svg",
+      "areaTitle": "Open-World Classifier Benchmarking & Out-of-Distribution Data Pipelines",
+      "areaSummary": "Curation of multi-domain open-world text datasets and statistical evaluation against baseline Softmax thresholding methods.",
+      "techStack": "Python & PyTorch",
+      "githubUrl": "https://github.com",
+      "linkedinUrl": "https://linkedin.com",
+      "email": "neha.c@juetguna.in"
+    },
+    {
+      "id": "mem-3",
+      "name": "Siddharth Jain",
+      "role": "Research Contributor & Developer",
+      "dept": "B.Tech CSE • JUET Guna",
+      "photo": "images/team/siddharth_jain.svg",
+      "areaTitle": "AST Parsing, Code Smell Detection & Static Analysis Pipelines",
+      "areaSummary": "Developed abstract syntax tree parsers to detect design smells, long methods, and god classes in open-source software repos.",
+      "techStack": "Java & Static Analysis",
+      "githubUrl": "https://github.com",
+      "linkedinUrl": "https://linkedin.com",
+      "email": "siddharth.j@juetguna.in"
+    },
+    {
+      "id": "mem-4",
+      "name": "Priya Patel",
+      "role": "Student ML Researcher",
+      "dept": "B.Tech CSE • JUET Guna",
+      "photo": "images/team/priya_patel.svg",
+      "areaTitle": "Deep Learning & Ensemble Classifiers for Medical Diagnostics",
+      "areaSummary": "Implemented ensemble CNN and Random Forest models for automated diabetic retinopathy and medical image segmentation.",
+      "techStack": "Computer Vision & CNNs",
+      "githubUrl": "https://github.com",
+      "linkedinUrl": "https://linkedin.com",
+      "email": "priya.p@juetguna.in"
+    }
+  ]
+}

@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Team & Scholars | Dr. Jitendra Parmar - JUET Guna</title>
+    <meta name="title" content="Research Team & Scholars | Dr. Jitendra Parmar - JUET Guna">
+    <meta name="description" content="Meet the research scholars, M.Tech/B.Tech students, and collaborators working under Dr. Jitendra Parmar in the Department of Computer Science & Engineering at JUET Guna. Research areas include Open-World ML, NLP, and AI.">
+    <meta name="keywords" content="Jitendra Parmar Research Team, Dr. Jitendra Parmar Lab, Jitendra Parmar Research Scholars, JUET Guna Research Group, Computer Science Researchers JUET, Open-World Machine Learning Group">
+    <meta name="author" content="Dr. Jitendra Parmar">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+
+    <!-- Favicon: Dr. Jitendra Parmar Photo -->
+    <link rel="icon" type="image/png" href="dr_parmar.png">
+    <link rel="apple-touch-icon" href="dr_parmar.png">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="profile">
+    <meta property="og:site_name" content="Dr. Jitendra Parmar Academic Portfolio">
+    <meta property="og:title" content="Research Team & Scholars | Dr. Jitendra Parmar - JUET Guna">
+    <meta property="og:description" content="Meet the research scholars and student researchers in Dr. Jitendra Parmar's lab at JUET Guna.">
+    <meta property="og:image" content="dr_parmar.png">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Research Team & Scholars | Dr. Jitendra Parmar - JUET Guna">
+    <meta name="twitter:description" content="Meet the research team under Dr. Jitendra Parmar at JUET Guna.">
+    <meta name="twitter:image" content="dr_parmar.png">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "AboutPage",
+      "name": "Research Group of Dr. Jitendra Parmar",
+      "description": "Research scholars, undergraduate researchers, and alumni under the guidance of Dr. Jitendra Parmar at JUET Guna.",
+      "mainEntity": {
+        "@type": "Person",
+        "name": "Dr. Jitendra Parmar",
+        "jobTitle": "Principal Investigator & Assistant Professor (SG)",
+        "affiliation": "Jaypee University of Engineering and Technology (JUET), Guna"
+      }
+    }
+    </script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="publications.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="config.js"></script>
+    <style>
+        /* Team Page Layout & Styles */
+        .team-page {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top left, rgba(99, 102, 241, 0.09), transparent 36rem),
+                radial-gradient(circle at top right, rgba(124, 58, 237, 0.07), transparent 32rem),
+                #f8fafc;
+            padding-top: 105px;
+            padding-bottom: 70px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: #1e293b;
+        }
+
+        .team-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* 1. Principal Investigator Centered Section */
+        .pi-section {
+            text-align: center;
+            max-width: 860px;
+            margin: 0 auto 4.5rem;
+            padding: 40px 30px;
+            background: #ffffff;
+            border-radius: 24px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05), 0 20px 40px -15px rgba(99, 102, 241, 0.06);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pi-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #2563eb);
+        }
+
+        .pi-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0.35rem 0.95rem;
+            border-radius: 999px;
+            background: rgba(99, 102, 241, 0.1);
+            color: #4f46e5;
+            font-weight: 700;
+            font-size: 0.78rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+        }
+
+        .pi-image-wrapper {
+            position: relative;
+            width: 160px;
+            height: 160px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .pi-image {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            object-position: center 20%;
+            border: 4px solid #ffffff;
+            box-shadow: 0 12px 28px rgba(79, 70, 229, 0.2), 0 0 0 3px rgba(99, 102, 241, 0.3);
+            transition: transform 0.35s ease, box-shadow 0.35s ease;
+        }
+
+        .pi-image:hover {
+            transform: scale(1.04);
+            box-shadow: 0 16px 36px rgba(79, 70, 229, 0.28), 0 0 0 4px #667eea;
+        }
+
+        .pi-badge-active {
+            position: absolute;
+            bottom: 4px;
+            right: 8px;
+            background: #10b981;
+            color: #ffffff;
+            font-size: 0.68rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 20px;
+            border: 2px solid #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        .pi-name {
+            font-size: clamp(2rem, 3.5vw, 2.7rem);
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            color: #0f172a;
+            margin-bottom: 0.35rem;
+            line-height: 1.2;
+        }
+
+        .pi-designation {
+            font-size: 1.22rem;
+            font-weight: 700;
+            color: #4f46e5;
+            margin-bottom: 0.65rem;
+        }
+
+        .pi-affiliation {
+            font-size: 1rem;
+            color: #475569;
+            line-height: 1.55;
+            margin-bottom: 1.35rem;
+        }
+
+        .pi-badges-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 1.6rem;
+        }
+
+        .pi-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #f1f5f9;
+            color: #334155;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            border: 1px solid #e2e8f0;
+        }
+
+        .pi-badge i {
+            color: #6366f1;
+        }
+
+        .pi-social-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .pi-link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 0.86rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            border: 1px solid #cbd5e1;
+            background: #ffffff;
+            color: #1e293b;
+        }
+
+        .pi-link-btn:hover {
+            border-color: #6366f1;
+            color: #4f46e5;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+        }
+
+        .pi-link-btn.primary {
+            background: #4f46e5;
+            color: #ffffff;
+            border-color: #4f46e5;
+        }
+
+        .pi-link-btn.primary:hover {
+            background: #4338ca;
+            color: #ffffff;
+        }
+
+        /* 2. Section Heading Styling (Centered) */
+        .section-header-centered {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            padding: 0 20px;
+        }
+
+        .section-header-centered .section-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0.35rem 0.95rem;
+            border-radius: 999px;
+            background: rgba(99, 102, 241, 0.1);
+            color: #4f46e5;
+            font-weight: 700;
+            font-size: 0.78rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 0.65rem;
+        }
+
+        .section-header-centered .center-heading {
+            font-size: clamp(1.8rem, 3vw, 2.35rem);
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .section-header-centered .center-heading::after {
+            content: '';
+            display: block;
+            width: 56px;
+            height: 4px;
+            background: #6366f1;
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+
+        .section-header-centered .section-subtitle {
+            font-size: 1.02rem;
+            color: #64748b;
+            max-width: 680px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* 3. Research Scholar Section (2 Scholars) */
+        .scholars-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 30px;
+            margin-bottom: 5rem;
+        }
+
+        .scholar-card {
+            background: #ffffff;
+            border-radius: 20px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            padding: 32px 28px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scholar-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08);
+            border-color: #cbd5e1;
+        }
+
+        .scholar-card-top {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .scholar-avatar {
+            width: 88px;
+            height: 88px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #e0e7ff;
+            background: #f8fafc;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+        }
+
+        .scholar-meta h3 {
+            font-size: 1.32rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 4px;
+        }
+
+        .scholar-role-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.76rem;
+            font-weight: 700;
+            color: #4338ca;
+            background: #eef2ff;
+            border: 1px solid #c7d2fe;
+            padding: 3px 10px;
+            border-radius: 20px;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .scholar-dept {
+            font-size: 0.86rem;
+            color: #64748b;
+        }
+
+        .scholar-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .info-row {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .info-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #6366f1;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .info-value {
+            font-size: 0.94rem;
+            color: #1e293b;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        .info-desc {
+            font-size: 0.88rem;
+            color: #475569;
+            line-height: 1.6;
+            background: #f8fafc;
+            padding: 12px 14px;
+            border-radius: 10px;
+            border-left: 3px solid #6366f1;
+        }
+
+        .scholar-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 6px;
+        }
+
+        .scholar-tag {
+            font-size: 0.74rem;
+            background: #f1f5f9;
+            color: #475569;
+            padding: 3px 9px;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+
+        .scholar-footer {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .scholar-social-links {
+            display: flex;
+            gap: 8px;
+        }
+
+        .scholar-social-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8fafc;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+            text-decoration: none;
+            font-size: 0.88rem;
+            transition: all 0.2s ease;
+        }
+
+        .scholar-social-btn:hover {
+            background: #6366f1;
+            color: #ffffff;
+            border-color: #6366f1;
+            transform: translateY(-2px);
+        }
+
+        /* 4. Our Team Section (Team Members with Photo, Name & Area of Work) */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 26px;
+            margin-bottom: 5rem;
+        }
+
+        .team-member-card {
+            background: #ffffff;
+            border-radius: 18px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.035);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+
+        .team-member-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 14px 30px rgba(0, 0, 0, 0.08);
+            border-color: #cbd5e1;
+        }
+
+        .member-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .member-photo {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #e2e8f0;
+            background: #f8fafc;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .member-info h4 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 3px;
+        }
+
+        .member-role {
+            font-size: 0.82rem;
+            color: #4f46e5;
+            font-weight: 600;
+        }
+
+        .member-dept {
+            font-size: 0.78rem;
+            color: #64748b;
+        }
+
+        /* Area of Work Highlight Box - Explicitly Requested */
+        .area-of-work-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-left: 3px solid #2563eb;
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 14px;
+            flex: 1;
+        }
+
+        .area-label {
+            font-size: 0.72rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: #2563eb;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .area-title {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: #0f172a;
+            line-height: 1.4;
+            margin-bottom: 6px;
+        }
+
+        .area-summary {
+            font-size: 0.82rem;
+            color: #475569;
+            line-height: 1.5;
+        }
+
+        .member-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 12px;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        .tech-pill {
+            font-size: 0.74rem;
+            font-weight: 600;
+            color: #334155;
+            background: #f1f5f9;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .member-social-links {
+            display: flex;
+            gap: 6px;
+        }
+
+        .member-social-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+            color: #64748b;
+            border: 1px solid #e2e8f0;
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
+        }
+
+        .member-social-btn:hover {
+            background: #2563eb;
+            color: #ffffff;
+            border-color: #2563eb;
+        }
+
+        /* 5. Join Lab Banner */
+        .join-lab-banner {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #1e3a8a 100%);
+            border-radius: 20px;
+            padding: 40px 32px;
+            color: #ffffff;
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(30, 27, 75, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .join-lab-banner h3 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 0.75rem;
+            color: #ffffff;
+        }
+
+        .join-lab-banner p {
+            max-width: 680px;
+            margin: 0 auto 1.5rem;
+            font-size: 0.98rem;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+
+        .join-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #ffffff;
+            color: #1e1b4b;
+            padding: 10px 24px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+        }
+
+        .join-btn:hover {
+            transform: translateY(-2px);
+            background: #f8fafc;
+            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.25);
+            color: #4f46e5;
+        }
+
+        @media (max-width: 768px) {
+            .scholars-grid {
+                grid-template-columns: 1fr;
+            }
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+            .pi-section {
+                padding: 30px 18px;
+            }
+            .pi-image-wrapper {
+                width: 130px;
+                height: 130px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation Bar (Consistent with Site) -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html" style="text-decoration: none; color: inherit;">
+                    <h2>Dr. Jitendra Parmar</h2>
+                </a>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="index.html#about" class="nav-link">About</a>
+                <a href="publications.html" class="nav-link">Publications</a>
+                <a href="projects.html" class="nav-link">AnveshanAI</a>
+                <a href="sql-practice.html" class="nav-link">Virtual Lab</a>
+                <a href="team.html" class="nav-link" style="color: #667eea; font-weight: 700;">Team</a>
+                <a href="index.html#contact" class="nav-link">Contact</a>
+            </div>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Team Page Content -->
+    <main class="team-page">
+        <div class="team-container">
+
+            <!-- ========================================== -->
+            <!-- 1. CENTERED SECTION: DR. JITENDRA PARMAR  -->
+            <!-- ========================================== -->
+            <section class="pi-section" aria-label="Faculty Lead and Principal Investigator">
+                <div class="pi-kicker">
+                    <i class="fas fa-microscope"></i> Research Group Lead & Principal Investigator
+                </div>
+
+                <div class="pi-image-wrapper">
+                    <!-- Centered Photo of Dr. Jitendra Parmar -->
+                    <img src="dr_parmar.png" alt="Dr. Jitendra Parmar" class="pi-image" onerror="this.src='new_profile.jpg'">
+                    <span class="pi-badge-active" title="Lab Director"><i class="fas fa-check-circle"></i> PI</span>
+                </div>
+
+                <!-- Centered Name -->
+                <h1 class="pi-name">
+                    <span class="gradient-text">Dr. Jitendra Parmar</span>
+                </h1>
+
+                <!-- Centered Designation -->
+                <p class="pi-designation">Assistant Professor (Senior Grade)</p>
+
+                <!-- Affiliation & Department -->
+                <p class="pi-affiliation">
+                    <i class="fas fa-university" style="color: #6366f1; margin-right: 6px;"></i>
+                    Department of Computer Science & Engineering<br>
+                    Jaypee University of Engineering and Technology (JUET), Guna, MP, India
+                </p>
+
+                <!-- Badges -->
+                <div class="pi-badges-row">
+                    <span class="pi-badge"><i class="fas fa-graduation-cap"></i> Ph.D. MNIT Jaipur</span>
+                    <span class="pi-badge"><i class="fas fa-brain"></i> Open-World Machine Learning</span>
+                    <span class="pi-badge"><i class="fas fa-award"></i> MoE Research Scholar (Govt. of India)</span>
+                    <span class="pi-badge"><i class="fas fa-star"></i> ACM CSUR (IF: 30.4)</span>
+                </div>
+
+                <!-- Social & Profile Links -->
+                <div class="pi-social-links">
+                    <a href="https://scholar.google.com/citations?user=toHDoiwAAAAJ&hl=en&authuser=1" target="_blank" rel="noopener noreferrer" class="pi-link-btn primary" title="Google Scholar Profile">
+                        <i class="fas fa-graduation-cap"></i> Google Scholar
+                    </a>
+                    <a href="https://www.researchgate.net/profile/Jitendra-Parmar-9?ev=hdr_xprf" target="_blank" rel="noopener noreferrer" class="pi-link-btn" title="ResearchGate Profile">
+                        <i class="fab fa-researchgate"></i> ResearchGate
+                    </a>
+                    <a href="https://www.linkedin.com/in/dr-jitendra-parmar-phd-2bb8a499" target="_blank" rel="noopener noreferrer" class="pi-link-btn" title="LinkedIn Profile">
+                        <i class="fab fa-linkedin"></i> LinkedIn
+                    </a>
+                    <a href="https://www.juet.ac.in/faculty/profile/dr-jitendra-parmar" target="_blank" rel="noopener noreferrer" class="pi-link-btn" title="JUET Faculty Profile">
+                        <i class="fas fa-university"></i> JUET Profile
+                    </a>
+                    <a href="mailto:jitendra.parmar@juet.ac.in" class="pi-link-btn" title="Send Official Email">
+                        <i class="fas fa-envelope"></i> Email
+                    </a>
+                </div>
+            </section>
+
+            <!-- ========================================== -->
+            <!-- 2. CENTERED HEADING: RESEARCH SCHOLAR      -->
+            <!-- (Info of 2 Research Scholars)             -->
+            <!-- ========================================== -->
+            <section id="research-scholars" aria-label="Research Scholars">
+                <div class="section-header-centered">
+                    <div class="section-kicker">
+                        <i class="fas fa-user-graduate"></i> Doctoral Fellows & Researchers
+                    </div>
+                    <!-- Center Heading: RESEARCH SCHOLAR per user request -->
+                    <h2 class="center-heading">RESEARCH SCHOLAR</h2>
+                    <p class="section-subtitle">
+                        Ph.D. scholars carrying out cutting-edge doctoral research under the supervision and guidance of Dr. Jitendra Parmar.
+                    </p>
+                </div>
+
+                <div class="scholars-grid" id="scholarsGridContainer">
+                    <!-- Research Scholar 1 -->
+                    <div class="scholar-card">
+                        <div class="scholar-card-top">
+                            <img src="images/team/pooja_sharma.svg" alt="Pooja Sharma" class="scholar-avatar" onerror="this.src='https://ui-avatars.com/api/?name=Pooja+Sharma&background=6366f1&color=fff&size=150'">
+                            <div class="scholar-meta">
+                                <h3>Pooja Sharma</h3>
+                                <span class="scholar-role-pill"><i class="fas fa-award"></i> Ph.D. Research Scholar</span>
+                                <div class="scholar-dept">Department of CSE, JUET Guna</div>
+                            </div>
+                        </div>
+
+                        <div class="scholar-body">
+                            <div class="info-row">
+                                <span class="info-label"><i class="fas fa-microscope"></i> Primary Research Focus</span>
+                                <span class="info-value"><strong>Unseen Class Detection & Novelty Recognition in Open-World NLP</strong></span>
+                            </div>
+
+                            <p class="info-desc">
+                                Investigating Extreme Value Theory (EVT) and open-world deep representation learning for recognizing unseen classes in streaming textual data without catastrophic degradation of known concepts.
+                            </p>
+
+                            <div class="info-row">
+                                <span class="info-label"><i class="fas fa-user-check"></i> Academic Background</span>
+                                <span class="info-value">M.Tech in Computer Science & Engineering (Honors) &bull; B.Tech CSE</span>
+                            </div>
+
+                            <div class="scholar-tags">
+                                <span class="scholar-tag">Open-World ML</span>
+                                <span class="scholar-tag">Out-of-Distribution</span>
+                                <span class="scholar-tag">NLP Transformers</span>
+                                <span class="scholar-tag">EVT Models</span>
+                            </div>
+                        </div>
+
+                        <div class="scholar-footer">
+                            <span style="font-size: 0.8rem; color: #64748b; font-weight: 500;">
+                                <i class="fas fa-calendar-alt" style="margin-right: 4px;"></i> Joined: 2023 &bull; Full-Time
+                            </span>
+                            <div class="scholar-social-links">
+                                <a href="https://scholar.google.com" target="_blank" class="scholar-social-btn" title="Scholar Profile"><i class="fas fa-graduation-cap"></i></a>
+                                <a href="https://linkedin.com" target="_blank" class="scholar-social-btn" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="mailto:pooja.sharma.phd@juetguna.in" class="scholar-social-btn" title="Email"><i class="fas fa-envelope"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Research Scholar 2 -->
+                    <div class="scholar-card">
+                        <div class="scholar-card-top">
+                            <img src="images/team/abhishek_soni.svg" alt="Abhishek Kumar Soni" class="scholar-avatar" onerror="this.src='https://ui-avatars.com/api/?name=Abhishek+Soni&background=0284c7&color=fff&size=150'">
+                            <div class="scholar-meta">
+                                <h3>Abhishek Kumar Soni</h3>
+                                <span class="scholar-role-pill"><i class="fas fa-award"></i> Ph.D. Research Scholar</span>
+                                <div class="scholar-dept">Department of CSE, JUET Guna</div>
+                            </div>
+                        </div>
+
+                        <div class="scholar-body">
+                            <div class="info-row">
+                                <span class="info-label"><i class="fas fa-microscope"></i> Primary Research Focus</span>
+                                <span class="info-value"><strong>Continual Deep Learning & Automated Code Smell Detection</strong></span>
+                            </div>
+
+                            <p class="info-desc">
+                                Formulating Graph Neural Network (GNN) and AST-based neural architectures for continual software intelligence, refactoring recommendations, and anti-pattern identification across evolving code repositories.
+                            </p>
+
+                            <div class="info-row">
+                                <span class="info-label"><i class="fas fa-user-check"></i> Academic Background</span>
+                                <span class="info-value">M.Tech in Software Engineering &bull; B.Tech in Information Technology</span>
+                            </div>
+
+                            <div class="scholar-tags">
+                                <span class="scholar-tag">Continual Learning</span>
+                                <span class="scholar-tag">Software Smells</span>
+                                <span class="scholar-tag">Code Intelligence</span>
+                                <span class="scholar-tag">Graph Neural Nets</span>
+                            </div>
+                        </div>
+
+                        <div class="scholar-footer">
+                            <span style="font-size: 0.8rem; color: #64748b; font-weight: 500;">
+                                <i class="fas fa-calendar-alt" style="margin-right: 4px;"></i> Joined: 2024 &bull; Institute Fellow
+                            </span>
+                            <div class="scholar-social-links">
+                                <a href="https://scholar.google.com" target="_blank" class="scholar-social-btn" title="Scholar Profile"><i class="fas fa-graduation-cap"></i></a>
+                                <a href="https://linkedin.com" target="_blank" class="scholar-social-btn" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="mailto:abhishek.soni.phd@juetguna.in" class="scholar-social-btn" title="Email"><i class="fas fa-envelope"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================== -->
+            <!-- 3. CENTERED HEADING: OUR TEAM              -->
+            <!-- (Team Members: Photo, Name & Area of Work) -->
+            <!-- ========================================== -->
+            <section id="our-team" aria-label="Our Team Members">
+                <div class="section-header-centered">
+                    <div class="section-kicker">
+                        <i class="fas fa-users-cog"></i> Research & Engineering Collaborators
+                    </div>
+                    <!-- Center Heading: OUR TEAM per user request -->
+                    <h2 class="center-heading">OUR TEAM</h2>
+                    <p class="section-subtitle">
+                        Student researchers, engineers, and contributors developing machine learning algorithms, benchmark suites, and virtual laboratory systems.
+                    </p>
+                </div>
+
+                <div class="team-grid" id="teamGridContainer">
+                    <!-- Member 1 -->
+                    <div class="team-member-card">
+                        <div class="member-header">
+                            <!-- Photo -->
+                            <img src="images/team/aditya_gupta.svg" alt="Aditya Gupta" class="member-photo" onerror="this.src='https://ui-avatars.com/api/?name=Aditya+Gupta&background=3b82f6&color=fff&size=120'">
+                            <div class="member-info">
+                                <!-- Name -->
+                                <h4>Aditya Gupta</h4>
+                                <div class="member-role">Lead Student Researcher & Developer</div>
+                                <div class="member-dept">B.Tech CSE &bull; JUET Guna</div>
+                            </div>
+                        </div>
+                        <!-- Area of Work (Clearly Highlighted) -->
+                        <div class="area-of-work-box">
+                            <div class="area-label"><i class="fas fa-laptop-code"></i> Area of Work</div>
+                            <div class="area-title">Intelligent Virtual Lab Architecture & In-Browser SQL Execution Engines</div>
+                            <div class="area-summary">Designed the client-side AlaSQL sandbox, real-time query validator, and automated scoring telemetry for JUET Virtual Lab.</div>
+                        </div>
+                        <div class="member-footer">
+                            <span class="tech-pill">Full-Stack & In-Memory DB</span>
+                            <div class="member-social-links">
+                                <a href="https://github.com" target="_blank" class="member-social-btn" title="GitHub"><i class="fab fa-github"></i></a>
+                                <a href="https://linkedin.com" target="_blank" class="member-social-btn" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="mailto:211b055@juetguna.in" class="member-social-btn" title="Email"><i class="fas fa-envelope"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Member 2 -->
+                    <div class="team-member-card">
+                        <div class="member-header">
+                            <!-- Photo -->
+                            <img src="images/team/neha_choudhary.svg" alt="Neha Choudhary" class="member-photo" onerror="this.src='https://ui-avatars.com/api/?name=Neha+Choudhary&background=ec4899&color=fff&size=120'">
+                            <div class="member-info">
+                                <!-- Name -->
+                                <h4>Neha Choudhary</h4>
+                                <div class="member-role">Undergraduate Research Assistant</div>
+                                <div class="member-dept">B.Tech CSE &bull; JUET Guna</div>
+                            </div>
+                        </div>
+                        <!-- Area of Work (Clearly Highlighted) -->
+                        <div class="area-of-work-box">
+                            <div class="area-label"><i class="fas fa-brain"></i> Area of Work</div>
+                            <div class="area-title">Open-World Classifier Benchmarking & Out-of-Distribution Data Pipelines</div>
+                            <div class="area-summary">Curation of multi-domain open-world text datasets and statistical evaluation against baseline Softmax thresholding methods.</div>
+                        </div>
+                        <div class="member-footer">
+                            <span class="tech-pill">Python & PyTorch</span>
+                            <div class="member-social-links">
+                                <a href="https://github.com" target="_blank" class="member-social-btn" title="GitHub"><i class="fab fa-github"></i></a>
+                                <a href="https://linkedin.com" target="_blank" class="member-social-btn" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="mailto:neha.c@juetguna.in" class="member-social-btn" title="Email"><i class="fas fa-envelope"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Member 3 -->
+                    <div class="team-member-card">
+                        <div class="member-header">
+                            <!-- Photo -->
+                            <img src="images/team/siddharth_jain.svg" alt="Siddharth Jain" class="member-photo" onerror="this.src='https://ui-avatars.com/api/?name=Siddharth+Jain&background=f59e0b&color=fff&size=120'">
+                            <div class="member-info">
+                                <!-- Name -->
+                                <h4>Siddharth Jain</h4>
+                                <div class="member-role">Research Contributor & Developer</div>
+                                <div class="member-dept">B.Tech CSE &bull; JUET Guna</div>
+                            </div>
+                        </div>
+                        <!-- Area of Work (Clearly Highlighted) -->
+                        <div class="area-of-work-box">
+                            <div class="area-label"><i class="fas fa-code-branch"></i> Area of Work</div>
+                            <div class="area-title">AST Parsing, Code Smell Detection & Static Analysis Pipelines</div>
+                            <div class="area-summary">Developed abstract syntax tree parsers to detect design smells, long methods, and god classes in open-source software repos.</div>
+                        </div>
+                        <div class="member-footer">
+                            <span class="tech-pill">Java & Static Analysis</span>
+                            <div class="member-social-links">
+                                <a href="https://github.com" target="_blank" class="member-social-btn" title="GitHub"><i class="fab fa-github"></i></a>
+                                <a href="https://linkedin.com" target="_blank" class="member-social-btn" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="mailto:siddharth.j@juetguna.in" class="member-social-btn" title="Email"><i class="fas fa-envelope"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Member 4 -->
+                    <div class="team-member-card">
+                        <div class="member-header">
+                            <!-- Photo -->
+                            <img src="images/team/priya_patel.svg" alt="Priya Patel" class="member-photo" onerror="this.src='https://ui-avatars.com/api/?name=Priya+Patel&background=10b981&color=fff&size=120'">
+                            <div class="member-info">
+                                <!-- Name -->
+                                <h4>Priya Patel</h4>
+                                <div class="member-role">Student ML Researcher</div>
+                                <div class="member-dept">B.Tech CSE &bull; JUET Guna</div>
+                            </div>
+                        </div>
+                        <!-- Area of Work (Clearly Highlighted) -->
+                        <div class="area-of-work-box">
+                            <div class="area-label"><i class="fas fa-heartbeat"></i> Area of Work</div>
+                            <div class="area-title">Deep Learning & Ensemble Classifiers for Medical Diagnostics</div>
+                            <div class="area-summary">Implemented ensemble CNN and Random Forest models for automated diabetic retinopathy and medical image segmentation.</div>
+                        </div>
+                        <div class="member-footer">
+                            <span class="tech-pill">Computer Vision & CNNs</span>
+                            <div class="member-social-links">
+                                <a href="https://github.com" target="_blank" class="member-social-btn" title="GitHub"><i class="fab fa-github"></i></a>
+                                <a href="https://linkedin.com" target="_blank" class="member-social-btn" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="mailto:priya.p@juetguna.in" class="member-social-btn" title="Email"><i class="fas fa-envelope"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Member 5 -->
+                    <div class="team-member-card">
+                        <div class="member-header">
+                            <!-- Photo -->
+                            <img src="images/team/rohan_sharma.svg" alt="Rohan Sharma" class="member-photo" onerror="this.src='https://ui-avatars.com/api/?name=Rohan+Sharma&background=6366f1&color=fff&size=120'">
+                            <div class="member-info">
+                                <!-- Name -->
+                                <h4>Rohan Sharma</h4>
+                                <div class="member-role">Data Science Associate</div>
+                                <div class="member-dept">B.Tech CSE &bull; JUET Guna</div>
+                            </div>
+                        </div>
+                        <!-- Area of Work (Clearly Highlighted) -->
+                        <div class="area-of-work-box">
+                            <div class="area-label"><i class="fas fa-comments"></i> Area of Work</div>
+                            <div class="area-title">NLP Corpus Extraction, Domain Adaptation & Semantic Embeddings</div>
+                            <div class="area-summary">Constructed high-density text embeddings and domain-shift benchmarks for evaluating classifier robustness on noisy text.</div>
+                        </div>
+                        <div class="member-footer">
+                            <span class="tech-pill">HuggingFace & Transformers</span>
+                            <div class="member-social-links">
+                                <a href="https://github.com" target="_blank" class="member-social-btn" title="GitHub"><i class="fab fa-github"></i></a>
+                                <a href="https://linkedin.com" target="_blank" class="member-social-btn" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="mailto:rohan.s@juetguna.in" class="member-social-btn" title="Email"><i class="fas fa-envelope"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Member 6 -->
+                    <div class="team-member-card">
+                        <div class="member-header">
+                            <!-- Photo -->
+                            <img src="images/team/ananya_verma.svg" alt="Ananya Verma" class="member-photo" onerror="this.src='https://ui-avatars.com/api/?name=Ananya+Verma&background=f43f5e&color=fff&size=120'">
+                            <div class="member-info">
+                                <!-- Name -->
+                                <h4>Ananya Verma</h4>
+                                <div class="member-role">UI/UX & Interactive Systems Designer</div>
+                                <div class="member-dept">B.Tech CSE &bull; JUET Guna</div>
+                            </div>
+                        </div>
+                        <!-- Area of Work (Clearly Highlighted) -->
+                        <div class="area-of-work-box">
+                            <div class="area-label"><i class="fas fa-palette"></i> Area of Work</div>
+                            <div class="area-title">Interactive Virtual Lab UI/UX & Educational Human-Computer Interaction</div>
+                            <div class="area-summary">Architected responsive user interfaces, real-time database schema diagrams, and interactive query progress trackers.</div>
+                        </div>
+                        <div class="member-footer">
+                            <span class="tech-pill">UI/UX & Modern CSS</span>
+                            <div class="member-social-links">
+                                <a href="https://github.com" target="_blank" class="member-social-btn" title="GitHub"><i class="fab fa-github"></i></a>
+                                <a href="https://linkedin.com" target="_blank" class="member-social-btn" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="mailto:ananya.v@juetguna.in" class="member-social-btn" title="Email"><i class="fas fa-envelope"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================== -->
+            <!-- 4. CALLOUT: JOIN OUR RESEARCH GROUP       -->
+            <!-- ========================================== -->
+            <section class="join-lab-banner">
+                <h3>Interested in Joining Our Research Lab?</h3>
+                <p>
+                    Dr. Jitendra Parmar is actively seeking enthusiastic undergraduate, postgraduate, and Ph.D. scholars passionate about Machine Learning, Open-World Classifiers, NLP, and intelligent software engineering. Interested students at JUET Guna are welcome to connect.
+                </p>
+                <a href="mailto:jitendra.parmar@juet.ac.in" class="join-btn">
+                    <i class="fas fa-paper-plane"></i> Get in Touch with Dr. Parmar &rarr;
+                </a>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2026 Dr. Jitendra Parmar. Department of CSE, JUET Guna. All rights reserved.</p>
+                <div class="social-links">
+                    <a href="https://scholar.google.com/citations?user=toHDoiwAAAAJ&hl=en&authuser=1" target="_blank" title="Google Scholar"><i class="fas fa-graduation-cap"></i></a>
+                    <a href="https://www.researchgate.net/profile/Jitendra-Parmar-9?ev=hdr_xprf" target="_blank" title="ResearchGate"><i class="fab fa-researchgate"></i></a>
+                    <a href="https://www.juet.ac.in/faculty/profile/dr-jitendra-parmar" target="_blank" title="JUET Profile"><i class="fas fa-university"></i></a>
+                    <a href="https://www.linkedin.com/in/dr-jitendra-parmar-phd-2bb8a499" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="mailto:jitendra.parmar@juet.ac.in" title="Email"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Navigation Toggle Script -->
+    <script>
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        if (hamburger && navMenu) {
+            hamburger.addEventListener('click', () => {
+                hamburger.classList.toggle('active');
+                navMenu.classList.toggle('active');
+            });
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    hamburger.classList.remove('active');
+                    navMenu.classList.remove('active');
+                });
+            });
+        }
+
+        // ==========================================
+        // DYNAMIC ADMIN SYNCHRONIZATION FOR TEAM
+        // ==========================================
+        function syncTeamDataFromAdmin() {
+            // 1. Check local cache
+            const cachedSch = localStorage.getItem('juet_admin_scholars');
+            if (cachedSch) {
+                try {
+                    const sch = JSON.parse(cachedSch);
+                    if (Array.isArray(sch) && sch.length > 0) renderScholars(sch);
+                } catch(e) {}
+            }
+            const cachedMem = localStorage.getItem('juet_admin_members');
+            if (cachedMem) {
+                try {
+                    const mem = JSON.parse(cachedMem);
+                    if (Array.isArray(mem) && mem.length > 0) renderMembers(mem);
+                } catch(e) {}
+            }
+
+            // 2. Fetch fresh data from backend
+            fetch('/api/admin/team')
+                .then(r => r.json())
+                .then(d => {
+                    if (d.success) {
+                        if (Array.isArray(d.scholars) && d.scholars.length > 0) {
+                            localStorage.setItem('juet_admin_scholars', JSON.stringify(d.scholars));
+                            renderScholars(d.scholars);
+                        }
+                        if (Array.isArray(d.members) && d.members.length > 0) {
+                            localStorage.setItem('juet_admin_members', JSON.stringify(d.members));
+                            renderMembers(d.members);
+                        }
+                    }
+                })
+                .catch(() => {});
+        }
+
+        function renderScholars(scholars) {
+            const container = document.getElementById('scholarsGridContainer');
+            if (!container || !scholars || scholars.length === 0) return;
+            container.innerHTML = scholars.map(s => {
+                const tags = Array.isArray(s.tags) ? s.tags : (s.tags ? s.tags.split(',') : []);
+                return `
+                    <div class="scholar-card">
+                        <div class="scholar-card-top">
+                            <img src="${s.photo || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(s.name) + '&background=6366f1&color=fff&size=150'}" alt="${escapeHtml(s.name)}" class="scholar-avatar" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(s.name)}&background=6366f1&color=fff&size=150'">
+                            <div class="scholar-meta">
+                                <h3>${escapeHtml(s.name)}</h3>
+                                <span class="scholar-role-pill"><i class="fas fa-award"></i> ${escapeHtml(s.role || 'Ph.D. Research Scholar')}</span>
+                                <div class="scholar-dept">${escapeHtml(s.dept || 'Department of CSE, JUET Guna')}</div>
+                            </div>
+                        </div>
+                        <div class="scholar-body">
+                            <div class="info-row">
+                                <span class="info-label"><i class="fas fa-microscope"></i> Primary Research Focus</span>
+                                <span class="info-value"><strong>${escapeHtml(s.focus || '')}</strong></span>
+                            </div>
+                            <p class="info-desc">${escapeHtml(s.desc || '')}</p>
+                            <div class="info-row">
+                                <span class="info-label"><i class="fas fa-user-check"></i> Academic Background</span>
+                                <span class="info-value">${escapeHtml(s.background || 'M.Tech CSE &bull; B.Tech CSE')}</span>
+                            </div>
+                            <div class="scholar-tags">
+                                ${tags.map(t => `<span class="scholar-tag">${escapeHtml(t.trim())}</span>`).join('')}
+                            </div>
+                        </div>
+                        <div class="scholar-footer">
+                            <span style="font-size: 0.8rem; color: #64748b; font-weight: 500;">
+                                <i class="fas fa-calendar-alt" style="margin-right: 4px;"></i> ${escapeHtml(s.joined || 'Joined: 2024 &bull; Institute Fellow')}
+                            </span>
+                            <div class="scholar-social-links">
+                                <a href="${s.scholarUrl || 'https://scholar.google.com'}" target="_blank" class="scholar-social-btn" title="Scholar Profile"><i class="fas fa-graduation-cap"></i></a>
+                                <a href="${s.linkedinUrl || 'https://linkedin.com'}" target="_blank" class="scholar-social-btn" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="mailto:${s.email || 'scholar@juetguna.in'}" class="scholar-social-btn" title="Email"><i class="fas fa-envelope"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderMembers(members) {
+            const container = document.getElementById('teamGridContainer');
+            if (!container || !members || members.length === 0) return;
+            container.innerHTML = members.map(m => `
+                <div class="team-member-card">
+                    <div class="member-header">
+                        <img src="${m.photo || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(m.name) + '&background=3b82f6&color=fff&size=120'}" alt="${escapeHtml(m.name)}" class="member-photo" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(m.name)}&background=3b82f6&color=fff&size=120'">
+                        <div class="member-info">
+                            <h4>${escapeHtml(m.name)}</h4>
+                            <div class="member-role">${escapeHtml(m.role || 'Student Researcher & Developer')}</div>
+                            <div class="member-dept">${escapeHtml(m.dept || 'B.Tech CSE &bull; JUET Guna')}</div>
+                        </div>
+                    </div>
+                    <div class="area-of-work-box">
+                        <div class="area-label"><i class="fas fa-laptop-code"></i> Area of Work</div>
+                        <div class="area-title">${escapeHtml(m.areaTitle || '')}</div>
+                        <div class="area-summary">${escapeHtml(m.areaSummary || '')}</div>
+                    </div>
+                    <div class="member-footer">
+                        <span class="tech-pill">${escapeHtml(m.techStack || 'Software Systems')}</span>
+                        <div class="member-social-links">
+                            <a href="${m.githubUrl || 'https://github.com'}" target="_blank" class="member-social-btn" title="GitHub"><i class="fab fa-github"></i></a>
+                            <a href="${m.linkedinUrl || 'https://linkedin.com'}" target="_blank" class="member-social-btn" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="mailto:${m.email || 'student@juetguna.in'}" class="member-social-btn" title="Email"><i class="fas fa-envelope"></i></a>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        document.addEventListener('DOMContentLoaded', syncTeamDataFromAdmin);
+    </script>
+</body>
+</html>

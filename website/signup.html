@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign in with Google - Dr. Jitendra Parmar Lab</title>
+    <link rel="icon" type="image/png" href="dr_parmar.png">
+    <link rel="apple-touch-icon" href="dr_parmar.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Centralized API Configuration -->
+    <script src="config.js"></script>
+    <!-- Google Official Identity Services SDK -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        :root {
+            --primary: #0b57d0;
+            --primary-hover: #0842a0;
+            --surface: #ffffff;
+            --background: #f8fafc;
+            --border: #dadce0;
+            --text-main: #1f1f1f;
+            --text-muted: #5f6368;
+            --radius-card: 24px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 24px 16px;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 480px;
+        }
+
+        .auth-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-card);
+            padding: 36px 32px 32px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Top Progress Bar Animation during Google OAuth sync */
+        .progress-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: #e0e2ec;
+            display: none;
+            overflow: hidden;
+        }
+        .progress-line::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 50%;
+            background-color: var(--primary);
+            animation: googleProgress 1.2s infinite ease-in-out;
+        }
+        @keyframes googleProgress {
+            0% { left: -40%; width: 30%; }
+            50% { left: 30%; width: 60%; }
+            100% { left: 100%; width: 40%; }
+        }
+
+        .lab-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #eff6ff;
+            color: #1d4ed8;
+            padding: 5px 12px;
+            border-radius: 100px;
+            font-size: 0.76rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .header-section {
+            margin-bottom: 24px;
+        }
+
+        .auth-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 6px;
+            line-height: 1.25;
+        }
+
+        .auth-subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.45;
+        }
+
+        .info-pill {
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 12px 14px;
+            font-size: 0.82rem;
+            color: #334155;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 24px;
+            line-height: 1.45;
+        }
+        .info-pill i {
+            color: var(--primary);
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        /* Official Google Button Host Container */
+        .gsi-button-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 50px;
+            margin-bottom: 16px;
+        }
+
+        /* Custom Official-Style OAuth2 Fallback / Trigger Button */
+        .btn-google-oauth {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            height: 48px;
+            background: #ffffff;
+            color: #1f1f1f;
+            border: 1px solid #dadce0;
+            border-radius: 24px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            margin-bottom: 16px;
+        }
+        .btn-google-oauth:hover {
+            background-color: #f8fafc;
+            border-color: #c7c9cc;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+        }
+
+        .btn-google-oauth svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        /* Status & Alert Box */
+        .status-box {
+            display: none;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 0.84rem;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+        .status-box.success {
+            display: block;
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            color: #065f46;
+        }
+        .status-box.error {
+            display: block;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #b91c1c;
+        }
+        .status-box.info {
+            display: block;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: #1e40af;
+        }
+
+        /* Config Card if Google Client ID not yet entered */
+        .config-card {
+            display: none;
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            border-radius: 14px;
+            padding: 20px;
+            margin-top: 10px;
+            margin-bottom: 16px;
+        }
+        .config-card.active {
+            display: block;
+        }
+        .config-title {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .config-desc {
+            font-size: 0.8rem;
+            color: #64748b;
+            line-height: 1.45;
+            margin-bottom: 14px;
+        }
+        .config-input {
+            width: 100%;
+            height: 42px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 0 12px;
+            font-size: 0.85rem;
+            font-family: monospace;
+            outline: none;
+            margin-bottom: 10px;
+            background: #ffffff;
+        }
+        .config-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(11, 87, 208, 0.15);
+        }
+        .btn-save-client {
+            background: var(--primary);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 18px;
+            font-size: 0.84rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.15s ease;
+        }
+        .btn-save-client:hover {
+            background: var(--primary-hover);
+        }
+
+        .steps-list {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid #e2e8f0;
+            font-size: 0.78rem;
+            color: #64748b;
+        }
+        .steps-list ol {
+            padding-left: 18px;
+            margin-top: 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .auth-footer-links {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 24px;
+            padding-top: 18px;
+            border-top: 1px solid #f1f5f9;
+            font-size: 0.8rem;
+        }
+        .auth-footer-links a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .auth-footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        .auth-bottom-nav {
+            margin-top: 18px;
+            text-align: center;
+            font-size: 0.78rem;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <!-- Top Animated Progress Loader -->
+            <div class="progress-line" id="progressLine"></div>
+
+            <!-- Lab Badge -->
+            <div class="lab-badge">
+                <i class="fas fa-flask"></i> Dr. Jitendra Parmar Lab
+            </div>
+
+            <!-- Header Section -->
+            <div class="header-section">
+                <h1 class="auth-title">Sign in with Google</h1>
+                <p class="auth-subtitle">
+                    Official Google OAuth 2.0 authentication for the JUET SQL Virtual Lab telemetry platform.
+                </p>
+            </div>
+
+            <!-- Informational Banner -->
+            <div class="info-pill">
+                <i class="fas fa-shield-alt"></i>
+                <span>Your Google authenticated <strong>Name</strong> and <strong>Email</strong> will be recorded to securely track your solved queries and live scoring on the Admin Portal.</span>
+            </div>
+
+            <!-- Real-time Status Box -->
+            <div id="authStatusBox" class="status-box"></div>
+
+            <!-- Google Identity Services Official Button Mount -->
+            <div class="gsi-button-wrap" id="gsiButtonWrapper">
+                <div id="googleOfficialButton"></div>
+            </div>
+
+            <!-- Secondary OAuth 2.0 Popup Trigger Button -->
+            <button type="button" class="btn-google-oauth" id="btnGooglePopup" onclick="triggerGoogleOAuthPopup()">
+                <svg viewBox="0 0 48 48">
+                    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+                    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                </svg>
+                <span id="btnPopupText">Continue with Google Account</span>
+            </button>
+
+            <!-- Configuration Helper Box (Active if Client ID is not yet provided or when clicking Setup) -->
+            <div class="config-card" id="configCard">
+                <div class="config-title">
+                    <i class="fab fa-google" style="color: #4285f4;"></i>
+                    <span>Connect Google Cloud OAuth 2.0</span>
+                </div>
+                <p class="config-desc">
+                    To activate Google official one-click authentication, paste your Google Cloud Web Client ID below. It will be saved into the lab system permanently.
+                </p>
+                <input type="text" id="clientIdInput" class="config-input" placeholder="e.g. 1234567890-xxx.apps.googleusercontent.com">
+                <button type="button" class="btn-save-client" onclick="saveGoogleClientId()">
+                    <i class="fas fa-check-circle"></i> Save & Enable Google OAuth
+                </button>
+
+                <div class="steps-list">
+                    <strong>Quick Setup Guide:</strong>
+                    <ol>
+                        <li>Open <a href="https://console.cloud.google.com/apis/credentials" target="_blank" style="color: #0b57d0;">Google Cloud Console &rarr; Credentials</a></li>
+                        <li>Create Credentials &rarr; <strong>OAuth client ID</strong> &rarr; <strong>Web application</strong></li>
+                        <li>Add Authorized JavaScript origin: <code style="background: #e2e8f0; padding: 2px 4px; border-radius: 4px;" id="originCode">http://localhost:5001</code></li>
+                        <li>Paste Client ID above and click Save.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Footer Links -->
+            <div class="auth-footer-links">
+                <a href="sql-practice.html">
+                    <i class="fas fa-arrow-left"></i> Back to SQL Lab
+                </a>
+                <a href="javascript:void(0)" onclick="toggleConfigCard()" id="toggleConfigBtn">
+                    <i class="fas fa-cog"></i> OAuth Settings
+                </a>
+            </div>
+        </div>
+
+        <div class="auth-bottom-nav">
+            Jaypee University of Engineering and Technology (JUET), Guna &bull; Dr. Jitendra Parmar Lab
+        </div>
+    </div>
+
+    <script>
+        let currentClientId = '';
+        let googleTokenClient = null;
+
+        function getApiBase() {
+            return (window.location.protocol.startsWith('http') && (window.location.port === '5001' || window.location.port === ''))
+                ? ''
+                : 'http://localhost:5001';
+        }
+
+        function setStatus(type, message) {
+            const box = document.getElementById('authStatusBox');
+            box.className = `status-box ${type}`;
+            box.innerHTML = message;
+            box.style.display = 'block';
+        }
+
+        function showProgress(show) {
+            document.getElementById('progressLine').style.display = show ? 'block' : 'none';
+        }
+
+        // 1. Fetch Google Client ID on Load
+        async function initGoogleAuth() {
+            try {
+                document.getElementById('originCode').textContent = window.location.origin;
+            } catch(e) {}
+
+            try {
+                const apiBase = getApiBase();
+                const res = await fetch(`${apiBase}/api/auth/google-client-id`).catch(() => null);
+                if (res && res.ok) {
+                    const data = await res.json();
+                    if (data && data.clientId && data.clientId.trim()) {
+                        currentClientId = data.clientId.trim();
+                        document.getElementById('clientIdInput').value = currentClientId;
+                        setupGoogleSDK(currentClientId);
+                        return;
+                    }
+                }
+            } catch (err) {
+                console.warn('Google Client ID check error:', err);
+            }
+
+            // If no client ID configured yet, display configuration card
+            document.getElementById('configCard').classList.add('active');
+            setStatus('info', '<i class="fas fa-info-circle"></i> Please enter your <strong>Google OAuth 2.0 Web Client ID</strong> below to activate official Google sign-in.');
+        }
+
+        // 2. Setup Google Identity Services SDK
+        function setupGoogleSDK(clientId) {
+            if (!clientId) return;
+
+            // Wait for Google SDK to load
+            const checkSDK = setInterval(() => {
+                if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
+                    clearInterval(checkSDK);
+
+                    try {
+                        // A. Initialize Official Google Sign-In with Google (GSI)
+                        google.accounts.id.initialize({
+                            client_id: clientId,
+                            callback: handleGoogleCredentialResponse,
+                            auto_select: false,
+                            cancel_on_tap_outside: true
+                        });
+
+                        // Render official Google button
+                        const btnDiv = document.getElementById('googleOfficialButton');
+                        btnDiv.innerHTML = '';
+                        google.accounts.id.renderButton(btnDiv, {
+                            type: 'standard',
+                            theme: 'outline',
+                            size: 'large',
+                            text: 'continue_with',
+                            shape: 'pill',
+                            logo_alignment: 'left',
+                            width: 380
+                        });
+
+                        // Optionally display One-Tap
+                        google.accounts.id.prompt();
+
+                        // B. Initialize OAuth 2.0 Token Client for Popup Fallback
+                        if (google.accounts.oauth2) {
+                            googleTokenClient = google.accounts.oauth2.initTokenClient({
+                                client_id: clientId,
+                                scope: 'openid email profile',
+                                callback: handleOAuth2TokenResponse
+                            });
+                        }
+
+                        document.getElementById('configCard').classList.remove('active');
+                        setStatus('info', '<i class="fas fa-check-circle" style="color: #10b981;"></i> Google Official OAuth 2.0 is active. Click below to authenticate.');
+                    } catch (e) {
+                        console.error('Error initializing Google Identity Services:', e);
+                    }
+                }
+            }, 100);
+
+            // Timeout after 8 seconds
+            setTimeout(() => clearInterval(checkSDK), 8000);
+        }
+
+        // 3. Handle GSI ID Token response (JWT)
+        async function handleGoogleCredentialResponse(response) {
+            if (!response || !response.credential) {
+                setStatus('error', '<i class="fas fa-exclamation-triangle"></i> Google authentication failed. Please try again.');
+                return;
+            }
+
+            showProgress(true);
+            setStatus('info', '<i class="fas fa-spinner fa-spin"></i> Verifying Google credentials and syncing progress...');
+
+            try {
+                // Decode token payload
+                const payload = parseJwt(response.credential);
+                const email = payload.email || '';
+                const name = payload.name || payload.given_name || 'JUET Student';
+                const picture = payload.picture || '';
+
+                await submitGoogleAuthToBackend({
+                    name: name,
+                    email: email,
+                    picture: picture,
+                    credential: response.credential
+                });
+            } catch (err) {
+                showProgress(false);
+                setStatus('error', `<i class="fas fa-exclamation-circle"></i> Error during Google verification: ${err.message}`);
+            }
+        }
+
+        // 4. Handle OAuth 2.0 Access Token response (Popup Flow)
+        async function handleOAuth2TokenResponse(tokenResponse) {
+            if (!tokenResponse || !tokenResponse.access_token) {
+                showProgress(false);
+                if (tokenResponse && tokenResponse.error) {
+                    setStatus('error', `<i class="fas fa-times-circle"></i> Google OAuth canceled: ${tokenResponse.error}`);
+                }
+                return;
+            }
+
+            showProgress(true);
+            setStatus('info', '<i class="fas fa-spinner fa-spin"></i> Fetching profile from Google OAuth2 API...');
+
+            try {
+                // Call Google Userinfo API
+                const userinfoRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                    headers: { Authorization: `Bearer ${tokenResponse.access_token}` }
+                });
+                const prof = await userinfoRes.json();
+
+                await submitGoogleAuthToBackend({
+                    name: prof.name || 'JUET Student',
+                    email: prof.email,
+                    picture: prof.picture || ''
+                });
+            } catch (err) {
+                showProgress(false);
+                setStatus('error', `<i class="fas fa-exclamation-circle"></i> Failed to retrieve Google profile: ${err.message}`);
+            }
+        }
+
+        // 5. Trigger Google OAuth Popup
+        function triggerGoogleOAuthPopup() {
+            if (!currentClientId) {
+                document.getElementById('configCard').classList.add('active');
+                document.getElementById('clientIdInput').focus();
+                setStatus('error', '<i class="fas fa-exclamation-triangle"></i> Please configure a Google OAuth Client ID first.');
+                return;
+            }
+
+            if (googleTokenClient) {
+                showProgress(true);
+                googleTokenClient.requestAccessToken({ prompt: 'select_account' });
+            } else if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
+                google.accounts.id.prompt();
+            } else {
+                setStatus('error', '<i class="fas fa-exclamation-triangle"></i> Google SDK is still loading. Please check your internet connection.');
+            }
+        }
+
+        // 6. Send authenticated user details to backend to save in SQLite & student store
+        async function submitGoogleAuthToBackend({ name, email, picture, credential }) {
+            try {
+                const apiBase = getApiBase();
+                const res = await fetch(`${apiBase}/api/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: name,
+                        email: email,
+                        picture: picture,
+                        credential: credential
+                    })
+                });
+
+                const data = await res.json();
+
+                if (!res.ok || !data.success) {
+                    showProgress(false);
+                    setStatus('error', `<i class="fas fa-ban"></i> ${data.error || 'Login verification failed.'}`);
+                    return;
+                }
+
+                // Persistence in localStorage
+                const userObj = {
+                    name: data.user.name || name,
+                    email: data.user.email || email,
+                    roll: data.user.roll || email.split('@')[0].toUpperCase(),
+                    picture: data.user.picture || picture || ''
+                };
+                localStorage.setItem('juet_sql_user', JSON.stringify(userObj));
+
+                if (Array.isArray(data.user.solved)) {
+                    localStorage.setItem('juet_sql_solved', JSON.stringify(data.user.solved));
+                    localStorage.setItem(`juet_sql_solved_${userObj.email}`, JSON.stringify(data.user.solved));
+                }
+                if (data.user.points !== undefined) {
+                    localStorage.setItem('juet_sql_points', data.user.points.toString());
+                    localStorage.setItem(`juet_sql_points_${userObj.email}`, data.user.points.toString());
+                }
+
+                showProgress(false);
+                setStatus('success', `<i class="fas fa-check-circle"></i> <strong>Success!</strong> Authenticated as <strong>${escapeHtml(userObj.name)}</strong> (${escapeHtml(userObj.email)}). Redirecting to SQL Virtual Lab...`);
+
+                setTimeout(() => {
+                    window.location.href = 'sql-practice.html';
+                }, 1200);
+
+            } catch (err) {
+                showProgress(false);
+                setStatus('error', `<i class="fas fa-exclamation-triangle"></i> Network error connecting to backend: ${err.message}`);
+            }
+        }
+
+        // 7. Save Client ID to backend settings
+        async function saveGoogleClientId() {
+            const input = document.getElementById('clientIdInput');
+            const val = (input.value || '').trim();
+
+            if (!val) {
+                setStatus('error', '<i class="fas fa-exclamation-circle"></i> Please enter a valid Google Client ID.');
+                return;
+            }
+
+            showProgress(true);
+            try {
+                const apiBase = getApiBase();
+                const res = await fetch(`${apiBase}/api/auth/google-client-id`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ clientId: val })
+                });
+
+                const data = await res.json();
+                showProgress(false);
+
+                if (res.ok && data.success) {
+                    currentClientId = val;
+                    setupGoogleSDK(currentClientId);
+                    setStatus('success', '<i class="fas fa-check-circle"></i> Google OAuth Client ID saved! Official Google sign-in is now initialized.');
+                } else {
+                    setStatus('error', `<i class="fas fa-times-circle"></i> Failed to save Client ID: ${data.error || 'Server error'}`);
+                }
+            } catch (err) {
+                showProgress(false);
+                setStatus('error', `<i class="fas fa-exclamation-triangle"></i> Connection error: ${err.message}`);
+            }
+        }
+
+        function toggleConfigCard() {
+            const card = document.getElementById('configCard');
+            card.classList.toggle('active');
+        }
+
+        function parseJwt(token) {
+            try {
+                const base64Url = token.split('.')[1];
+                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(''));
+                return JSON.parse(jsonPayload);
+            } catch(e) {
+                return {};
+            }
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initGoogleAuth();
+        });
+    </script>
+</body>
+</html>

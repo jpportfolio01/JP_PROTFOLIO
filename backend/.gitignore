@@ -1,0 +1,15 @@
+# Environment Variables & Secrets
+.env
+.env.*
+*.env
+!*.env.example
+
+# Dependencies
+node_modules/
+
+# OS Metadata
+.DS_Store
+
+# Logs
+*.log
+

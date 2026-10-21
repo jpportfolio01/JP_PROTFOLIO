@@ -1,0 +1,16 @@
+{
+  "name": "jitendra-parmar-lab-root",
+  "version": "1.0.0",
+  "description": "Root workspace runner for Dr. Jitendra Parmar Academic Portal & JUET Virtual Lab Backend",
+  "scripts": {
+    "start": "cd backend && npm start",
+    "backend": "cd backend && npm start",
+    "backend:dev": "cd backend && npm run dev",
+    "frontend": "cd frontend && npx serve -l 3000 .",
+    "build": "cd backend && npm install",
+    "generate-html": "node backend/generate-html.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

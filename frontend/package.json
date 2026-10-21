@@ -1,0 +1,8 @@
+{
+  "name": "dr-jitendra-parmar-frontend",
+  "version": "1.0.0",
+  "description": "Frontend static suite for Dr. Jitendra Parmar Academic Portfolio, AnveshanAI, and Virtual Lab",
+  "scripts": {
+    "start": "npx serve -l 3000 ."
+  }
+}

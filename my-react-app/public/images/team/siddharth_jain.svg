@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGradSiddharth" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#ea580c" />
+    </linearGradient>
+  </defs>
+  <rect width="200" height="200" rx="100" fill="url(#bgGradSiddharth)" />
+  <!-- Shoulders -->
+  <path d="M40 200 C40 145 70 135 100 135 C130 135 160 145 160 200 Z" fill="#292524" />
+  <path d="M80 145 L100 175 L120 145 Z" fill="#f8fafc" />
+  <!-- Neck -->
+  <rect x="88" y="115" width="24" height="25" rx="5" fill="#f5c28e" />
+  <!-- Face -->
+  <ellipse cx="100" cy="85" rx="34" ry="40" fill="#fcd34d" />
+  <!-- Hair & Short beard -->
+  <path d="M64 80 C60 48 140 48 136 80 C130 52 110 50 100 50 C80 50 70 55 64 80 Z" fill="#292524" />
+  <!-- Subtle stylish beard / stubble -->
+  <path d="M78 95 C78 120 100 128 100 128 C100 128 122 120 122 95 C122 115 110 122 100 122 C90 122 78 115 78 95 Z" fill="#44403c" opacity="0.65" />
+  <!-- Eyes -->
+  <circle cx="86" cy="85" r="3.5" fill="#1c1917" />
+  <circle cx="114" cy="85" r="3.5" fill="#1c1917" />
+  <circle cx="87" cy="84" r="1.2" fill="#ffffff" />
+  <circle cx="115" cy="84" r="1.2" fill="#ffffff" />
+  <!-- Eyebrows -->
+  <path d="M80 77 Q86 73 92 76" stroke="#1c1917" stroke-width="2.5" stroke-linecap="round" fill="none" />
+  <path d="M108 76 Q114 73 120 77" stroke="#1c1917" stroke-width="2.5" stroke-linecap="round" fill="none" />
+  <!-- Nose -->
+  <path d="M100 87 L98 95 L103 95" stroke="#d97706" stroke-width="1.8" stroke-linecap="round" fill="none" />
+  <!-- Smile -->
+  <path d="M92 105 Q100 112 108 105" stroke="#78350f" stroke-width="2.2" stroke-linecap="round" fill="none" />
+</svg>

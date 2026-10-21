@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Publications & Research Papers | Dr. Jitendra Parmar - JUET Guna</title>
+    <meta name="title" content="Publications & Research Papers | Dr. Jitendra Parmar - JUET Guna">
+    <meta name="description" content="Explore research publications by Dr. Jitendra Parmar in ACM Computing Surveys (IF: 30.4), Information Processing & Management (IF: 8.1), and Journal of Systems & Software (IF: 4.1). Specialized in Open-World Machine Learning, NLP, and AI.">
+    <meta name="keywords" content="Jitendra Parmar Publications, Dr. Jitendra Parmar Research Papers, Jitendra Parmar ACM Computing Surveys, Jitendra Parmar Google Scholar, Jitendra Parmar JUET Guna, Open-World Machine Learning, Unseen Class Identification, Text Classification, Code Smells, Few-Shot Learning">
+    <meta name="author" content="Dr. Jitendra Parmar">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+
+    <!-- Favicon: Dr. Jitendra Parmar Photo -->
+    <link rel="icon" type="image/png" href="dr_parmar.png">
+    <link rel="apple-touch-icon" href="dr_parmar.png">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Dr. Jitendra Parmar Academic Portfolio">
+    <meta property="og:title" content="Publications & Research Papers | Dr. Jitendra Parmar - JUET Guna">
+    <meta property="og:description" content="Explore high-impact research papers by Dr. Jitendra Parmar in ACM CSUR, Elsevier IPM, and JSS on Open-World Machine Learning, NLP, and Software Systems.">
+    <meta property="og:image" content="dr_parmar.png">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Publications & Research Papers | Dr. Jitendra Parmar - JUET Guna">
+    <meta name="twitter:description" content="Explore high-impact research papers by Dr. Jitendra Parmar on Open-World Machine Learning, NLP, and Software Systems.">
+    <meta name="twitter:image" content="dr_parmar.png">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": "Research Publications of Dr. Jitendra Parmar",
+      "description": "Scientific journal articles, conference papers, and book chapters authored by Dr. Jitendra Parmar (JUET Guna).",
+      "author": {
+        "@type": "Person",
+        "name": "Dr. Jitendra Parmar",
+        "jobTitle": "Assistant Professor (Senior Grade)",
+        "affiliation": "Jaypee University of Engineering and Technology (JUET), Guna"
+      }
+    }
+    </script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="publications.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation Bar - Exactly aligned with index.html -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html" style="text-decoration: none; color: inherit;">
+                    <h2>Dr. Jitendra Parmar</h2>
+                </a>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="index.html#about" class="nav-link">About</a>
+                <a href="publications.html" class="nav-link" style="color: #667eea; font-weight: 700;">Publications</a>
+                <a href="projects.html" class="nav-link">AnveshanAI</a>
+                <a href="sql-practice.html" class="nav-link">Virtual Lab</a>
+                <a href="team.html" class="nav-link">Team</a>
+                <a href="index.html#contact" class="nav-link">Contact</a>
+            </div>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Publications Content -->
+    <main class="publications-page">
+        <!-- Hero Header -->
+        <header class="publications-header">
+            <p class="publications-kicker"><i class="fas fa-microscope" style="margin-right: 6px;"></i> Research Output</p>
+            <h1>Publications</h1>
+            <p class="publications-subtitle">
+                High-impact SCI-Q1 journal articles, IEEE international conference papers, and book chapters in Machine Learning, Open-World Classifiers, and Software Engineering.
+            </p>
+
+            <!-- Quick Summary Statistics -->
+            <div class="publications-stats-bar">
+                <div class="stat-pill">
+                    <i class="fas fa-layer-group" style="color: #6366f1;"></i>
+                    <span>Total Publications: <strong id="stat-total">18</strong></span>
+                </div>
+                <div class="stat-pill">
+                    <i class="fas fa-book-open" style="color: #059669;"></i>
+                    <span>Journal Articles: <strong id="stat-journal">4</strong></span>
+                </div>
+                <div class="stat-pill">
+                    <i class="fas fa-users" style="color: #2563eb;"></i>
+                    <span>Conference Papers: <strong id="stat-conference">14</strong></span>
+                </div>
+                <div class="stat-pill">
+                    <i class="fas fa-star" style="color: #f59e0b;"></i>
+                    <span>Highest Impact Factor: <strong>30.4 (CSUR)</strong></span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Publication Type Selection (All, Journal, Conference - No Yearwise Filter) -->
+        <section class="type-selection" aria-label="Publication type filter">
+            <h3>Select Publication Category</h3>
+            <div class="type-buttons">
+                <button type="button" class="type-btn active" data-type="all">
+                    <i class="fas fa-globe"></i>
+                    <span>All Publications</span>
+                    <span class="count-badge" id="count-all">18</span>
+                </button>
+                <button type="button" class="type-btn" data-type="journal">
+                    <i class="fas fa-book-open"></i>
+                    <span>Journal Articles</span>
+                    <span class="count-badge" id="count-journal">4</span>
+                </button>
+                <button type="button" class="type-btn" data-type="conference">
+                    <i class="fas fa-users"></i>
+                    <span>Conference Papers</span>
+                    <span class="count-badge" id="count-conference">14</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Search and Showing Count -->
+        <div class="publications-search-row">
+            <div class="search-input-wrapper">
+                <i class="fas fa-search"></i>
+                <input type="text" id="pub-search" class="publications-search-input" placeholder="Search by paper title, co-author, venue, or keyword...">
+            </div>
+            <div class="showing-count" id="showing-count-text">
+                Showing all 18 publications
+            </div>
+        </div>
+
+        <!-- Publications List Container (Rendered dynamically via publications.js) -->
+        <section class="publications-container" id="publications-container" aria-live="polite">
+            <!-- Dynamic publication cards injected here -->
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2026 Dr. Jitendra Parmar. Department of CSE, JUET Guna. All rights reserved.</p>
+                <div class="social-links">
+                    <a href="https://scholar.google.com/citations?user=toHDoiwAAAAJ&hl=en&authuser=1" target="_blank" title="Google Scholar"><i class="fas fa-graduation-cap"></i></a>
+                    <a href="https://www.researchgate.net/profile/Jitendra-Parmar-9?ev=hdr_xprf" target="_blank" title="ResearchGate"><i class="fab fa-researchgate"></i></a>
+                    <a href="https://www.juet.ac.in/faculty/profile/dr-jitendra-parmar" target="_blank" title="JUET Profile"><i class="fas fa-university"></i></a>
+                    <a href="https://www.linkedin.com/in/dr-jitendra-parmar-phd-2bb8a499" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="mailto:jitendra.parmar@juet.ac.in" title="Email"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="config.js"></script>
+    <script src="publications.js"></script>
+</body>
+</html>
