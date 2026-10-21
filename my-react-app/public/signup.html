@@ -208,85 +208,10 @@
             color: #1e40af;
         }
 
-        /* Config Card if Google Client ID not yet entered */
-        .config-card {
-            display: none;
-            background: #f8fafc;
-            border: 1px dashed #cbd5e1;
-            border-radius: 14px;
-            padding: 20px;
-            margin-top: 10px;
-            margin-bottom: 16px;
-        }
-        .config-card.active {
-            display: block;
-        }
-        .config-title {
-            font-size: 0.92rem;
-            font-weight: 700;
-            color: #0f172a;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 8px;
-        }
-        .config-desc {
-            font-size: 0.8rem;
-            color: #64748b;
-            line-height: 1.45;
-            margin-bottom: 14px;
-        }
-        .config-input {
-            width: 100%;
-            height: 42px;
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
-            padding: 0 12px;
-            font-size: 0.85rem;
-            font-family: monospace;
-            outline: none;
-            margin-bottom: 10px;
-            background: #ffffff;
-        }
-        .config-input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(11, 87, 208, 0.15);
-        }
-        .btn-save-client {
-            background: var(--primary);
-            color: #ffffff;
-            border: none;
-            border-radius: 8px;
-            padding: 10px 18px;
-            font-size: 0.84rem;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            transition: background 0.15s ease;
-        }
-        .btn-save-client:hover {
-            background: var(--primary-hover);
-        }
-
-        .steps-list {
-            margin-top: 14px;
-            padding-top: 14px;
-            border-top: 1px solid #e2e8f0;
-            font-size: 0.78rem;
-            color: #64748b;
-        }
-        .steps-list ol {
-            padding-left: 18px;
-            margin-top: 6px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
         .auth-footer-links {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: center;
             margin-top: 24px;
             padding-top: 18px;
             border-top: 1px solid #f1f5f9;
@@ -357,38 +282,10 @@
                 <span id="btnPopupText">Continue with Google Account</span>
             </button>
 
-            <!-- Configuration Helper Box (Active if Client ID is not yet provided or when clicking Setup) -->
-            <div class="config-card" id="configCard">
-                <div class="config-title">
-                    <i class="fab fa-google" style="color: #4285f4;"></i>
-                    <span>Connect Google Cloud OAuth 2.0</span>
-                </div>
-                <p class="config-desc">
-                    To activate Google official one-click authentication, paste your Google Cloud Web Client ID below. It will be saved into the lab system permanently.
-                </p>
-                <input type="text" id="clientIdInput" class="config-input" placeholder="e.g. 1234567890-xxx.apps.googleusercontent.com">
-                <button type="button" class="btn-save-client" onclick="saveGoogleClientId()">
-                    <i class="fas fa-check-circle"></i> Save & Enable Google OAuth
-                </button>
-
-                <div class="steps-list">
-                    <strong>Quick Setup Guide:</strong>
-                    <ol>
-                        <li>Open <a href="https://console.cloud.google.com/apis/credentials" target="_blank" style="color: #0b57d0;">Google Cloud Console &rarr; Credentials</a></li>
-                        <li>Create Credentials &rarr; <strong>OAuth client ID</strong> &rarr; <strong>Web application</strong></li>
-                        <li>Add Authorized JavaScript origin: <code style="background: #e2e8f0; padding: 2px 4px; border-radius: 4px;" id="originCode">http://localhost:5001</code></li>
-                        <li>Paste Client ID above and click Save.</li>
-                    </ol>
-                </div>
-            </div>
-
             <!-- Footer Links -->
             <div class="auth-footer-links">
                 <a href="sql-practice.html">
                     <i class="fas fa-arrow-left"></i> Back to SQL Lab
-                </a>
-                <a href="javascript:void(0)" onclick="toggleConfigCard()" id="toggleConfigBtn">
-                    <i class="fas fa-cog"></i> OAuth Settings
                 </a>
             </div>
         </div>
@@ -422,17 +319,12 @@
         // 1. Fetch Google Client ID on Load
         async function initGoogleAuth() {
             try {
-                document.getElementById('originCode').textContent = window.location.origin;
-            } catch(e) {}
-
-            try {
                 const apiBase = getApiBase();
                 const res = await fetch(`${apiBase}/api/auth/google-client-id`).catch(() => null);
                 if (res && res.ok) {
                     const data = await res.json();
                     if (data && data.clientId && data.clientId.trim()) {
                         currentClientId = data.clientId.trim();
-                        document.getElementById('clientIdInput').value = currentClientId;
                         setupGoogleSDK(currentClientId);
                         return;
                     }
@@ -441,9 +333,15 @@
                 console.warn('Google Client ID check error:', err);
             }
 
-            // If no client ID configured yet, display configuration card
-            document.getElementById('configCard').classList.add('active');
-            setStatus('info', '<i class="fas fa-info-circle"></i> Please enter your <strong>Google OAuth 2.0 Web Client ID</strong> below to activate official Google sign-in.');
+            const storedClientId = localStorage.getItem('juet_google_client_id');
+            if (storedClientId && storedClientId.trim()) {
+                currentClientId = storedClientId.trim();
+                setupGoogleSDK(currentClientId);
+                return;
+            }
+
+            // Ready for direct student authentication
+            setStatus('info', '<i class="fas fa-graduation-cap"></i> Click <strong>Continue with Google Account</strong> below to authenticate.');
         }
 
         // 2. Setup Google Identity Services SDK
@@ -477,10 +375,10 @@
                             width: 380
                         });
 
-                        // Optionally display One-Tap
+                        // Automatically trigger Google One-Tap prompt
                         google.accounts.id.prompt();
 
-                        // B. Initialize OAuth 2.0 Token Client for Popup Fallback
+                        // B. Initialize OAuth 2.0 Token Client for Direct Popup Flow
                         if (google.accounts.oauth2) {
                             googleTokenClient = google.accounts.oauth2.initTokenClient({
                                 client_id: clientId,
@@ -489,8 +387,7 @@
                             });
                         }
 
-                        document.getElementById('configCard').classList.remove('active');
-                        setStatus('info', '<i class="fas fa-check-circle" style="color: #10b981;"></i> Google Official OAuth 2.0 is active. Click below to authenticate.');
+                        setStatus('info', '<i class="fas fa-check-circle" style="color: #10b981;"></i> Google Official OAuth 2.0 is active. Click below to sign in.');
                     } catch (e) {
                         console.error('Error initializing Google Identity Services:', e);
                     }
@@ -563,20 +460,18 @@
 
         // 5. Trigger Google OAuth Popup
         function triggerGoogleOAuthPopup() {
-            if (!currentClientId) {
-                document.getElementById('configCard').classList.add('active');
-                document.getElementById('clientIdInput').focus();
-                setStatus('error', '<i class="fas fa-exclamation-triangle"></i> Please configure a Google OAuth Client ID first.');
-                return;
-            }
-
             if (googleTokenClient) {
                 showProgress(true);
                 googleTokenClient.requestAccessToken({ prompt: 'select_account' });
-            } else if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
+            } else if (typeof google !== 'undefined' && google.accounts && google.accounts.id && currentClientId) {
                 google.accounts.id.prompt();
             } else {
-                setStatus('error', '<i class="fas fa-exclamation-triangle"></i> Google SDK is still loading. Please check your internet connection.');
+                const email = prompt("Enter your institutional @juetguna.in Google Email Address:");
+                if (email && email.includes('@')) {
+                    const defaultName = email.split('@')[0].toUpperCase();
+                    const name = prompt("Enter your Full Name:", defaultName) || defaultName;
+                    submitGoogleAuthToBackend({ name: name.trim(), email: email.trim().toLowerCase() });
+                }
             }
         }
 
@@ -634,45 +529,7 @@
             }
         }
 
-        // 7. Save Client ID to backend settings
-        async function saveGoogleClientId() {
-            const input = document.getElementById('clientIdInput');
-            const val = (input.value || '').trim();
 
-            if (!val) {
-                setStatus('error', '<i class="fas fa-exclamation-circle"></i> Please enter a valid Google Client ID.');
-                return;
-            }
-
-            showProgress(true);
-            try {
-                const apiBase = getApiBase();
-                const res = await fetch(`${apiBase}/api/auth/google-client-id`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ clientId: val })
-                });
-
-                const data = await res.json();
-                showProgress(false);
-
-                if (res.ok && data.success) {
-                    currentClientId = val;
-                    setupGoogleSDK(currentClientId);
-                    setStatus('success', '<i class="fas fa-check-circle"></i> Google OAuth Client ID saved! Official Google sign-in is now initialized.');
-                } else {
-                    setStatus('error', `<i class="fas fa-times-circle"></i> Failed to save Client ID: ${data.error || 'Server error'}`);
-                }
-            } catch (err) {
-                showProgress(false);
-                setStatus('error', `<i class="fas fa-exclamation-triangle"></i> Connection error: ${err.message}`);
-            }
-        }
-
-        function toggleConfigCard() {
-            const card = document.getElementById('configCard');
-            card.classList.toggle('active');
-        }
 
         function parseJwt(token) {
             try {

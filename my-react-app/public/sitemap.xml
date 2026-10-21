@@ -1,52 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    <!-- Homepage: Dr. Jitendra Parmar Academic Portfolio -->
+    <!-- Homepage: Dr. Jitendra Parmar Academic Portfolio (JUET Guna) -->
     <url>
         <loc>/index.html</loc>
-        <lastmod>2026-10-21</lastmod>
-        <changefreq>weekly</changefreq>
+        <lastmod>2026-10-22</lastmod>
+        <changefreq>daily</changefreq>
         <priority>1.0</priority>
     </url>
-    <!-- Research Publications -->
+    <!-- Research Publications & Patents -->
     <url>
         <loc>/publications.html</loc>
-        <lastmod>2026-10-21</lastmod>
+        <lastmod>2026-10-22</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
-    <!-- JUET Virtual Lab Portal -->
+    <!-- AnveshanAI Research & Innovation Laboratory -->
     <url>
-        <loc>/virtual-lab.html</loc>
-        <lastmod>2026-10-21</lastmod>
+        <loc>/projects.html</loc>
+        <lastmod>2026-10-22</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
     <!-- SQL Practice Virtual Lab -->
     <url>
         <loc>/sql-practice.html</loc>
-        <lastmod>2026-10-21</lastmod>
+        <lastmod>2026-10-22</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
-    <!-- Research Projects & Benchmarks -->
+    <!-- JUET Virtual Lab Portal -->
     <url>
-        <loc>/projects.html</loc>
-        <lastmod>2026-10-21</lastmod>
-        <changefreq>monthly</changefreq>
+        <loc>/virtual-lab.html</loc>
+        <lastmod>2026-10-22</lastmod>
+        <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <!-- Research Team & Scholars -->
     <url>
         <loc>/team.html</loc>
-        <lastmod>2026-10-21</lastmod>
-        <changefreq>monthly</changefreq>
+        <lastmod>2026-10-22</lastmod>
+        <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
-    <!-- Official Google Authentication Portal -->
+    <!-- Student Sign-in Portal -->
     <url>
         <loc>/signup.html</loc>
-        <lastmod>2026-10-21</lastmod>
+        <lastmod>2026-10-22</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.6</priority>
+        <priority>0.5</priority>
     </url>
 </urlset>

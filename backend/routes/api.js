@@ -28,6 +28,8 @@ router.get('/admin/settings', adminController.getSettings);
 router.post('/admin/settings', adminController.updateSettings);
 router.post('/admin/change-password', adminController.changePassword);
 router.get('/admin/students', adminController.getStudentProgress);
+router.post('/admin/students/clear', adminController.clearStudentProgress);
+router.delete('/admin/students', adminController.clearStudentProgress);
 router.get('/admin/modules', adminController.getModules);
 router.post('/admin/questions', adminController.addQuestion);
 router.put('/admin/questions/:moduleId/:questionId', adminController.updateQuestion);

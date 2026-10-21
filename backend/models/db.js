@@ -313,6 +313,21 @@ class VirtualLabDatabase {
     return this.users;
   }
 
+  clearAllTelemetry() {
+    this.users = {};
+    this.saveUsers();
+    if (this.sqliteDb) {
+      try {
+        this.sqliteDb.exec('DELETE FROM student_points;');
+        this.sqliteDb.exec('DELETE FROM submission_logs;');
+        this.sqliteDb.exec('VACUUM;');
+      } catch (err) {
+        console.error('Error clearing SQLite student telemetry:', err);
+      }
+    }
+    return true;
+  }
+
   upsertUser({ name, email, roll, picture }) {
     const now = new Date().toISOString();
     const normalized = (email || '').trim().toLowerCase();

@@ -401,6 +401,18 @@ exports.getStudentProgress = (req, res) => {
   }
 };
 
+exports.clearStudentProgress = (req, res) => {
+  try {
+    db.clearAllTelemetry();
+    res.json({
+      success: true,
+      message: 'All student telemetry records have been cleared successfully.'
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
 // 3. Get Modules & Questions
 exports.getModules = (req, res) => {
   try {

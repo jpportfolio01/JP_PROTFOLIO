@@ -16,7 +16,7 @@ SQL_MODULES.forEach((module) => {
       difficulty: q.difficulty || 'Medium',
       points: q.points || 15,
       description: q.question,
-      initialCode: q.initialCode || `-- Write your SQL for ${q.title}\n${q.query.startsWith('SELECT') ? 'SELECT * FROM ' + module.schema.tables[0].table_name + ';' : '-- DDL/DML query'}`,
+      initialCode: '',
       expectedQuery: q.query,
       expectedOutput: q.output
     });

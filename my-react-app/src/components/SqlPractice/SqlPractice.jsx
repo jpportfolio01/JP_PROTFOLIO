@@ -4,7 +4,7 @@ import { HOSPITAL_DB } from '../../data/hospitalDb';
 
 export default function SqlPractice({ onBack }) {
   const [currentIdx, setCurrentIdx] = useState(0);
-  const [sqlCode, setSqlCode] = useState(CHALLENGES[0].initialCode);
+  const [sqlCode, setSqlCode] = useState('');
   const [result, setResult] = useState(null);
   const [isCorrect, setIsCorrect] = useState(null);
   const [evalMessage, setEvalMessage] = useState('');
@@ -108,14 +108,14 @@ export default function SqlPractice({ onBack }) {
 
   const handleSelectChallenge = (index) => {
     setCurrentIdx(index);
-    setSqlCode(CHALLENGES[index].initialCode);
+    setSqlCode('');
     setResult(null);
     setIsCorrect(null);
     setEvalMessage('');
   };
 
   const handleResetCode = () => {
-    setSqlCode(currentChallenge.initialCode);
+    setSqlCode('');
   };
 
   const handleRunQuery = async () => {

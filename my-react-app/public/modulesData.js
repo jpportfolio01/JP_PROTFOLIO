@@ -137,7 +137,6 @@ var SQL_MODULES = [
         "difficulty": "Easy",
         "points": 10,
         "question": "Write a DDL statement to create the departments table with department_id as an integer primary key, dept_name as a non-null string, and location as a variable character field.",
-        "initialCode": "-- Write DDL query to create departments table\nCREATE TABLE departments (\n    department_id INT PRIMARY KEY,\n    dept_name VARCHAR(50) NOT NULL,\n    location VARCHAR(50)\n);",
         "query": "CREATE TABLE departments (\n    department_id INT PRIMARY KEY,\n    dept_name VARCHAR(50) NOT NULL,\n    location VARCHAR(50)\n);",
         "output": "Command(s) completed successfully."
       },
@@ -147,7 +146,6 @@ var SQL_MODULES = [
         "difficulty": "Easy",
         "points": 10,
         "question": "Write a DDL query to create the employees table defining emp_id as the primary key, emp_name as non-null, salary with decimal precision, and department_id as a foreign key referencing departments.",
-        "initialCode": "-- Write DDL query to create employees table\nCREATE TABLE employees (\n    emp_id INT PRIMARY KEY,\n    emp_name VARCHAR(50) NOT NULL,\n    department_id INT,\n    salary DECIMAL(10, 2) NOT NULL,\n    hire_date DATE,\n    bonus DECIMAL(10, 2),\n    FOREIGN KEY (department_id) REFERENCES departments(department_id)\n);",
         "query": "CREATE TABLE employees (\n    emp_id INT PRIMARY KEY,\n    emp_name VARCHAR(50) NOT NULL,\n    department_id INT,\n    salary DECIMAL(10, 2) NOT NULL,\n    hire_date DATE,\n    bonus DECIMAL(10, 2),\n    FOREIGN KEY (department_id) REFERENCES departments(department_id)\n);",
         "output": "Command(s) completed successfully."
       },
@@ -157,7 +155,6 @@ var SQL_MODULES = [
         "difficulty": "Easy",
         "points": 10,
         "question": "Write a DDL statement to alter the employees table and add a new column named performance_rating of integer type.",
-        "initialCode": "-- Alter table to add performance_rating\nALTER TABLE employees ADD performance_rating INT;",
         "query": "ALTER TABLE employees ADD performance_rating INT;",
         "output": "Command(s) completed successfully."
       },
@@ -167,7 +164,6 @@ var SQL_MODULES = [
         "difficulty": "Easy",
         "points": 10,
         "question": "Write a DDL statement to remove the performance_rating column from the employees table.",
-        "initialCode": "-- Alter table to drop performance_rating\nALTER TABLE employees DROP COLUMN performance_rating;",
         "query": "ALTER TABLE employees DROP COLUMN performance_rating;",
         "output": "Command(s) completed successfully."
       },
@@ -177,7 +173,6 @@ var SQL_MODULES = [
         "difficulty": "Easy",
         "points": 10,
         "question": "Write the SQL statement to delete all records from the employees table while retaining its table structure.",
-        "initialCode": "-- Delete all records while retaining table structure\nDELETE FROM employees;",
         "query": "DELETE FROM employees;",
         "output": "Command(s) completed successfully."
       },
@@ -187,7 +182,6 @@ var SQL_MODULES = [
         "difficulty": "Easy",
         "points": 10,
         "question": "Write the SQL command to completely destroy the employees table structure and all stored records.",
-        "initialCode": "-- Drop table employees\nDROP TABLE employees;",
         "query": "DROP TABLE employees;",
         "output": "Command(s) completed successfully."
       },
@@ -197,7 +191,6 @@ var SQL_MODULES = [
         "difficulty": "Easy",
         "points": 10,
         "question": "Write a DML query to insert a new employee with ID 1006, name 'Priya Patel', department 20, salary 75000.00, hire date '2022-04-12', and bonus 4500.00.",
-        "initialCode": "-- Insert full employee record\nINSERT INTO employees (emp_id, emp_name, department_id, salary, hire_date, bonus)\nVALUES (1006, 'Priya Patel', 20, 75000.00, '2022-04-12', 4500.00);",
         "query": "INSERT INTO employees (emp_id, emp_name, department_id, salary, hire_date, bonus)\nVALUES (1006, 'Priya Patel', 20, 75000.00, '2022-04-12', 4500.00);",
         "output": "1 row affected."
       },
@@ -207,7 +200,6 @@ var SQL_MODULES = [
         "difficulty": "Easy",
         "points": 10,
         "question": "Write a DML query to insert a new employee with ID 1007, name 'Ravi Kumar', department 10, and salary 50000.00, leaving hire_date and bonus as NULL.",
-        "initialCode": "-- Insert partial employee record\nINSERT INTO employees (emp_id, emp_name, department_id, salary)\nVALUES (1007, 'Ravi Kumar', 10, 50000.00);",
         "query": "INSERT INTO employees (emp_id, emp_name, department_id, salary)\nVALUES (1007, 'Ravi Kumar', 10, 50000.00);",
         "output": "1 row affected."
       },
@@ -217,7 +209,6 @@ var SQL_MODULES = [
         "difficulty": "Easy",
         "points": 10,
         "question": "Write a SQL query to retrieve all details of employees who belong to department 20.",
-        "initialCode": "-- Write query here\nSELECT * FROM employees WHERE department_id = 20;",
         "query": "SELECT * FROM employees WHERE department_id = 20;",
         "output": [
           {
@@ -244,7 +235,6 @@ var SQL_MODULES = [
         "difficulty": "Easy",
         "points": 10,
         "question": "Write a SQL query to select the emp_name and salary of all employees earning strictly more than 60000.00.",
-        "initialCode": "-- Write query here\nSELECT emp_name, salary FROM employees WHERE salary > 60000.00;",
         "query": "SELECT emp_name, salary FROM employees WHERE salary > 60000.00;",
         "output": [
           {
@@ -267,7 +257,6 @@ var SQL_MODULES = [
         "difficulty": "Easy",
         "points": 10,
         "question": "Write a SQL query to retrieve employees who work in department 20 AND have a salary greater than 80000.00.",
-        "initialCode": "-- Write query here\nSELECT * FROM employees WHERE department_id = 20 AND salary > 80000.00;",
         "query": "SELECT * FROM employees WHERE department_id = 20 AND salary > 80000.00;",
         "output": [
           {
@@ -294,7 +283,6 @@ var SQL_MODULES = [
         "difficulty": "Easy",
         "points": 10,
         "question": "Write a SQL query to list all departments located in either 'Building A' OR 'Building C'.",
-        "initialCode": "-- Write query here\nSELECT * FROM departments WHERE location = 'Building A' OR location = 'Building C';",
         "query": "SELECT * FROM departments WHERE location = 'Building A' OR location = 'Building C';",
         "output": [
           {
@@ -320,7 +308,6 @@ var SQL_MODULES = [
         "difficulty": "Easy",
         "points": 10,
         "question": "Write a SQL query to display all employees whose salary falls between 50000.00 and 85000.00 inclusive.",
-        "initialCode": "-- Write query here\nSELECT * FROM employees WHERE salary BETWEEN 50000.00 AND 85000.00;",
         "query": "SELECT * FROM employees WHERE salary BETWEEN 50000.00 AND 85000.00;",
         "output": [
           {
@@ -355,7 +342,6 @@ var SQL_MODULES = [
         "difficulty": "Easy",
         "points": 10,
         "question": "Write a SQL query to find all employees whose name starts with the letter 'S'.",
-        "initialCode": "-- Write query here\nSELECT * FROM employees WHERE emp_name LIKE 'S%';",
         "query": "SELECT * FROM employees WHERE emp_name LIKE 'S%';",
         "output": [
           {
@@ -374,7 +360,6 @@ var SQL_MODULES = [
         "difficulty": "Easy",
         "points": 10,
         "question": "Write a SQL query to select all employees who do not have a bonus assigned (bonus IS NULL).",
-        "initialCode": "-- Write query here\nSELECT * FROM employees WHERE bonus IS NULL;",
         "query": "SELECT * FROM employees WHERE bonus IS NULL;",
         "output": [
           {
@@ -530,7 +515,6 @@ var SQL_MODULES = [
         "difficulty": "Easy",
         "points": 10,
         "question": "Write a query using COUNT() to calculate the total number of workers in the factory.",
-        "initialCode": "-- Calculate total workers\nSELECT COUNT(*) AS total_workers FROM workers;",
         "query": "SELECT COUNT(*) AS total_workers FROM workers;",
         "output": [
           {
@@ -544,7 +528,6 @@ var SQL_MODULES = [
         "difficulty": "Easy",
         "points": 10,
         "question": "Write a query using SUM() to find the total salary expense paid across all workers.",
-        "initialCode": "-- Calculate total payroll\nSELECT SUM(salary) AS total_payroll FROM workers;",
         "query": "SELECT SUM(salary) AS total_payroll FROM workers;",
         "output": [
           {
@@ -558,7 +541,6 @@ var SQL_MODULES = [
         "difficulty": "Easy",
         "points": 10,
         "question": "Write a query using AVG() to calculate the overall average salary of the workforce.",
-        "initialCode": "-- Calculate average salary\nSELECT AVG(salary) AS avg_salary FROM workers;",
         "query": "SELECT AVG(salary) AS avg_salary FROM workers;",
         "output": [
           {
@@ -572,7 +554,6 @@ var SQL_MODULES = [
         "difficulty": "Easy",
         "points": 10,
         "question": "Write a single query to find the minimum salary (MIN) and maximum salary (MAX) among all workers.",
-        "initialCode": "-- Find min and max salary\nSELECT MIN(salary) AS min_salary, MAX(salary) AS max_salary FROM workers;",
         "query": "SELECT MIN(salary) AS min_salary, MAX(salary) AS max_salary FROM workers;",
         "output": [
           {
@@ -587,7 +568,6 @@ var SQL_MODULES = [
         "difficulty": "Medium",
         "points": 15,
         "question": "Write a query using GROUP BY to display each department and the total number of workers assigned to it.",
-        "initialCode": "-- Department worker count\nSELECT department, COUNT(*) AS worker_count FROM workers GROUP BY department ORDER BY MIN(worker_id);",
         "query": "SELECT department, COUNT(*) AS worker_count FROM workers GROUP BY department ORDER BY MIN(worker_id);",
         "output": [
           {
@@ -618,7 +598,6 @@ var SQL_MODULES = [
         "difficulty": "Medium",
         "points": 15,
         "question": "Write a query to find the average salary for each department, ordered from highest average salary to lowest.",
-        "initialCode": "-- Average salary per department descending\nSELECT department, AVG(salary) AS avg_salary FROM workers GROUP BY department ORDER BY avg_salary DESC;",
         "query": "SELECT department, AVG(salary) AS avg_salary FROM workers GROUP BY department ORDER BY avg_salary DESC;",
         "output": [
           {
@@ -649,7 +628,6 @@ var SQL_MODULES = [
         "difficulty": "Medium",
         "points": 15,
         "question": "Write a query using GROUP BY to find the average salary grouped by gender (M/F).",
-        "initialCode": "-- Average salary by gender\nSELECT gender, AVG(salary) AS avg_salary FROM workers GROUP BY gender;",
         "query": "SELECT gender, AVG(salary) AS avg_salary FROM workers GROUP BY gender;",
         "output": [
           {
@@ -668,7 +646,6 @@ var SQL_MODULES = [
         "difficulty": "Medium",
         "points": 15,
         "question": "Write a query to calculate the average worker age for each department.",
-        "initialCode": "-- Average age per department\nSELECT department, AVG(age) AS avg_age FROM workers GROUP BY department;",
         "query": "SELECT department, AVG(age) AS avg_age FROM workers GROUP BY department;",
         "output": [
           {
@@ -699,7 +676,6 @@ var SQL_MODULES = [
         "difficulty": "Medium",
         "points": 20,
         "question": "Write a query to calculate the average salary per department considering only workers older than 30 years (WHERE age > 30).",
-        "initialCode": "-- Average salary per department for age > 30\nSELECT department, AVG(salary) AS avg_salary FROM workers WHERE age > 30 GROUP BY department;",
         "query": "SELECT department, AVG(salary) AS avg_salary FROM workers WHERE age > 30 GROUP BY department;",
         "output": [
           {
@@ -730,7 +706,6 @@ var SQL_MODULES = [
         "difficulty": "Medium",
         "points": 20,
         "question": "Write a query to list all departments that have strictly more than 2 workers.",
-        "initialCode": "-- Departments with count > 2\nSELECT department, COUNT(*) AS worker_count FROM workers GROUP BY department HAVING COUNT(*) > 2;",
         "query": "SELECT department, COUNT(*) AS worker_count FROM workers GROUP BY department HAVING COUNT(*) > 2;",
         "output": [
           {
@@ -745,7 +720,6 @@ var SQL_MODULES = [
         "difficulty": "Medium",
         "points": 20,
         "question": "Write a query using HAVING to show departments whose average worker salary exceeds 33000.00.",
-        "initialCode": "-- Departments where avg salary > 33000\nSELECT department, AVG(salary) AS avg_salary FROM workers GROUP BY department HAVING AVG(salary) > 33000.00;",
         "query": "SELECT department, AVG(salary) AS avg_salary FROM workers GROUP BY department HAVING AVG(salary) > 33000.00;",
         "output": [
           {
@@ -764,7 +738,6 @@ var SQL_MODULES = [
         "difficulty": "Medium",
         "points": 20,
         "question": "Write a query to find departments whose total salary expense exceeds 80000.00.",
-        "initialCode": "-- Departments with total salary > 80000\nSELECT department, SUM(salary) AS total_salary FROM workers GROUP BY department HAVING SUM(salary) > 80000.00;",
         "query": "SELECT department, SUM(salary) AS total_salary FROM workers GROUP BY department HAVING SUM(salary) > 80000.00;",
         "output": [
           {
@@ -783,7 +756,6 @@ var SQL_MODULES = [
         "difficulty": "Hard",
         "points": 25,
         "question": "Write a query to find the average salary per department for male workers only, displaying only departments where this male average salary exceeds 30000.00.",
-        "initialCode": "-- WHERE gender='M' and HAVING avg > 30000\nSELECT department, AVG(salary) AS avg_male_salary FROM workers WHERE gender = 'M' GROUP BY department HAVING AVG(salary) > 30000.00;",
         "query": "SELECT department, AVG(salary) AS avg_male_salary FROM workers WHERE gender = 'M' GROUP BY department HAVING AVG(salary) > 30000.00;",
         "output": [
           {
@@ -810,7 +782,6 @@ var SQL_MODULES = [
         "difficulty": "Hard",
         "points": 25,
         "question": "Write a query to group workers by both department and gender, showing the headcount for each combination.",
-        "initialCode": "-- Group by department, gender\nSELECT department, gender, COUNT(*) AS worker_count FROM workers GROUP BY department, gender;",
         "query": "SELECT department, gender, COUNT(*) AS worker_count FROM workers GROUP BY department, gender;",
         "output": [
           {
@@ -866,7 +837,6 @@ var SQL_MODULES = [
         "difficulty": "Medium",
         "points": 20,
         "question": "Write a query to display each department along with its total salary payout, sorted in descending order of total payout.",
-        "initialCode": "-- Group by department and order by total_payout desc\nSELECT department, SUM(salary) AS total_payout FROM workers GROUP BY department ORDER BY total_payout DESC;",
         "query": "SELECT department, SUM(salary) AS total_payout FROM workers GROUP BY department ORDER BY total_payout DESC;",
         "output": [
           {
@@ -1083,7 +1053,6 @@ var SQL_MODULES = [
         "difficulty": "Easy",
         "points": 10,
         "question": "Write an INNER JOIN query to display emp_name, salary, and their corresponding dept_name.",
-        "initialCode": "-- INNER JOIN employees and departments\nSELECT e.emp_name, e.salary, d.dept_name\nFROM employees e\nINNER JOIN departments d ON e.department_id = d.department_id;",
         "query": "SELECT e.emp_name, e.salary, d.dept_name FROM employees e INNER JOIN departments d ON e.department_id = d.department_id;",
         "output": [
           {
@@ -1119,7 +1088,6 @@ var SQL_MODULES = [
         "difficulty": "Medium",
         "points": 15,
         "question": "Write a query joining employees and departments to display employees in the 'Engineering' department earning more than 70000.00.",
-        "initialCode": "-- JOIN with filter\nSELECT e.emp_name, e.salary, d.dept_name\nFROM employees e\nJOIN departments d ON e.department_id = d.department_id\nWHERE d.dept_name = 'Engineering' AND e.salary > 70000.00;",
         "query": "SELECT e.emp_name, e.salary, d.dept_name FROM employees e JOIN departments d ON e.department_id = d.department_id WHERE d.dept_name = 'Engineering' AND e.salary > 70000.00;",
         "output": [
           {
@@ -1135,7 +1103,6 @@ var SQL_MODULES = [
         "difficulty": "Medium",
         "points": 15,
         "question": "Write a LEFT JOIN query to list all department names and associated employee names, ensuring departments without employees are still returned.",
-        "initialCode": "-- LEFT JOIN departments and employees\nSELECT d.dept_name, e.emp_name\nFROM departments d\nLEFT JOIN employees e ON d.department_id = e.department_id\nORDER BY d.department_id, e.emp_id;",
         "query": "SELECT d.dept_name, e.emp_name FROM departments d LEFT JOIN employees e ON d.department_id = e.department_id ORDER BY d.department_id, e.emp_id;",
         "output": [
           {
@@ -1170,7 +1137,6 @@ var SQL_MODULES = [
         "difficulty": "Medium",
         "points": 20,
         "question": "Write a query using LEFT JOIN and WHERE department_id IS NULL to identify departments that currently have no assigned employees.",
-        "initialCode": "-- Find departments with no employees\nSELECT d.dept_name\nFROM departments d\nLEFT JOIN employees e ON d.department_id = e.department_id\nWHERE e.emp_id IS NULL;",
         "query": "SELECT d.dept_name FROM departments d LEFT JOIN employees e ON d.department_id = e.department_id WHERE e.emp_id IS NULL;",
         "output": [
           {
@@ -1184,7 +1150,6 @@ var SQL_MODULES = [
         "difficulty": "Medium",
         "points": 15,
         "question": "Write a RIGHT JOIN query between departments and employees that keeps all employee records regardless of whether their department ID matches.",
-        "initialCode": "-- RIGHT JOIN departments and employees\nSELECT e.emp_name, d.dept_name\nFROM departments d\nRIGHT JOIN employees e ON d.department_id = e.department_id\nORDER BY e.emp_id;",
         "query": "SELECT e.emp_name, d.dept_name FROM departments d RIGHT JOIN employees e ON d.department_id = e.department_id ORDER BY e.emp_id;",
         "output": [
           {
@@ -1215,7 +1180,6 @@ var SQL_MODULES = [
         "difficulty": "Hard",
         "points": 25,
         "question": "Write a SELF JOIN on the employees table to display each employee's name alongside their direct manager's name.",
-        "initialCode": "-- SELF JOIN employees to get manager name\nSELECT e.emp_name AS employee, m.emp_name AS manager\nFROM employees e\nLEFT JOIN employees m ON e.manager_id = m.emp_id;",
         "query": "SELECT e.emp_name AS employee, m.emp_name AS manager FROM employees e LEFT JOIN employees m ON e.manager_id = m.emp_id;",
         "output": [
           {
@@ -1246,7 +1210,6 @@ var SQL_MODULES = [
         "difficulty": "Hard",
         "points": 25,
         "question": "Write a SELF JOIN query to find employees who earn a higher salary than their direct manager.",
-        "initialCode": "-- Employees earning more than their manager\nSELECT e.emp_name AS employee, e.salary AS emp_salary, m.emp_name AS manager, m.salary AS mgr_salary\nFROM employees e\nJOIN employees m ON e.manager_id = m.emp_id\nWHERE e.salary > m.salary;",
         "query": "SELECT e.emp_name AS employee, e.salary AS emp_salary, m.emp_name AS manager, m.salary AS mgr_salary FROM employees e JOIN employees m ON e.manager_id = m.emp_id WHERE e.salary > m.salary;",
         "output": []
       },
@@ -1256,7 +1219,6 @@ var SQL_MODULES = [
         "difficulty": "Hard",
         "points": 25,
         "question": "Write a query joining employees, works_on, and projects to display emp_name, project_name, and hours worked.",
-        "initialCode": "-- 3-Table JOIN\nSELECT e.emp_name, p.project_name, w.hours\nFROM employees e\nJOIN works_on w ON e.emp_id = w.emp_id\nJOIN projects p ON w.project_id = p.project_id;",
         "query": "SELECT e.emp_name, p.project_name, w.hours FROM employees e JOIN works_on w ON e.emp_id = w.emp_id JOIN projects p ON w.project_id = p.project_id;",
         "output": [
           {
@@ -1282,7 +1244,6 @@ var SQL_MODULES = [
         "difficulty": "Hard",
         "points": 30,
         "question": "Write a query combining employees, departments, works_on, and projects to list employee name, employee department name, assigned project name, and project controlling department name.",
-        "initialCode": "-- 4-Table JOIN\nSELECT e.emp_name, ed.dept_name AS emp_dept, p.project_name, pd.dept_name AS proj_dept\nFROM employees e\nJOIN departments ed ON e.department_id = ed.department_id\nJOIN works_on w ON e.emp_id = w.emp_id\nJOIN projects p ON w.project_id = p.project_id\nJOIN departments pd ON p.department_id = pd.department_id;",
         "query": "SELECT e.emp_name, ed.dept_name AS emp_dept, p.project_name, pd.dept_name AS proj_dept FROM employees e JOIN departments ed ON e.department_id = ed.department_id JOIN works_on w ON e.emp_id = w.emp_id JOIN projects p ON w.project_id = p.project_id JOIN departments pd ON p.department_id = pd.department_id;",
         "output": [
           {
@@ -1311,7 +1272,6 @@ var SQL_MODULES = [
         "difficulty": "Medium",
         "points": 20,
         "question": "Write a query joining employees and departments to output each dept_name along with the count of employees in that department.",
-        "initialCode": "-- Count employees per department\nSELECT d.dept_name, COUNT(e.emp_id) AS total_employees\nFROM departments d\nLEFT JOIN employees e ON d.department_id = e.department_id\nGROUP BY d.dept_name;",
         "query": "SELECT d.dept_name, COUNT(e.emp_id) AS total_employees FROM departments d LEFT JOIN employees e ON d.department_id = e.department_id GROUP BY d.dept_name;",
         "output": [
           {
@@ -1338,7 +1298,6 @@ var SQL_MODULES = [
         "difficulty": "Medium",
         "points": 20,
         "question": "Write a query joining departments and employees to display department name and average employee salary per department.",
-        "initialCode": "-- Average salary per department\nSELECT d.dept_name, AVG(e.salary) AS avg_salary\nFROM departments d\nJOIN employees e ON d.department_id = e.department_id\nGROUP BY d.dept_name;",
         "query": "SELECT d.dept_name, AVG(e.salary) AS avg_salary FROM departments d JOIN employees e ON d.department_id = e.department_id GROUP BY d.dept_name;",
         "output": [
           {
@@ -1361,7 +1320,6 @@ var SQL_MODULES = [
         "difficulty": "Hard",
         "points": 25,
         "question": "Write a query joining employees and departments to display department names having an average salary greater than 60000.00.",
-        "initialCode": "-- Department with avg salary > 60000\nSELECT d.dept_name, AVG(e.salary) AS avg_salary\nFROM departments d\nJOIN employees e ON d.department_id = e.department_id\nGROUP BY d.dept_name\nHAVING AVG(e.salary) > 60000.00;",
         "query": "SELECT d.dept_name, AVG(e.salary) AS avg_salary FROM departments d JOIN employees e ON d.department_id = e.department_id GROUP BY d.dept_name HAVING AVG(e.salary) > 60000.00;",
         "output": [
           {
@@ -1376,7 +1334,6 @@ var SQL_MODULES = [
         "difficulty": "Medium",
         "points": 20,
         "question": "Write a query joining projects and works_on to display each project's name and the total sum of hours logged for it.",
-        "initialCode": "-- Total hours per project\nSELECT p.project_name, SUM(w.hours) AS total_hours\nFROM projects p\nJOIN works_on w ON p.project_id = w.project_id\nGROUP BY p.project_name;",
         "query": "SELECT p.project_name, SUM(w.hours) AS total_hours FROM projects p JOIN works_on w ON p.project_id = w.project_id GROUP BY p.project_name;",
         "output": [
           {
@@ -1399,7 +1356,6 @@ var SQL_MODULES = [
         "difficulty": "Hard",
         "points": 25,
         "question": "Write a query to find employees working on projects controlled by a department different from their own assigned department.",
-        "initialCode": "-- Employees on external projects\nSELECT e.emp_name, e.department_id AS emp_dept, p.project_name, p.department_id AS proj_dept\nFROM employees e\nJOIN works_on w ON e.emp_id = w.emp_id\nJOIN projects p ON w.project_id = p.project_id\nWHERE e.department_id <> p.department_id;",
         "query": "SELECT e.emp_name, e.department_id AS emp_dept, p.project_name, p.department_id AS proj_dept FROM employees e JOIN works_on w ON e.emp_id = w.emp_id JOIN projects p ON w.project_id = p.project_id WHERE e.department_id <> p.department_id;",
         "output": [
           {
@@ -1416,7 +1372,6 @@ var SQL_MODULES = [
         "difficulty": "Hard",
         "points": 25,
         "question": "Write a SELF JOIN query with GROUP BY to list each manager's name and the total number of direct reports reporting to them.",
-        "initialCode": "-- Manager and direct reports count\nSELECT m.emp_name AS manager_name, COUNT(e.emp_id) AS direct_reports\nFROM employees e\nJOIN employees m ON e.manager_id = m.emp_id\nGROUP BY m.emp_name;",
         "query": "SELECT m.emp_name AS manager_name, COUNT(e.emp_id) AS direct_reports FROM employees e JOIN employees m ON e.manager_id = m.emp_id GROUP BY m.emp_name;",
         "output": [
           {
@@ -1537,7 +1492,6 @@ var SQL_MODULES = [
         "difficulty": "Medium",
         "points": 15,
         "question": "Write a query to find all employees earning strictly more than the overall average employee salary.",
-        "initialCode": "-- Employees earning above overall average\nSELECT emp_name, salary FROM employees WHERE salary > (SELECT AVG(salary) FROM employees);",
         "query": "SELECT emp_name, salary FROM employees WHERE salary > (SELECT AVG(salary) FROM employees);",
         "output": [
           {
@@ -1556,7 +1510,6 @@ var SQL_MODULES = [
         "difficulty": "Easy",
         "points": 15,
         "question": "Write a query using a subquery to find the employee(s) who earn the single highest salary in the company.",
-        "initialCode": "-- Employee with highest salary\nSELECT emp_name, salary FROM employees WHERE salary = (SELECT MAX(salary) FROM employees);",
         "query": "SELECT emp_name, salary FROM employees WHERE salary = (SELECT MAX(salary) FROM employees);",
         "output": [
           {
@@ -1571,7 +1524,6 @@ var SQL_MODULES = [
         "difficulty": "Easy",
         "points": 15,
         "question": "Write a query using a subquery to find the details of the employee(s) with the lowest salary.",
-        "initialCode": "-- Employee with lowest salary\nSELECT emp_name, salary FROM employees WHERE salary = (SELECT MIN(salary) FROM employees);",
         "query": "SELECT emp_name, salary FROM employees WHERE salary = (SELECT MIN(salary) FROM employees);",
         "output": [
           {
@@ -1586,7 +1538,6 @@ var SQL_MODULES = [
         "difficulty": "Medium",
         "points": 15,
         "question": "Write a query using a subquery and the IN operator to retrieve all employees who belong to the 'Engineering' department.",
-        "initialCode": "-- Subquery with IN operator\nSELECT emp_name, salary FROM employees WHERE department_id IN (SELECT department_id FROM departments WHERE dept_name = 'Engineering');",
         "query": "SELECT emp_name, salary FROM employees WHERE department_id IN (SELECT department_id FROM departments WHERE dept_name = 'Engineering');",
         "output": [
           {
@@ -1609,7 +1560,6 @@ var SQL_MODULES = [
         "difficulty": "Medium",
         "points": 20,
         "question": "Write a query using NOT IN to display employees who do not belong to either the 'Human Resources' or 'Sales' departments.",
-        "initialCode": "-- Subquery with NOT IN\nSELECT emp_name, salary FROM employees WHERE department_id NOT IN (SELECT department_id FROM departments WHERE dept_name IN ('Human Resources', 'Sales'));",
         "query": "SELECT emp_name, salary FROM employees WHERE department_id NOT IN (SELECT department_id FROM departments WHERE dept_name IN ('Human Resources', 'Sales'));",
         "output": [
           {
@@ -1636,7 +1586,6 @@ var SQL_MODULES = [
         "difficulty": "Hard",
         "points": 25,
         "question": "Write a query using > ANY to find employees whose salary is greater than the salary of at least one employee in department 10.",
-        "initialCode": "-- Subquery with > ANY\nSELECT emp_name, salary FROM employees WHERE salary > ANY (SELECT salary FROM employees WHERE department_id = 10);",
         "query": "SELECT emp_name, salary FROM employees WHERE salary > ANY (SELECT salary FROM employees WHERE department_id = 10);",
         "output": [
           {
@@ -1663,7 +1612,6 @@ var SQL_MODULES = [
         "difficulty": "Hard",
         "points": 25,
         "question": "Write a query using > ALL to find employees whose salary is greater than the salaries of all employees in department 10.",
-        "initialCode": "-- Subquery with > ALL\nSELECT emp_name, salary FROM employees WHERE salary > ALL (SELECT salary FROM employees WHERE department_id = 10);",
         "query": "SELECT emp_name, salary FROM employees WHERE salary > ALL (SELECT salary FROM employees WHERE department_id = 10);",
         "output": [
           {
@@ -1690,7 +1638,6 @@ var SQL_MODULES = [
         "difficulty": "Hard",
         "points": 25,
         "question": "Write a query using < ALL to list employees whose salary is lower than every employee working in department 20.",
-        "initialCode": "-- Subquery with < ALL\nSELECT emp_name, salary FROM employees WHERE salary < ALL (SELECT salary FROM employees WHERE department_id = 20);",
         "query": "SELECT emp_name, salary FROM employees WHERE salary < ALL (SELECT salary FROM employees WHERE department_id = 20);",
         "output": [
           {
@@ -1709,7 +1656,6 @@ var SQL_MODULES = [
         "difficulty": "Hard",
         "points": 25,
         "question": "Write a query using EXISTS to list all departments that have at least one employee working in them.",
-        "initialCode": "-- Departments with existing employees\nSELECT dept_name FROM departments d WHERE EXISTS (SELECT 1 FROM employees e WHERE e.department_id = d.department_id);",
         "query": "SELECT dept_name FROM departments d WHERE EXISTS (SELECT 1 FROM employees e WHERE e.department_id = d.department_id);",
         "output": [
           {
@@ -1729,7 +1675,6 @@ var SQL_MODULES = [
         "difficulty": "Hard",
         "points": 25,
         "question": "Write a query using NOT EXISTS to list all departments that currently have no assigned employees.",
-        "initialCode": "-- Departments without employees\nSELECT dept_name FROM departments d WHERE NOT EXISTS (SELECT 1 FROM employees e WHERE e.department_id = d.department_id);",
         "query": "SELECT dept_name FROM departments d WHERE NOT EXISTS (SELECT 1 FROM employees e WHERE e.department_id = d.department_id);",
         "output": [
           {
@@ -1743,7 +1688,6 @@ var SQL_MODULES = [
         "difficulty": "Hard",
         "points": 30,
         "question": "Write a correlated subquery to find employees who earn more than the average salary of their own respective department.",
-        "initialCode": "-- Correlated subquery for dept average\nSELECT e.emp_name, e.salary, e.department_id\nFROM employees e\nWHERE e.salary > (SELECT AVG(salary) FROM employees WHERE department_id = e.department_id);",
         "query": "SELECT e.emp_name, e.salary, e.department_id FROM employees e WHERE e.salary > (SELECT AVG(salary) FROM employees WHERE department_id = e.department_id);",
         "output": [
           {
@@ -1759,7 +1703,6 @@ var SQL_MODULES = [
         "difficulty": "Hard",
         "points": 30,
         "question": "Write a correlated subquery to list the highest-earning employee in each department.",
-        "initialCode": "-- Highest earner per department\nSELECT e.emp_name, e.salary, e.department_id\nFROM employees e\nWHERE e.salary = (SELECT MAX(salary) FROM employees WHERE department_id = e.department_id);",
         "query": "SELECT e.emp_name, e.salary, e.department_id FROM employees e WHERE e.salary = (SELECT MAX(salary) FROM employees WHERE department_id = e.department_id);",
         "output": [
           {
@@ -1785,7 +1728,6 @@ var SQL_MODULES = [
         "difficulty": "Medium",
         "points": 20,
         "question": "Write a query that selects emp_name, salary, and includes a computed column showing the company-wide average salary alongside each record.",
-        "initialCode": "-- Subquery in SELECT clause\nSELECT emp_name, salary, (SELECT AVG(salary) FROM employees) AS company_avg_salary FROM employees;",
         "query": "SELECT emp_name, salary, (SELECT AVG(salary) FROM employees) AS company_avg_salary FROM employees;",
         "output": [
           {
@@ -1821,7 +1763,6 @@ var SQL_MODULES = [
         "difficulty": "Hard",
         "points": 25,
         "question": "Write a query that computes total salary per department in an inner subquery (FROM clause) and then selects the maximum department total from that result.",
-        "initialCode": "-- Derived table in FROM clause\nSELECT MAX(dept_total) AS max_dept_payroll\nFROM (SELECT department_id, SUM(salary) AS dept_total FROM employees GROUP BY department_id) AS dept_summaries;",
         "query": "SELECT MAX(dept_total) AS max_dept_payroll FROM (SELECT department_id, SUM(salary) AS dept_total FROM employees GROUP BY department_id) AS dept_summaries;",
         "output": [
           {
@@ -1835,7 +1776,6 @@ var SQL_MODULES = [
         "difficulty": "Hard",
         "points": 30,
         "question": "Write a query using double-nested subqueries to find employees working in the department that has the highest average salary.",
-        "initialCode": "-- Employees in highest avg salary department\nSELECT emp_name, salary\nFROM employees\nWHERE department_id = (SELECT department_id FROM employees GROUP BY department_id ORDER BY AVG(salary) DESC LIMIT 1);",
         "query": "SELECT emp_name, salary FROM employees WHERE department_id = (SELECT department_id FROM employees GROUP BY department_id ORDER BY AVG(salary) DESC LIMIT 1);",
         "output": [
           {
@@ -1986,7 +1926,6 @@ var SQL_MODULES = [
         "difficulty": "Medium",
         "points": 20,
         "question": "Write a query using ROW_NUMBER() OVER() to assign a unique sequential integer to each sale, ordered by sale_date ascending.",
-        "initialCode": "-- Sequential row number ordered by sale_date\nSELECT sale_id, emp_id, sale_amount, sale_date, ROW_NUMBER() OVER(ORDER BY sale_date ASC) AS row_num FROM sales;",
         "query": "SELECT sale_id, emp_id, sale_amount, sale_date, ROW_NUMBER() OVER(ORDER BY sale_date ASC) AS row_num FROM sales;",
         "output": [
           {
@@ -2039,7 +1978,6 @@ var SQL_MODULES = [
         "difficulty": "Hard",
         "points": 25,
         "question": "Write a query using both RANK() and DENSE_RANK() to rank sales by sale_amount descending, demonstrating how ties are handled.",
-        "initialCode": "-- Compare RANK and DENSE_RANK\nSELECT sale_id, sale_amount, RANK() OVER(ORDER BY sale_amount DESC) AS rnk, DENSE_RANK() OVER(ORDER BY sale_amount DESC) AS dense_rnk FROM sales;",
         "query": "SELECT sale_id, sale_amount, RANK() OVER(ORDER BY sale_amount DESC) AS rnk, DENSE_RANK() OVER(ORDER BY sale_amount DESC) AS dense_rnk FROM sales;",
         "output": [
           {
@@ -2086,7 +2024,6 @@ var SQL_MODULES = [
         "difficulty": "Hard",
         "points": 25,
         "question": "Write a query using DENSE_RANK() OVER(PARTITION BY region ORDER BY sale_amount DESC) to rank sales individually within each region.",
-        "initialCode": "-- Partitioned ranking by region\nSELECT sale_id, region, sale_amount, DENSE_RANK() OVER(PARTITION BY region ORDER BY sale_amount DESC) AS regional_rank FROM sales;",
         "query": "SELECT sale_id, region, sale_amount, DENSE_RANK() OVER(PARTITION BY region ORDER BY sale_amount DESC) AS regional_rank FROM sales;",
         "output": [
           {
@@ -2133,7 +2070,6 @@ var SQL_MODULES = [
         "difficulty": "Hard",
         "points": 25,
         "question": "Write a query using SUM(sale_amount) OVER(ORDER BY sale_date) to calculate a cumulative running total of sales over time.",
-        "initialCode": "-- Cumulative running total of sales\nSELECT sale_id, sale_date, sale_amount, SUM(sale_amount) OVER(ORDER BY sale_date ASC) AS running_total FROM sales;",
         "query": "SELECT sale_id, sale_date, sale_amount, SUM(sale_amount) OVER(ORDER BY sale_date ASC) AS running_total FROM sales;",
         "output": [
           {
@@ -2180,7 +2116,6 @@ var SQL_MODULES = [
         "difficulty": "Hard",
         "points": 25,
         "question": "Write a query displaying sale_id, region, sale_amount, and the average sale amount for that sale's region using AVG() OVER(PARTITION BY region).",
-        "initialCode": "-- Average sale amount per region window\nSELECT sale_id, region, sale_amount, AVG(sale_amount) OVER(PARTITION BY region) AS avg_region_sale FROM sales;",
         "query": "SELECT sale_id, region, sale_amount, AVG(sale_amount) OVER(PARTITION BY region) AS avg_region_sale FROM sales;",
         "output": [
           {
@@ -2227,7 +2162,6 @@ var SQL_MODULES = [
         "difficulty": "Hard",
         "points": 30,
         "question": "Write a query using LAG(sale_amount) OVER(PARTITION BY emp_id ORDER BY sale_date) to retrieve each employee's previous sale amount alongside their current sale.",
-        "initialCode": "-- Previous sale using LAG\nSELECT sale_id, emp_id, sale_date, sale_amount, LAG(sale_amount) OVER(PARTITION BY emp_id ORDER BY sale_date ASC) AS prev_sale FROM sales;",
         "query": "SELECT sale_id, emp_id, sale_date, sale_amount, LAG(sale_amount) OVER(PARTITION BY emp_id ORDER BY sale_date ASC) AS prev_sale FROM sales;",
         "output": [
           {
@@ -2280,7 +2214,6 @@ var SQL_MODULES = [
         "difficulty": "Hard",
         "points": 30,
         "question": "Write a query using LEAD(sale_amount) OVER(PARTITION BY emp_id ORDER BY sale_date) to display each employee's next upcoming sale amount.",
-        "initialCode": "-- Next upcoming sale using LEAD\nSELECT sale_id, emp_id, sale_date, sale_amount, LEAD(sale_amount) OVER(PARTITION BY emp_id ORDER BY sale_date ASC) AS next_sale FROM sales;",
         "query": "SELECT sale_id, emp_id, sale_date, sale_amount, LEAD(sale_amount) OVER(PARTITION BY emp_id ORDER BY sale_date ASC) AS next_sale FROM sales;",
         "output": [
           {
@@ -2333,7 +2266,6 @@ var SQL_MODULES = [
         "difficulty": "Easy",
         "points": 15,
         "question": "Write a query using a CASE expression to add a column named sale_category that flags sales over 2000.00 as 'High' and all others as 'Standard'.",
-        "initialCode": "-- Categorize sale using CASE WHEN\nSELECT sale_id, sale_amount, CASE WHEN sale_amount > 2000.00 THEN 'High' ELSE 'Standard' END AS sale_category FROM sales;",
         "query": "SELECT sale_id, sale_amount, CASE WHEN sale_amount > 2000.00 THEN 'High' ELSE 'Standard' END AS sale_category FROM sales;",
         "output": [
           {
@@ -2374,7 +2306,6 @@ var SQL_MODULES = [
         "difficulty": "Medium",
         "points": 20,
         "question": "Write a query using CASE WHEN to categorize sales into three tiers: 'Tier 1' (> 2500), 'Tier 2' (1500–2500), and 'Tier 3' (< 1500).",
-        "initialCode": "-- 3-Tier categorization with CASE WHEN\nSELECT sale_id, sale_amount, CASE WHEN sale_amount > 2500.00 THEN 'Tier 1' WHEN sale_amount BETWEEN 1500.00 AND 2500.00 THEN 'Tier 2' ELSE 'Tier 3' END AS tier FROM sales;",
         "query": "SELECT sale_id, sale_amount, CASE WHEN sale_amount > 2500.00 THEN 'Tier 1' WHEN sale_amount BETWEEN 1500.00 AND 2500.00 THEN 'Tier 2' ELSE 'Tier 3' END AS tier FROM sales;",
         "output": [
           {
@@ -2415,7 +2346,6 @@ var SQL_MODULES = [
         "difficulty": "Hard",
         "points": 25,
         "question": "Write a query using SUM(CASE WHEN ... THEN ... END) to calculate the total sales amount for the 'North' region and 'South' region as separate output columns in a single row.",
-        "initialCode": "-- Conditional sum for North and South\nSELECT SUM(CASE WHEN region = 'North' THEN sale_amount ELSE 0 END) AS north_total, SUM(CASE WHEN region = 'South' THEN sale_amount ELSE 0 END) AS south_total FROM sales;",
         "query": "SELECT SUM(CASE WHEN region = 'North' THEN sale_amount ELSE 0 END) AS north_total, SUM(CASE WHEN region = 'South' THEN sale_amount ELSE 0 END) AS south_total FROM sales;",
         "output": [
           {
@@ -2430,7 +2360,6 @@ var SQL_MODULES = [
         "difficulty": "Medium",
         "points": 20,
         "question": "Write a query using a WITH clause to compute total sales per employee, then filter the CTE result to display only employees with total sales exceeding 3000.00.",
-        "initialCode": "-- CTE with summary filter\nWITH emp_sales_summary AS (SELECT emp_id, SUM(sale_amount) AS total_sales FROM sales GROUP BY emp_id)\nSELECT emp_id, total_sales FROM emp_sales_summary WHERE total_sales > 3000.00;",
         "query": "WITH emp_sales_summary AS (SELECT emp_id, SUM(sale_amount) AS total_sales FROM sales GROUP BY emp_id) SELECT emp_id, total_sales FROM emp_sales_summary WHERE total_sales > 3000.00;",
         "output": [
           {
@@ -2449,7 +2378,6 @@ var SQL_MODULES = [
         "difficulty": "Hard",
         "points": 25,
         "question": "Write a query using two sequential CTEs: the first calculating total sales per employee, and the second joining that summary with the employees table to include employee names.",
-        "initialCode": "-- Multiple CTEs chaining\nWITH sales_totals AS (SELECT emp_id, SUM(sale_amount) AS total_sales FROM sales GROUP BY emp_id),\nemp_details AS (SELECT e.emp_id, e.emp_name, st.total_sales FROM employees e JOIN sales_totals st ON e.emp_id = st.emp_id)\nSELECT * FROM emp_details;",
         "query": "WITH sales_totals AS (SELECT emp_id, SUM(sale_amount) AS total_sales FROM sales GROUP BY emp_id), emp_details AS (SELECT e.emp_id, e.emp_name, st.total_sales FROM employees e JOIN sales_totals st ON e.emp_id = st.emp_id) SELECT * FROM emp_details;",
         "output": [
           {
@@ -2475,7 +2403,6 @@ var SQL_MODULES = [
         "difficulty": "Medium",
         "points": 20,
         "question": "Write queries using UNION and UNION ALL to combine list of emp_ids from the sales table and the employees table, observing how duplicates are handled.",
-        "initialCode": "-- UNION distinct employee IDs\nSELECT emp_id FROM employees UNION SELECT emp_id FROM sales;",
         "query": "SELECT emp_id FROM employees UNION SELECT emp_id FROM sales;",
         "output": [
           {
@@ -2498,7 +2425,6 @@ var SQL_MODULES = [
         "difficulty": "Medium",
         "points": 20,
         "question": "Write a query using INTERSECT to find emp_id values that exist in both the employees table and the sales table.",
-        "initialCode": "-- INTERSECT common employee IDs\nSELECT emp_id FROM employees INTERSECT SELECT emp_id FROM sales;",
         "query": "SELECT emp_id FROM employees INTERSECT SELECT emp_id FROM sales;",
         "output": [
           {
@@ -2518,7 +2444,6 @@ var SQL_MODULES = [
         "difficulty": "Medium",
         "points": 20,
         "question": "Write a query using EXCEPT (or MINUS) to find employees present in the employees table who have never recorded a transaction in the sales table.",
-        "initialCode": "-- EXCEPT employees without sales\nSELECT emp_id FROM employees EXCEPT SELECT emp_id FROM sales;",
         "query": "SELECT emp_id FROM employees EXCEPT SELECT emp_id FROM sales;",
         "output": [
           {

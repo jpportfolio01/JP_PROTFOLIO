@@ -9,24 +9,25 @@ const fullHtml = `<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SQL Practice Virtual Lab - Dr. Jitendra Parmar | JUET Guna</title>
-    <meta name="title" content="SQL Practice Virtual Lab - Dr. Jitendra Parmar | JUET Guna">
-    <meta name="description" content="Interactive SQL Practice Virtual Lab developed by Dr. Jitendra Parmar at JUET Guna. Practice 75 hands-on SQL queries across DDL, DML, Aggregations, JOINs, Subqueries, and Window Functions with instant query evaluation and progress tracking.">
-    <meta name="keywords" content="Jitendra Parmar SQL, Dr. Jitendra Parmar SQL Virtual Lab, JUET SQL Practice, SQL Grading Engine, SQL Practice Platform, Dr. Jitendra Parmar Lab, Computer Science Virtual Lab JUET Guna, SQL Practice Modules">
+    <title>SQL Practice Virtual Lab | Dr. Jitendra Parmar - JUET Guna</title>
+    <meta name="title" content="SQL Practice Virtual Lab | Dr. Jitendra Parmar - JUET Guna">
+    <meta name="description" content="Interactive SQL Practice Virtual Lab developed by Dr. Jitendra Parmar (Jitendra Parmar JUET) at Jaypee University of Engineering and Technology (JUET), Guna. Practice 75 hands-on SQL queries across DDL, DML, Aggregations, JOINs, Subqueries, and Window Functions with instant query evaluation.">
+    <meta name="keywords" content="Jitendra Parmar, Jitendra Parmar JUET, Dr. Jitendra Parmar, Jitendra Parmar SQL, Jitendra Parmar Virtual Lab, Dr. Jitendra Parmar JUET Guna, JUET SQL Practice, SQL Grading Engine, SQL Practice Platform, Dr. Jitendra Parmar Lab, Computer Science Virtual Lab JUET Guna, SQL Practice Modules">
     <meta name="author" content="Dr. Jitendra Parmar">
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <meta name="googlebot" content="index, follow">
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Dr. Jitendra Parmar Lab">
-    <meta property="og:title" content="SQL Practice Virtual Lab - Dr. Jitendra Parmar | JUET Guna">
-    <meta property="og:description" content="Interactive SQL Practice Virtual Lab with real-time query execution, test case verification, and live progress telemetry.">
+    <meta property="og:title" content="SQL Practice Virtual Lab | Dr. Jitendra Parmar - JUET Guna">
+    <meta property="og:description" content="Interactive SQL Practice Virtual Lab developed by Dr. Jitendra Parmar (Jitendra Parmar JUET) with real-time query execution, test case verification, and progress tracking.">
     <meta property="og:image" content="dr_parmar.png">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="SQL Practice Virtual Lab - Dr. Jitendra Parmar | JUET Guna">
-    <meta name="twitter:description" content="Interactive SQL Practice Virtual Lab with real-time query verification.">
+    <meta name="twitter:title" content="SQL Practice Virtual Lab | Dr. Jitendra Parmar - JUET Guna">
+    <meta name="twitter:description" content="Interactive SQL Practice Virtual Lab developed by Dr. Jitendra Parmar (Jitendra Parmar JUET) at JUET Guna.">
     <meta name="twitter:image" content="dr_parmar.png">
 
     <!-- JSON-LD Structured Data -->
@@ -37,12 +38,17 @@ const fullHtml = `<!DOCTYPE html>
       "name": "JUET SQL Practice Virtual Lab",
       "applicationCategory": "EducationalApplication",
       "operatingSystem": "All modern web browsers",
-      "description": "Educational platform for SQL database learning with in-memory execution, grading engine, and progress telemetry created by Dr. Jitendra Parmar at JUET Guna.",
+      "description": "Educational platform for SQL database learning with in-memory execution, grading engine, and progress tracking created by Dr. Jitendra Parmar at JUET Guna.",
       "author": {
         "@type": "Person",
         "name": "Dr. Jitendra Parmar",
+        "alternateName": ["Jitendra Parmar", "Jitendra Parmar JUET", "Dr Jitendra Parmar"],
         "jobTitle": "Assistant Professor (Senior Grade)",
-        "affiliation": "Jaypee University of Engineering and Technology (JUET), Guna"
+        "affiliation": "Jaypee University of Engineering and Technology (JUET), Guna",
+        "sameAs": [
+          "https://scholar.google.com/citations?user=toHDoiwAAAAJ&hl=en&authuser=1",
+          "https://www.juet.ac.in/faculty/profile/dr-jitendra-parmar"
+        ]
       }
     }
     </script>
@@ -1239,8 +1245,11 @@ const fullHtml = `<!DOCTYPE html>
                     Sign in with your Google account to record your progress, earn points, and appear on the Admin Portal leaderboard.
                 </div>
 
-                <!-- Google OAuth Official Sign-in Button -->
-                <button type="button" class="btn-google-signin" id="btn-custom-google" onclick="goToSignup()">
+                <!-- Official Google Identity Services Render Mount -->
+                <div id="gsiModalOfficialBtn" style="margin-bottom: 6px; display: none;"></div>
+
+                <!-- Google OAuth Direct Sign-in Button -->
+                <button type="button" class="btn-google-signin" id="btn-custom-google" onclick="triggerDirectGoogleAuth()">
                     <svg class="google-icon" viewBox="0 0 48 48">
                         <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
                         <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
@@ -1250,6 +1259,8 @@ const fullHtml = `<!DOCTYPE html>
                     </svg>
                     <span>Sign in with Google Account</span>
                 </button>
+
+                <div id="modalAuthStatus" style="font-size: 0.8rem; color: #2563eb; display: none; margin-top: 4px;"></div>
 
                 <div style="font-size: 0.74rem; color: #94a3b8; display: flex; align-items: center; justify-content: center; gap: 5px;">
                     <i class="fas fa-lock" style="font-size: 0.72rem;"></i> Official Google OAuth 2.0 Security
@@ -1398,7 +1409,7 @@ const fullHtml = `<!DOCTYPE html>
             diffBadge.className = 'difficulty-badge ' + (q.difficulty === 'Easy' ? 'diff-easy' : (q.difficulty === 'Medium' ? 'diff-medium' : 'diff-hard'));
             document.getElementById('current-pts').textContent = \`+\${q.points} pts\`;
 
-            document.getElementById('sql-input').value = q.initialCode || q.query;
+            document.getElementById('sql-input').value = '';
             document.getElementById('solution-code-block').textContent = q.query;
             document.getElementById('solution-drawer').classList.remove('visible');
             document.getElementById('toggle-solution-text').textContent = "Show Reference Solution";
@@ -1419,7 +1430,7 @@ const fullHtml = `<!DOCTYPE html>
         function resetEditorCode() {
             const mod = SQL_MODULES[currentModuleIndex];
             const q = mod.questions[currentQuestionIndex];
-            document.getElementById('sql-input').value = q.initialCode || q.query;
+            document.getElementById('sql-input').value = '';
             updateLineNumbers();
         }
 
@@ -2137,12 +2148,181 @@ const fullHtml = `<!DOCTYPE html>
                 : 'http://localhost:5001';
         }
 
-        function goToSignup() {
-            if (window.location.protocol.startsWith('http')) {
-                window.location.href = '/signup';
-            } else {
-                window.location.href = 'signup.html';
+        let labGoogleClientId = '';
+        let labGoogleTokenClient = null;
+
+        function setModalAuthStatus(html) {
+            const statusEl = document.getElementById('modalAuthStatus');
+            if (statusEl) {
+                statusEl.innerHTML = html;
+                statusEl.style.display = html ? 'block' : 'none';
             }
+        }
+
+        async function initLabGoogleAuth() {
+            try {
+                const apiBase = getApiBase();
+                const res = await fetch(\`\${apiBase}/api/auth/google-client-id\`).catch(() => null);
+                if (res && res.ok) {
+                    const data = await res.json();
+                    if (data && data.clientId && data.clientId.trim()) {
+                        labGoogleClientId = data.clientId.trim();
+                        setupLabGoogleSDK(labGoogleClientId);
+                        return;
+                    }
+                }
+            } catch (err) {}
+
+            const stored = localStorage.getItem('juet_google_client_id');
+            if (stored && stored.trim()) {
+                labGoogleClientId = stored.trim();
+                setupLabGoogleSDK(labGoogleClientId);
+            }
+        }
+
+        function setupLabGoogleSDK(clientId) {
+            if (!clientId) return;
+            const checkSDK = setInterval(() => {
+                if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
+                    clearInterval(checkSDK);
+                    try {
+                        google.accounts.id.initialize({
+                            client_id: clientId,
+                            callback: handleLabGoogleCredentialResponse,
+                            auto_select: false,
+                            cancel_on_tap_outside: true
+                        });
+
+                        const mount = document.getElementById('gsiModalOfficialBtn');
+                        if (mount) {
+                            mount.style.display = 'block';
+                            mount.innerHTML = '';
+                            google.accounts.id.renderButton(mount, {
+                                type: 'standard',
+                                theme: 'outline',
+                                size: 'large',
+                                text: 'continue_with',
+                                shape: 'pill',
+                                logo_alignment: 'left',
+                                width: 340
+                            });
+                        }
+
+                        if (google.accounts.oauth2) {
+                            labGoogleTokenClient = google.accounts.oauth2.initTokenClient({
+                                client_id: clientId,
+                                scope: 'openid email profile',
+                                callback: handleLabOAuth2TokenResponse
+                            });
+                        }
+
+                        if (!currentUser) {
+                            google.accounts.id.prompt();
+                        }
+                    } catch (e) {
+                        console.error('Lab GIS init error:', e);
+                    }
+                }
+            }, 100);
+            setTimeout(() => clearInterval(checkSDK), 8000);
+        }
+
+        function parseJwtLab(token) {
+            try {
+                const base64Url = token.split('.')[1];
+                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(''));
+                return JSON.parse(jsonPayload);
+            } catch(e) {
+                return {};
+            }
+        }
+
+        async function handleLabGoogleCredentialResponse(response) {
+            if (!response || !response.credential) return;
+            setModalAuthStatus('<i class="fas fa-spinner fa-spin"></i> Verifying Google credentials...');
+            try {
+                const payload = parseJwtLab(response.credential);
+                const email = payload.email || '';
+                const name = payload.name || payload.given_name || 'JUET Student';
+                const picture = payload.picture || '';
+                await submitLabAuthAndComplete({ name, email, picture, credential: response.credential });
+            } catch (err) {
+                setModalAuthStatus('<span style="color:#ef4444;"><i class="fas fa-times-circle"></i> Verification failed: ' + err.message + '</span>');
+            }
+        }
+
+        async function handleLabOAuth2TokenResponse(tokenResponse) {
+            if (!tokenResponse || !tokenResponse.access_token) {
+                if (tokenResponse && tokenResponse.error) {
+                    setModalAuthStatus('<span style="color:#ef4444;"><i class="fas fa-times-circle"></i> Google sign-in canceled.</span>');
+                }
+                return;
+            }
+            setModalAuthStatus('<i class="fas fa-spinner fa-spin"></i> Retrieving Google profile...');
+            try {
+                const userinfoRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                    headers: { Authorization: \`Bearer \${tokenResponse.access_token}\` }
+                });
+                const prof = await userinfoRes.json();
+                await submitLabAuthAndComplete({
+                    name: prof.name || 'JUET Student',
+                    email: prof.email,
+                    picture: prof.picture || ''
+                });
+            } catch (err) {
+                setModalAuthStatus('<span style="color:#ef4444;"><i class="fas fa-times-circle"></i> Failed to retrieve profile: ' + err.message + '</span>');
+            }
+        }
+
+        async function submitLabAuthAndComplete({ name, email, picture, credential }) {
+            setModalAuthStatus('<i class="fas fa-spinner fa-spin"></i> Synchronizing with JUET Virtual Lab...');
+            try {
+                const apiBase = getApiBase();
+                const res = await fetch(\`\${apiBase}/api/auth/login\`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, picture, credential })
+                });
+                const data = await res.json().catch(() => ({}));
+                if (res.ok && data && data.success && data.user) {
+                    await completeLogin({
+                        name: data.user.name || name,
+                        email: data.user.email || email,
+                        roll: data.user.roll || '',
+                        picture: data.user.picture || picture || ''
+                    });
+                } else {
+                    await completeLogin({ name, email, roll: '', picture });
+                }
+                setModalAuthStatus('');
+            } catch (err) {
+                await completeLogin({ name, email, roll: '', picture });
+                setModalAuthStatus('');
+            }
+        }
+
+        function triggerDirectGoogleAuth() {
+            if (labGoogleTokenClient) {
+                setModalAuthStatus('<i class="fas fa-spinner fa-spin"></i> Opening Google authentication...');
+                labGoogleTokenClient.requestAccessToken({ prompt: 'select_account' });
+            } else if (typeof google !== 'undefined' && google.accounts && google.accounts.id && labGoogleClientId) {
+                setModalAuthStatus('<i class="fas fa-spinner fa-spin"></i> Triggering Google One-Tap...');
+                google.accounts.id.prompt();
+            } else {
+                const studentEmail = prompt("Enter your institutional @juetguna.in Google Email Address:");
+                if (studentEmail && studentEmail.includes('@')) {
+                    const defaultName = studentEmail.split('@')[0].toUpperCase();
+                    const studentName = prompt("Enter your Full Name:", defaultName) || defaultName;
+                    submitLabAuthAndComplete({ name: studentName.trim(), email: studentEmail.trim().toLowerCase() });
+                }
+            }
+        }
+
+        function goToSignup() {
+            triggerDirectGoogleAuth();
         }
 
         async function completeLogin({ name, email, roll, picture }) {
@@ -2318,6 +2498,7 @@ const fullHtml = `<!DOCTYPE html>
         }
 
         // Initialize Virtual Lab
+        initLabGoogleAuth();
         updateUserDisplay();
         selectModule(0);
 

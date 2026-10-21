@@ -1104,6 +1104,9 @@
                                 <button class="btn-secondary" onclick="loadStudentProgressData()">
                                     <i class="fas fa-sync-alt"></i> Refresh
                                 </button>
+                                <button class="btn-secondary" style="color: #ef4444; border-color: #fca5a5;" onclick="clearAllStudentTelemetry()">
+                                    <i class="fas fa-trash-alt"></i> Clear Telemetry
+                                </button>
                             </div>
                         </div>
 
@@ -2556,6 +2559,29 @@
         }
         function closeStudentModal() {
             document.getElementById('studentDetailsModal').style.display = 'none';
+        }
+
+        async function clearAllStudentTelemetry() {
+            if (!confirm("Are you sure you want to permanently clear all Student SQL Progress Telemetry data? This will reset all student points and solved question records.")) {
+                return;
+            }
+            try {
+                const apiBase = (window.location.protocol.startsWith('http') && (window.location.port === '5001' || window.location.port === ''))
+                    ? ''
+                    : 'http://localhost:5001';
+                const res = await fetch(`${apiBase}/api/admin/students/clear`, { method: 'POST' });
+                const data = await res.json().catch(() => ({}));
+                if (res.ok && data.success) {
+                    showToast('Student telemetry cleared successfully.');
+                    currentStudents = [];
+                    renderStudentsTable(currentStudents);
+                    updateOverviewStats();
+                } else {
+                    showToast('Failed to clear telemetry: ' + (data.error || 'Unknown error'));
+                }
+            } catch (err) {
+                showToast('Network error clearing telemetry: ' + err.message);
+            }
         }
 
         function exportStudentsCSV() {

@@ -146,7 +146,7 @@
 
         function SqlPracticeApp({ onBack }) {
             const [currentIdx, setCurrentIdx] = useState(0);
-            const [code, setCode] = useState(CHALLENGES[0].initialCode);
+            const [code, setCode] = useState('');
             const [result, setResult] = useState(null);
             const [isCorrect, setIsCorrect] = useState(null);
             const [message, setMessage] = useState('');
@@ -178,7 +178,7 @@
 
             const handleSelect = (idx) => {
                 setCurrentIdx(idx);
-                setCode(CHALLENGES[idx].initialCode);
+                setCode('');
                 setResult(null);
                 setIsCorrect(null);
                 setMessage('');
@@ -315,7 +315,7 @@
                             <div style={{ background: '#ffffff', border: '1px solid #cbd5e1', borderRadius: '8px', overflow: 'hidden' }}>
                                 <div style={{ height: '36px', background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 12px', fontSize: '0.75rem', fontWeight: 700 }}>
                                     <span>&lt;/&gt; EDITOR</span>
-                                    <span onClick={() => setCode(current.initialCode)} style={{ cursor: 'pointer', color: '#64748b' }}>Reset Code</span>
+                                    <span onClick={() => setCode('')} style={{ cursor: 'pointer', color: '#64748b' }}>Reset Code</span>
                                 </div>
                                 <textarea
                                     value={code}
