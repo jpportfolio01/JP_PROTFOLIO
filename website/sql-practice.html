@@ -4623,6 +4623,14 @@
             if (stored && stored.trim()) {
                 labGoogleClientId = stored.trim();
                 setupLabGoogleSDK(labGoogleClientId);
+                return;
+            }
+
+            // Fallback to active configured Client ID
+            const FALLBACK_CLIENT_ID = '527537707643-40bp0kbvm46ahpqb19ul7k99ld3v4hc8.apps.googleusercontent.com';
+            if (FALLBACK_CLIENT_ID) {
+                labGoogleClientId = FALLBACK_CLIENT_ID;
+                setupLabGoogleSDK(labGoogleClientId);
             }
         }
 
@@ -4727,11 +4735,23 @@
             setModalAuthStatus('<i class="fas fa-spinner fa-spin"></i> Synchronizing with JUET Virtual Lab...');
             try {
                 const apiBase = getApiBase();
-                const res = await fetch(`${apiBase}/api/auth/login`, {
+                const payload = JSON.stringify({ name, email, picture, credential });
+                
+                // Hits /signup endpoint directly
+                let res = await fetch(`${apiBase}/signup`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, email, picture, credential })
-                });
+                    body: payload
+                }).catch(() => null);
+
+                // Fallback to /api/auth/login
+                if (!res || !res.ok) {
+                    res = await fetch(`${apiBase}/api/auth/login`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: payload
+                    });
+                }
                 const data = await res.json().catch(() => ({}));
                 if (res.ok && data && data.success && data.user) {
                     await completeLogin({

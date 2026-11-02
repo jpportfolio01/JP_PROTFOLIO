@@ -845,6 +845,12 @@
                 <span class="nav-chip" id="adminUserNavChip">
                     <i class="fas fa-user-check" style="color: #10b981;"></i> adminparmar
                 </span>
+                <button type="button" class="btn-view-site" id="navGitSyncBtn" onclick="openGitSyncModal()" style="background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; cursor: pointer; padding: 7px 14px; border-radius: 8px; font-weight: 700; font-size: 0.82rem; display: inline-flex; align-items: center; gap: 6px;" title="GitHub Cloud Persistence & Auto-Sync">
+                    <i class="fab fa-github"></i> <span id="navGitStatusText">GitHub: Checking...</span>
+                </button>
+                <button type="button" class="btn-view-site" onclick="handleExportData()" style="background: #f8fafc; color: #334155; border: 1px solid #cbd5e1; cursor: pointer; padding: 7px 14px; border-radius: 8px; font-weight: 700; font-size: 0.82rem; display: inline-flex; align-items: center; gap: 6px;" title="Download complete offline JSON backup">
+                    <i class="fas fa-download"></i> Backup
+                </button>
                 <button type="button" class="btn-view-site" onclick="openAdminSecurityModal()" style="background: #eef2ff; color: #4338ca; border: 1px solid #c7d2fe; cursor: pointer; padding: 7px 14px; border-radius: 8px; font-weight: 700; font-size: 0.82rem; display: inline-flex; align-items: center; gap: 6px;">
                     <i class="fas fa-key"></i> Security & Access
                 </button>
@@ -872,6 +878,9 @@
                     <h1>Administrative Operations Suite</h1>
                     <p>Select a specialized administration portal to track real-time telemetry or manage academic records.</p>
                 </div>
+
+                <!-- GIT SYNC ALERT BANNER -->
+                <div id="gitSyncHubAlert" style="display: none; margin-bottom: 24px; padding: 14px 20px; border-radius: 12px; font-size: 0.88rem; align-items: center; justify-content: space-between; gap: 16px;"></div>
 
                 <!-- OVERVIEW STATS -->
                 <div class="stats-row">
@@ -1951,6 +1960,115 @@
         </div>
     </div>
 
+    <!-- GITHUB CLOUD SYNC & DATA PERSISTENCE MODAL -->
+    <div id="gitSyncModal" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px); z-index: 10000; align-items: center; justify-content: center; padding: 20px;">
+        <div style="background: white; border-radius: 18px; max-width: 680px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 28px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border: 1px solid #e2e8f0;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid #f1f5f9;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 42px; height: 42px; border-radius: 12px; background: #0f172a; color: white; display: inline-flex; align-items: center; justify-content: center; font-size: 1.35rem;">
+                        <i class="fab fa-github"></i>
+                    </div>
+                    <div>
+                        <h3 style="margin: 0; font-size: 1.25rem; font-weight: 800; color: #0f172a;">GitHub Auto-Commit & Cloud Sync</h3>
+                        <span style="font-size: 0.82rem; color: #64748b;">Permanent data persistence across Render redeployments</span>
+                    </div>
+                </div>
+                <button onclick="closeGitSyncModal()" style="background: none; border: none; font-size: 1.35rem; cursor: pointer; color: #94a3b8; padding: 4px 8px; border-radius: 6px; line-height: 1;" title="Close modal">&times;</button>
+            </div>
+
+            <!-- STATUS BOX -->
+            <div id="modalGitStatusBox" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px; margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <div style="font-size: 0.84rem; font-weight: 700; color: #334155; display: flex; align-items: center; gap: 8px;">
+                        <span id="modalGitStatusDot" style="width: 10px; height: 10px; border-radius: 50%; background: #94a3b8; display: inline-block;"></span>
+                        <span id="modalGitStatusTitle">Checking Git connection...</span>
+                    </div>
+                    <span id="modalGitBranchBadge" class="pill-badge pill-info" style="font-size: 0.78rem; font-family: monospace;">main</span>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.82rem; color: #64748b; margin-bottom: 14px;">
+                    <div><strong>Repository:</strong> <span id="modalGitRepoDisplay" style="font-family: monospace;">jpportfolio01/JP_PROTFOLIO</span></div>
+                    <div><strong>Last Commit:</strong> <span id="modalGitLastCommitDisplay" style="font-family: monospace;">---</span></div>
+                </div>
+                <div id="modalGitPendingFilesBox" style="display: none; background: #fff7ed; border: 1px solid #ffedd5; border-radius: 8px; padding: 10px 12px; margin-bottom: 14px; font-size: 0.8rem; color: #9a3412;">
+                    <i class="fas fa-exclamation-triangle"></i> <strong>Pending Changes:</strong> <span id="modalGitPendingCount">0</span> uncommitted files waiting to be pushed to GitHub.
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" id="btnModalPushNow" class="btn-primary" onclick="handleManualGitSync()" style="flex: 1; justify-content: center; padding: 10px 18px; font-weight: 700; font-size: 0.88rem; background: #0f172a;">
+                        <i class="fas fa-cloud-upload-alt"></i> Commit & Push to GitHub Now
+                    </button>
+                    <button type="button" class="btn-secondary" onclick="loadGitSyncStatus(true)" style="padding: 10px 14px;" title="Refresh Git status">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- GITHUB TOKEN & SETTINGS -->
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px; margin-bottom: 20px;">
+                <h4 style="margin: 0 0 8px 0; font-size: 0.98rem; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-key" style="color: #4f46e5;"></i> GitHub Personal Access Token (PAT)
+                </h4>
+                <p style="font-size: 0.8rem; color: #64748b; line-height: 1.5; margin-bottom: 12px;">
+                    To let the backend automatically commit changes permanently to your GitHub repository (preventing data loss when Render redeploys), provide a GitHub token with <strong>repo</strong> permissions:
+                </p>
+                <div style="margin-bottom: 12px;">
+                    <div style="display: flex; gap: 8px; margin-bottom: 6px;">
+                        <input type="password" id="modalGitTokenInput" placeholder="Enter ghp_xxxxxxxxxxxxxxxxxxxx" class="form-control" style="flex: 1; font-family: monospace; font-size: 0.85rem;">
+                        <button type="button" class="btn-secondary" onclick="toggleGitTokenVisibility()" style="padding: 6px 12px; font-size: 0.8rem;">
+                            <i class="fas fa-eye" id="iconToggleGitToken"></i>
+                        </button>
+                    </div>
+                    <span style="font-size: 0.74rem; color: #64748b;">
+                        You can also set this as <code>GITHUB_TOKEN</code> in your Render Web Service Environment Variables.
+                    </span>
+                </div>
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 10px; margin-bottom: 12px;">
+                    <div>
+                        <label style="display: block; font-size: 0.78rem; font-weight: 700; color: #334155; margin-bottom: 4px;">Repository</label>
+                        <input type="text" id="modalGitRepoInput" value="jpportfolio01/JP_PROTFOLIO" class="form-control" style="width: 100%; font-family: monospace; font-size: 0.85rem;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 0.78rem; font-weight: 700; color: #334155; margin-bottom: 4px;">Branch</label>
+                        <input type="text" id="modalGitBranchInput" value="main" class="form-control" style="width: 100%; font-family: monospace; font-size: 0.85rem;">
+                    </div>
+                </div>
+                <div style="margin-bottom: 16px;">
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.84rem; font-weight: 600; color: #334155;">
+                        <input type="checkbox" id="modalGitAutoSyncCheck" checked style="width: 16px; height: 16px;">
+                        <span>Automatically commit and push to GitHub on every save (Questions, Publications, Projects, Scholars)</span>
+                    </label>
+                </div>
+                <div style="display: flex; justify-content: flex-end;">
+                    <button type="button" class="btn-primary" onclick="handleSaveGitSettings()" style="padding: 9px 18px; font-size: 0.88rem;">
+                        <i class="fas fa-save"></i> Save GitHub Settings
+                    </button>
+                </div>
+            </div>
+
+            <!-- ZERO-TOKEN SAFEGUARD: EXPORT & RESTORE BACKUP -->
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px; margin-bottom: 16px;">
+                <h4 style="margin: 0 0 8px 0; font-size: 0.98rem; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-shield-alt" style="color: #10b981;"></i> Offline Backup & Restore Safeguard
+                </h4>
+                <p style="font-size: 0.8rem; color: #64748b; line-height: 1.5; margin-bottom: 14px;">
+                    You can download a full unified backup of all 5 SQL modules, questions, publications, projects, and team members to your computer at any time. If a redeployment ever resets the server, upload your backup JSON file to restore everything in 1 click!
+                </p>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button type="button" class="btn-secondary" onclick="handleExportData()" style="padding: 9px 16px; font-size: 0.84rem; font-weight: 700; background: white;">
+                        <i class="fas fa-file-download" style="color: #2563eb;"></i> Download Full Backup (JSON)
+                    </button>
+                    <button type="button" class="btn-secondary" onclick="document.getElementById('backupFileInput').click()" style="padding: 9px 16px; font-size: 0.84rem; font-weight: 700; background: white;">
+                        <i class="fas fa-file-upload" style="color: #059669;"></i> Restore from Backup File
+                    </button>
+                    <input type="file" id="backupFileInput" accept=".json" style="display: none;" onchange="handleImportFile(event)">
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end;">
+                <button class="btn-secondary" onclick="closeGitSyncModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
     <!-- STUDENT SOLVED INSPECTOR MODAL -->
     <div id="studentDetailsModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center; padding: 20px;">
         <div style="background: white; border-radius: 14px; max-width: 580px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
@@ -2140,7 +2258,8 @@
                 loadModulesData(),
                 loadPublicationsData(),
                 loadTeamData(),
-                loadProjectsData()
+                loadProjectsData(),
+                loadGitSyncStatus(true)
             ]);
             updateOverviewStats();
         }
@@ -2408,6 +2527,314 @@
             const modal = document.getElementById('adminSecurityModal');
             if (modal) {
                 modal.style.display = 'none';
+            }
+        }
+
+        // ==========================================
+        // GITHUB CLOUD SYNC & PERMANENT PERSISTENCE
+        // ==========================================
+        let currentGitStatus = null;
+
+        async function loadGitSyncStatus(silent = false) {
+            try {
+                const apiBase = (window.location.protocol.startsWith('http') && (window.location.port === '5001' || window.location.port === ''))
+                    ? ''
+                    : 'http://localhost:5001';
+
+                const res = await fetch(`${apiBase}/api/admin/git-status`).catch(() => null);
+                if (res && res.ok) {
+                    const data = await res.json();
+                    if (data && data.success) {
+                        currentGitStatus = data;
+                        updateGitSyncUI();
+                        if (!silent) console.log('Git sync status loaded:', data);
+                        return;
+                    }
+                }
+            } catch (err) {
+                console.warn('Could not load git status:', err);
+            }
+        }
+
+        function updateGitSyncUI() {
+            if (!currentGitStatus) return;
+
+            const navBtn = document.getElementById('navGitSyncBtn');
+            const navText = document.getElementById('navGitStatusText');
+            const hubAlert = document.getElementById('gitSyncHubAlert');
+
+            // 1. Navbar badge
+            if (navBtn && navText) {
+                if (!currentGitStatus.hasToken) {
+                    navBtn.style.background = '#fff7ed';
+                    navBtn.style.color = '#c2410c';
+                    navBtn.style.borderColor = '#fed7aa';
+                    navText.innerHTML = '<i class="fas fa-exclamation-circle"></i> GitHub: Setup Token';
+                } else if (currentGitStatus.hasUncommittedChanges) {
+                    navBtn.style.background = '#fefce8';
+                    navBtn.style.color = '#854d0e';
+                    navBtn.style.borderColor = '#fef08a';
+                    navText.innerHTML = `<i class="fas fa-arrow-up"></i> ${currentGitStatus.modifiedFiles.length} To Push`;
+                } else {
+                    navBtn.style.background = '#f0fdf4';
+                    navBtn.style.color = '#166534';
+                    navBtn.style.borderColor = '#bbf7d0';
+                    navText.innerHTML = '<i class="fas fa-check-circle"></i> GitHub: Synced';
+                }
+            }
+
+            // 2. Hub Alert Banner
+            if (hubAlert) {
+                if (!currentGitStatus.hasToken) {
+                    hubAlert.style.display = 'flex';
+                    hubAlert.style.background = '#fff7ed';
+                    hubAlert.style.border = '1px solid #fed7aa';
+                    hubAlert.style.color = '#9a3412';
+                    hubAlert.innerHTML = `
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <i class="fas fa-exclamation-triangle" style="font-size:1.4rem; color:#ea580c;"></i>
+                            <div>
+                                <strong>Cloud Persistence Warning:</strong> Changes made in the Admin Portal are currently on Render's temporary disk. Connect your GitHub Token below so all updates commit automatically and stay permanent across redeployments!
+                            </div>
+                        </div>
+                        <button type="button" class="btn-primary" onclick="openGitSyncModal()" style="padding:7px 16px; font-size:0.82rem; white-space:nowrap; background:#ea580c; border:none; border-radius:8px; color:white; font-weight:700; cursor:pointer;">
+                            Connect GitHub Token
+                        </button>
+                    `;
+                } else if (currentGitStatus.hasUncommittedChanges) {
+                    hubAlert.style.display = 'flex';
+                    hubAlert.style.background = '#fefce8';
+                    hubAlert.style.border = '1px solid #fef08a';
+                    hubAlert.style.color = '#854d0e';
+                    hubAlert.innerHTML = `
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <i class="fas fa-cloud-upload-alt" style="font-size:1.4rem; color:#ca8a04;"></i>
+                            <div>
+                                <strong>Uncommitted Changes:</strong> You have ${currentGitStatus.modifiedFiles.length} file(s) updated locally that haven't been pushed to GitHub main yet.
+                            </div>
+                        </div>
+                        <button type="button" class="btn-primary" onclick="handleManualGitSync()" style="padding:7px 16px; font-size:0.82rem; white-space:nowrap; background:#ca8a04; border:none; border-radius:8px; color:white; font-weight:700; cursor:pointer;">
+                            Push Changes Now
+                        </button>
+                    `;
+                } else {
+                    hubAlert.style.display = 'none';
+                }
+            }
+
+            // 3. Modal elements
+            const dot = document.getElementById('modalGitStatusDot');
+            const title = document.getElementById('modalGitStatusTitle');
+            const branchBadge = document.getElementById('modalGitBranchBadge');
+            const repoDisplay = document.getElementById('modalGitRepoDisplay');
+            const commitDisplay = document.getElementById('modalGitLastCommitDisplay');
+            const pendingBox = document.getElementById('modalGitPendingFilesBox');
+            const pendingCount = document.getElementById('modalGitPendingCount');
+
+            if (branchBadge) branchBadge.textContent = currentGitStatus.branch || 'main';
+            if (repoDisplay) repoDisplay.textContent = currentGitStatus.repo || 'jpportfolio01/JP_PROTFOLIO';
+            if (commitDisplay) {
+                if (currentGitStatus.lastCommit) {
+                    commitDisplay.textContent = `${currentGitStatus.lastCommit.hash} (${currentGitStatus.lastCommit.date})`;
+                } else {
+                    commitDisplay.textContent = 'None';
+                }
+            }
+
+            if (dot && title) {
+                if (!currentGitStatus.hasToken) {
+                    dot.style.background = '#ea580c';
+                    title.textContent = 'GitHub Token Required for Cloud Persistence';
+                } else if (currentGitStatus.hasUncommittedChanges) {
+                    dot.style.background = '#eab308';
+                    title.textContent = `${currentGitStatus.modifiedFiles.length} uncommitted file(s) waiting to be pushed`;
+                } else {
+                    dot.style.background = '#10b981';
+                    title.textContent = 'In Sync with GitHub origin/' + (currentGitStatus.branch || 'main');
+                }
+            }
+
+            if (pendingBox && pendingCount) {
+                if (currentGitStatus.hasUncommittedChanges) {
+                    pendingBox.style.display = 'block';
+                    pendingCount.textContent = currentGitStatus.modifiedFiles.length;
+                } else {
+                    pendingBox.style.display = 'none';
+                }
+            }
+        }
+
+        function openGitSyncModal() {
+            const modal = document.getElementById('gitSyncModal');
+            if (modal) {
+                modal.style.display = 'flex';
+                if (currentGitStatus) {
+                    const tokenInput = document.getElementById('modalGitTokenInput');
+                    const repoInput = document.getElementById('modalGitRepoInput');
+                    const branchInput = document.getElementById('modalGitBranchInput');
+                    const autoCheck = document.getElementById('modalGitAutoSyncCheck');
+
+                    if (tokenInput && currentGitStatus.maskedToken) {
+                        tokenInput.placeholder = currentGitStatus.maskedToken;
+                    }
+                    if (repoInput && currentGitStatus.repo) {
+                        repoInput.value = currentGitStatus.repo;
+                    }
+                    if (branchInput && currentGitStatus.branch) {
+                        branchInput.value = currentGitStatus.branch;
+                    }
+                    if (autoCheck) {
+                        autoCheck.checked = currentGitStatus.autoGitSync !== false;
+                    }
+                }
+                loadGitSyncStatus(true);
+            }
+        }
+
+        function closeGitSyncModal() {
+            const modal = document.getElementById('gitSyncModal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        function toggleGitTokenVisibility() {
+            const input = document.getElementById('modalGitTokenInput');
+            const icon = document.getElementById('iconToggleGitToken');
+            if (input) {
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    if (icon) icon.className = 'fas fa-eye-slash';
+                } else {
+                    input.type = 'password';
+                    if (icon) icon.className = 'fas fa-eye';
+                }
+            }
+        }
+
+        async function handleSaveGitSettings() {
+            const tokenInput = document.getElementById('modalGitTokenInput');
+            const repoInput = document.getElementById('modalGitRepoInput');
+            const branchInput = document.getElementById('modalGitBranchInput');
+            const autoCheck = document.getElementById('modalGitAutoSyncCheck');
+
+            const tokenVal = tokenInput ? tokenInput.value.trim() : '';
+            const repoVal = repoInput ? repoInput.value.trim() : '';
+            const branchVal = branchInput ? branchInput.value.trim() : '';
+            const autoVal = autoCheck ? autoCheck.checked : true;
+
+            const payload = {
+                githubRepo: repoVal,
+                githubBranch: branchVal,
+                autoGitSync: autoVal
+            };
+            if (tokenVal) payload.githubToken = tokenVal;
+
+            try {
+                const apiBase = (window.location.protocol.startsWith('http') && (window.location.port === '5001' || window.location.port === ''))
+                    ? ''
+                    : 'http://localhost:5001';
+
+                const res = await fetch(`${apiBase}/api/admin/settings`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json().catch(() => ({}));
+                if (res.ok && data && data.success) {
+                    showToast('GitHub cloud persistence settings saved successfully!');
+                    if (tokenInput && tokenVal) tokenInput.value = '';
+                    await loadGitSyncStatus(true);
+                } else {
+                    showToast('Error saving settings: ' + (data.error || 'Server error'));
+                }
+            } catch (err) {
+                showToast('Failed to save settings: ' + err.message);
+            }
+        }
+
+        async function handleManualGitSync() {
+            const pushBtn = document.getElementById('btnModalPushNow');
+            const origHtml = pushBtn ? pushBtn.innerHTML : '';
+            if (pushBtn) {
+                pushBtn.disabled = true;
+                pushBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Committing & Pushing to GitHub...';
+            }
+
+            try {
+                const apiBase = (window.location.protocol.startsWith('http') && (window.location.port === '5001' || window.location.port === ''))
+                    ? ''
+                    : 'http://localhost:5001';
+
+                const res = await fetch(`${apiBase}/api/admin/git-sync`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: 'Manual sync from Admin Portal' })
+                });
+
+                const data = await res.json().catch(() => ({}));
+
+                if (res.ok && data && data.success) {
+                    showToast('✅ ' + (data.message || 'Pushed successfully to GitHub!'));
+                } else {
+                    showToast('❌ Sync failed: ' + (data.error || 'Could not push to GitHub. Verify your GITHUB_TOKEN.'));
+                    alert('GitHub Sync Notice:\n\n' + (data.error || 'Could not push.'));
+                }
+            } catch (err) {
+                showToast('Network error during sync: ' + err.message);
+            } finally {
+                if (pushBtn) {
+                    pushBtn.disabled = false;
+                    pushBtn.innerHTML = origHtml;
+                }
+                await loadGitSyncStatus(true);
+            }
+        }
+
+        function handleExportData() {
+            const apiBase = (window.location.protocol.startsWith('http') && (window.location.port === '5001' || window.location.port === ''))
+                ? ''
+                : 'http://localhost:5001';
+            window.location.href = `${apiBase}/api/admin/export-data`;
+            showToast('Downloading complete lab backup JSON...');
+        }
+
+        async function handleImportFile(event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+
+            if (!confirm(`Restore all data from backup file "${file.name}"?\n\nThis will update all SQL modules, questions, publications, projects, and team members.`)) {
+                event.target.value = '';
+                return;
+            }
+
+            try {
+                showToast('Reading and verifying backup file...');
+                const text = await file.text();
+                const json = JSON.parse(text);
+
+                const apiBase = (window.location.protocol.startsWith('http') && (window.location.port === '5001' || window.location.port === ''))
+                    ? ''
+                    : 'http://localhost:5001';
+
+                const res = await fetch(`${apiBase}/api/admin/import-data`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(json)
+                });
+
+                const result = await res.json().catch(() => ({}));
+
+                if (res.ok && result && result.success) {
+                    showToast('✅ Full backup restored successfully!');
+                    alert(`Backup Restored Successfully!\n\nModules: ${result.counts.modules}\nQuestions: ${result.counts.questions}\nPublications: ${result.counts.publications}\nProjects: ${result.counts.projects}\nTeam Members: ${result.counts.team}\n\nThe platform has been synchronized.`);
+                    await loadAllInitialData();
+                    await loadGitSyncStatus(true);
+                } else {
+                    showToast('Restore failed: ' + (result.error || 'Invalid backup structure'));
+                }
+            } catch (err) {
+                showToast('Invalid backup file: ' + err.message);
+            } finally {
+                event.target.value = '';
             }
         }
 

@@ -85,6 +85,7 @@ You can deploy `frontend/` to any static hosting provider for free (Vercel, Netl
 4. Add **Environment Variables** in Render:
    - `NODE_ENV`: `production`
    - `GOOGLE_CLIENT_ID`: `<your-google-oauth-client-id>.apps.googleusercontent.com`
+   - `GITHUB_TOKEN`: `<your-github-personal-access-token>` *(Optional but recommended: Automatically commits all Admin Portal updates back to GitHub so they survive redeployments)*
    *(Render will inject `PORT` automatically)*
 5. Under **Advanced Settings**:
    - **Health Check Path**: `/api/health`

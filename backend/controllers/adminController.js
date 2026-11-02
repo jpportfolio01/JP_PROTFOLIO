@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 const db = require('../models/db');
+const gitSync = require('../services/gitSyncService');
 
 const DATA_DIR = path.join(__dirname, '..', 'data');
 const MODULES_DATA_PATH = path.join(DATA_DIR, 'modulesData.js');
@@ -76,6 +77,11 @@ function saveModulesAndRegenerate(modules) {
   } catch (err) {
     console.error('Error during automatic HTML generation:', err.message);
   }
+
+  // Cloud Auto-Sync
+  try {
+    gitSync.queueAutoSync('Updated SQL practice modules and questions');
+  } catch (e) {}
 }
 
 // Helper: load students store
@@ -124,6 +130,10 @@ function savePublications(pubs) {
       console.error(`Error syncing publications.js to ${dir}:`, err.message);
     }
   });
+
+  try {
+    gitSync.queueAutoSync('Updated publications');
+  } catch (e) {}
 }
 
 // Helper: load & save team data
@@ -140,6 +150,9 @@ function loadTeam() {
 
 function saveTeam(team) {
   fs.writeFileSync(TEAM_PATH, JSON.stringify(team, null, 2), 'utf8');
+  try {
+    gitSync.queueAutoSync('Updated scholars and team members');
+  } catch (e) {}
 }
 
 // Helper: load & save research projects
@@ -173,6 +186,10 @@ function saveProjects(projects) {
       console.error(`Error syncing projectsData.js to ${dir}:`, e.message);
     }
   });
+
+  try {
+    gitSync.queueAutoSync('Updated research projects');
+  } catch (e) {}
 }
 
 // Helper: load & save virtual lab projects
@@ -199,6 +216,10 @@ function saveVlabProjects(vlabs) {
   } catch (e) {
     console.error('Error syncing vlabData.js:', e.message);
   }
+
+  try {
+    gitSync.queueAutoSync('Updated virtual lab projects');
+  } catch (e) {}
 }
 
 // 1. Admin Login
@@ -225,15 +246,26 @@ exports.login = (req, res) => {
 exports.getSettings = (req, res) => {
   try {
     const settings = loadAdminSettings();
+    const gitStatus = gitSync.getGitStatus();
     res.json({
       success: true,
       username: settings.username,
       triggerClickCount: settings.triggerClickCount || 8,
       googleClientId: settings.googleClientId || '',
+      githubRepo: settings.githubRepo || gitStatus.repo || 'jpportfolio01/JP_PROTFOLIO',
+      githubBranch: settings.githubBranch || gitStatus.branch || 'main',
+      hasGithubToken: gitStatus.hasToken,
+      maskedGithubToken: gitStatus.maskedToken,
+      autoGitSync: settings.autoGitSync !== false,
+      gitStatus,
       settings: {
         username: settings.username,
         triggerClickCount: settings.triggerClickCount || 8,
-        googleClientId: settings.googleClientId || ''
+        googleClientId: settings.googleClientId || '',
+        githubRepo: settings.githubRepo || gitStatus.repo || 'jpportfolio01/JP_PROTFOLIO',
+        githubBranch: settings.githubBranch || gitStatus.branch || 'main',
+        hasGithubToken: gitStatus.hasToken,
+        autoGitSync: settings.autoGitSync !== false
       }
     });
   } catch (err) {
@@ -244,7 +276,7 @@ exports.getSettings = (req, res) => {
 // Admin Settings: Update settings
 exports.updateSettings = (req, res) => {
   try {
-    const { triggerClickCount, googleClientId } = req.body;
+    const { triggerClickCount, googleClientId, githubToken, githubRepo, githubBranch, autoGitSync } = req.body;
     const settings = loadAdminSettings();
 
     if (triggerClickCount !== undefined) {
@@ -263,16 +295,43 @@ exports.updateSettings = (req, res) => {
       settings.googleClientId = googleClientId.trim();
     }
 
+    if (githubToken !== undefined) {
+      settings.githubToken = githubToken.trim();
+    }
+
+    if (githubRepo !== undefined) {
+      settings.githubRepo = githubRepo.trim();
+    }
+
+    if (githubBranch !== undefined) {
+      settings.githubBranch = githubBranch.trim();
+    }
+
+    if (autoGitSync !== undefined) {
+      settings.autoGitSync = !!autoGitSync;
+    }
+
     saveAdminSettings(settings);
+
+    const gitStatus = gitSync.getGitStatus();
 
     res.json({
       success: true,
       triggerClickCount: settings.triggerClickCount,
       googleClientId: settings.googleClientId || '',
+      githubRepo: settings.githubRepo || gitStatus.repo,
+      githubBranch: settings.githubBranch || gitStatus.branch,
+      hasGithubToken: gitStatus.hasToken,
+      autoGitSync: settings.autoGitSync !== false,
+      gitStatus,
       settings: {
         username: settings.username,
         triggerClickCount: settings.triggerClickCount,
-        googleClientId: settings.googleClientId || ''
+        googleClientId: settings.googleClientId || '',
+        githubRepo: settings.githubRepo || gitStatus.repo,
+        githubBranch: settings.githubBranch || gitStatus.branch,
+        hasGithubToken: gitStatus.hasToken,
+        autoGitSync: settings.autoGitSync !== false
       },
       message: 'Admin settings updated successfully.'
     });
@@ -972,6 +1031,11 @@ exports.uploadImage = (req, res) => {
     });
 
     const relativeUrl = `images/${folder}/${finalFilename}`;
+
+    try {
+      gitSync.queueAutoSync(`Uploaded ${folder} image`);
+    } catch(e) {}
+
     res.json({
       success: true,
       message: 'Image uploaded successfully!',
@@ -980,6 +1044,86 @@ exports.uploadImage = (req, res) => {
   } catch (err) {
     console.error('Image upload error:', err);
     res.status(500).json({ success: false, error: err.message });
+  }
+};
+
+// ==========================================
+// GIT CLOUD SYNC & PERMANENT PERSISTENCE APIs
+// ==========================================
+
+exports.getGitSyncStatus = (req, res) => {
+  try {
+    const status = gitSync.getGitStatus();
+    res.json({ success: true, ...status });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
+exports.triggerGitSync = async (req, res) => {
+  try {
+    const { message } = req.body || {};
+    const result = await gitSync.commitAndPush(message);
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
+exports.exportData = (req, res) => {
+  try {
+    const data = gitSync.exportFullData();
+    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Content-Disposition', `attachment; filename="juet_portfolio_backup_${new Date().toISOString().slice(0, 10)}.json"`);
+    res.send(JSON.stringify(data, null, 2));
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
+exports.importData = async (req, res) => {
+  try {
+    const payload = req.body;
+    const data = payload.data || payload;
+    let counts = { modules: 0, questions: 0, publications: 0, projects: 0, team: 0 };
+
+    if (Array.isArray(data.modules) && data.modules.length > 0) {
+      saveModulesAndRegenerate(data.modules);
+      counts.modules = data.modules.length;
+      counts.questions = data.modules.reduce((acc, m) => acc + (m.questions ? m.questions.length : 0), 0);
+    }
+    if (Array.isArray(data.publications) && data.publications.length > 0) {
+      savePublications(data.publications);
+      counts.publications = data.publications.length;
+    }
+    if (Array.isArray(data.projects) && data.projects.length > 0) {
+      saveProjects(data.projects);
+      counts.projects = data.projects.length;
+    }
+    if (Array.isArray(data.vlabProjects) && data.vlabProjects.length > 0) {
+      saveVlabProjects(data.vlabProjects);
+    }
+    if (data.team && (Array.isArray(data.team.scholars) || Array.isArray(data.team.members))) {
+      saveTeam(data.team);
+      counts.team = (data.team.scholars ? data.team.scholars.length : 0) + (data.team.members ? data.team.members.length : 0);
+    }
+    if (data.publicSettings) {
+      const cur = loadAdminSettings();
+      if (data.publicSettings.triggerClickCount) cur.triggerClickCount = data.publicSettings.triggerClickCount;
+      if (data.publicSettings.googleClientId) cur.googleClientId = data.publicSettings.googleClientId;
+      saveAdminSettings(cur);
+    }
+
+    gitSync.queueAutoSync('Restored full unified data backup');
+
+    return res.json({
+      success: true,
+      message: 'Full backup restored successfully! All modules, publications, projects, and team members updated.',
+      counts
+    });
+  } catch (err) {
+    console.error('Import data error:', err);
+    return res.status(500).json({ success: false, error: err.message });
   }
 };
 
