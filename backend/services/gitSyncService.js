@@ -137,7 +137,11 @@ async function commitAndPush(customMessage) {
   try {
     // 1. Stage modified dynamic files (data, scripts, images, modules)
     const stagePaths = [
-      'backend/data/',
+      'backend/data/modulesData.js',
+      'backend/data/publications.json',
+      'backend/data/projects.json',
+      'backend/data/team.json',
+      'backend/data/vlab_projects.json',
       'frontend/modulesData.js',
       'frontend/publications.js',
       'frontend/projectsData.js',

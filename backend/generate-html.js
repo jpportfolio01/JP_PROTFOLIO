@@ -1029,6 +1029,255 @@ const fullHtml = `<!DOCTYPE html>
             align-items: center;
             justify-content: space-between;
         }
+
+        /* Mobile View Switcher Tabs */
+        .mobile-view-tabs {
+            display: none;
+            background: #ffffff;
+            border-bottom: 2px solid #e2e8f0;
+            position: sticky;
+            top: 0;
+            z-index: 95;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+        }
+        .mobile-tab-btn {
+            flex: 1;
+            padding: 10px 8px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: #64748b;
+            font-size: 0.82rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+        .mobile-tab-btn.active {
+            color: #2563eb;
+            border-bottom-color: #2563eb;
+            background: #eff6ff;
+        }
+        .mobile-tab-badge {
+            background: #e2e8f0;
+            color: #475569;
+            font-size: 0.68rem;
+            padding: 1px 6px;
+            border-radius: 10px;
+            font-weight: 700;
+        }
+        .mobile-tab-btn.active .mobile-tab-badge {
+            background: #bfdbfe;
+            color: #1e40af;
+        }
+
+        /* Responsive Mobile Styles */
+        @media (max-width: 860px) {
+            body {
+                height: auto;
+                min-height: 100vh;
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+            .top-navbar {
+                height: 52px;
+                padding: 0 10px;
+            }
+            .brand-title {
+                font-size: 0.84rem;
+                max-width: 140px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .brand-sub {
+                display: none;
+            }
+            .btn-back {
+                width: 28px;
+                height: 28px;
+                font-size: 0.85rem;
+            }
+            .brand-logo-box {
+                width: 28px;
+                height: 28px;
+                font-size: 0.95rem;
+            }
+            .nav-center {
+                display: none;
+            }
+            .btn-login-outline {
+                padding: 4px 10px;
+                font-size: 0.75rem;
+            }
+            .user-profile-badge {
+                padding: 3px 8px;
+                font-size: 0.75rem;
+            }
+            #user-display-name {
+                max-width: 75px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .mobile-view-tabs {
+                display: flex;
+            }
+
+            .workspace-container {
+                display: block;
+                height: auto;
+                min-height: calc(100vh - 96px);
+                overflow: visible;
+            }
+
+            /* Responsive Sidebar Left (Questions) */
+            .sidebar-left {
+                width: 100%;
+                border-right: none;
+                height: auto;
+                max-height: none;
+                display: none;
+            }
+            .module-tabs {
+                max-height: 140px;
+            }
+            .challenge-list-container {
+                max-height: calc(100vh - 230px);
+                overflow-y: auto;
+            }
+
+            /* Responsive Center Workspace (Editor & Output) */
+            .workspace-center {
+                width: 100%;
+                height: auto;
+                overflow: visible;
+                padding: 14px 12px 30px;
+                display: flex;
+            }
+            .problem-breadcrumb {
+                font-size: 0.7rem;
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+            .problem-title {
+                font-size: 1.15rem;
+            }
+            .problem-desc {
+                font-size: 0.86rem;
+                padding: 12px 14px;
+            }
+            .editor-header {
+                padding: 8px 12px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+            }
+            .editor-header-actions {
+                width: 100%;
+                justify-content: flex-end;
+                gap: 6px;
+            }
+            .btn-secondary-action {
+                font-size: 0.72rem;
+                padding: 4px 8px;
+            }
+            .code-textarea {
+                font-size: 14px !important;
+                min-height: 150px;
+                line-height: 1.45;
+            }
+            .action-bar {
+                flex-direction: column;
+                gap: 8px;
+                align-items: stretch;
+            }
+            .action-buttons-right {
+                flex-direction: column;
+                gap: 8px;
+                width: 100%;
+            }
+            .btn-run-query, .btn-submit-lab {
+                width: 100%;
+                justify-content: center;
+                padding: 11px 16px;
+                font-size: 0.9rem;
+            }
+            .parallel-results-grid {
+                grid-template-columns: 1fr !important;
+                gap: 16px;
+            }
+            .output-table-wrap {
+                max-height: 280px;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            /* Responsive Sidebar Right (Schema) */
+            .sidebar-right {
+                width: 100%;
+                border-left: none;
+                height: auto;
+                display: none;
+            }
+            .schema-cards {
+                max-height: none;
+                overflow: visible;
+                padding: 12px;
+            }
+
+            /* Modals */
+            .modal-card {
+                width: 95% !important;
+                max-width: 95% !important;
+                margin: 10px;
+            }
+            .modal-body {
+                padding: 16px;
+                max-height: 80vh;
+            }
+        }
+
+        /* Modern Floating Toast Notification (No browser alert popups) */
+        .vlab-toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 10000;
+            background: #0f172a;
+            color: #ffffff;
+            padding: 12px 20px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+            max-width: calc(100vw - 48px);
+        }
+        .vlab-toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .vlab-toast.success {
+            border-left: 4px solid #10b981;
+        }
+        .vlab-toast.info {
+            border-left: 4px solid #3b82f6;
+        }
+        .vlab-toast.warning {
+            border-left: 4px solid #f59e0b;
+        }
     </style>
 </head>
 <body>
@@ -1082,6 +1331,20 @@ const fullHtml = `<!DOCTYPE html>
             </div>
         </div>
     </header>
+
+    <!-- MOBILE NAVIGATION TABS (Visible only on screens <= 860px) -->
+    <nav class="mobile-view-tabs" id="mobile-view-tabs">
+        <button type="button" class="mobile-tab-btn active" id="tab-btn-editor" onclick="switchMobileView('editor')">
+            <i class="fas fa-terminal"></i> <span>Workspace</span>
+        </button>
+        <button type="button" class="mobile-tab-btn" id="tab-btn-questions" onclick="switchMobileView('questions')">
+            <i class="fas fa-tasks"></i> <span>Challenges</span>
+            <span class="mobile-tab-badge" id="mobile-tab-progress">0/75</span>
+        </button>
+        <button type="button" class="mobile-tab-btn" id="tab-btn-schema" onclick="switchMobileView('schema')">
+            <i class="fas fa-table"></i> <span>Schema</span>
+        </button>
+    </nav>
 
     <!-- WORKSPACE 3 COLUMNS -->
     <main class="workspace-container">
@@ -1220,6 +1483,50 @@ const fullHtml = `<!DOCTYPE html>
             </div>
         </div>
     </div>
+
+    <!-- FAQ & LAB GUIDE MODAL -->
+    <div class="modal-overlay" id="faq-modal">
+        <div class="modal-card" style="max-width: 600px;">
+            <div class="modal-header">
+                <div class="modal-title" style="display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-question-circle" style="color:#2563eb;"></i> JUET Virtual Lab Guide & FAQ
+                </div>
+                <button class="btn-close-modal" onclick="closeFaqModal()">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 24px; font-size: 0.9rem; line-height: 1.6; color: #334155;">
+                <div style="margin-bottom: 16px;">
+                    <h4 style="color: #0f172a; margin-bottom: 4px; font-size: 0.98rem; display: flex; align-items: center; gap: 6px;">
+                        <i class="fas fa-check-double" style="color:#10b981;"></i> 1. How does Parallel Verification work?
+                    </h4>
+                    <p style="margin: 0; font-size: 0.85rem; color: #64748b;">When you click <strong>Run & Compare Query</strong>, your query output is displayed side-by-side with the expected output, checking row count, column names, order, and cell values.</p>
+                </div>
+                <div style="margin-bottom: 16px;">
+                    <h4 style="color: #0f172a; margin-bottom: 4px; font-size: 0.98rem; display: flex; align-items: center; gap: 6px;">
+                        <i class="fas fa-layer-group" style="color:#2563eb;"></i> 2. 5 Topic-Wise Modules
+                    </h4>
+                    <p style="margin: 0; font-size: 0.85rem; color: #64748b;">Module 1: DDL & DML Basics<br>Module 2: Aggregations & GROUP BY<br>Module 3: Relational JOINs<br>Module 4: Subqueries & Logic<br>Module 5: Window Functions & CTEs</p>
+                </div>
+                <div style="margin-bottom: 16px;">
+                    <h4 style="color: #0f172a; margin-bottom: 4px; font-size: 0.98rem; display: flex; align-items: center; gap: 6px;">
+                        <i class="fab fa-google" style="color:#ea4335;"></i> 3. Google Institutional Sign-In
+                    </h4>
+                    <p style="margin: 0; font-size: 0.85rem; color: #64748b;">Sign in with your @juetguna.in Gmail ID. Your enrollment number is automatically identified from your email to record your points and question progress on the leaderboard.</p>
+                </div>
+                <div style="margin-bottom: 18px;">
+                    <h4 style="color: #0f172a; margin-bottom: 4px; font-size: 0.98rem; display: flex; align-items: center; gap: 6px;">
+                        <i class="fas fa-keyboard" style="color:#8b5cf6;"></i> 4. Keyboard Shortcut
+                    </h4>
+                    <p style="margin: 0; font-size: 0.85rem; color: #64748b;">Press <kbd style="background: #e2e8f0; padding: 2px 6px; border-radius: 4px; font-family: monospace;">Ctrl+Enter</kbd> or <kbd style="background: #e2e8f0; padding: 2px 6px; border-radius: 4px; font-family: monospace;">Cmd+Enter</kbd> to execute queries instantly.</p>
+                </div>
+                <div style="text-align: right;">
+                    <button class="btn-tool" style="background:#2563eb; color:white; padding:8px 20px;" onclick="closeFaqModal()">Got it</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FLOATING TOAST CONTAINER -->
+    <div id="vlab-toast" class="vlab-toast"></div>
 
     <!-- LOGIN MODAL (ONLY GMAIL AUTHENTICATION) -->
     <div class="modal-overlay" id="login-modal">
@@ -1392,6 +1699,9 @@ const fullHtml = `<!DOCTYPE html>
         // Load specific question into center editor
         function loadQuestion(index) {
             currentQuestionIndex = index;
+            if (window.innerWidth <= 860) {
+                switchMobileView('editor');
+            }
             const mod = SQL_MODULES[currentModuleIndex];
             const q = mod.questions[index];
 
@@ -1747,7 +2057,7 @@ const fullHtml = `<!DOCTYPE html>
             }
 
             if (!currentUser) {
-                alert("Please sign in with your @juetguna.in Google/Gmail account to run queries and record your progress.");
+                showToast("Please sign in with Google to run queries and record your progress.", "warning");
                 openLoginModal();
                 return;
             }
@@ -2091,6 +2401,26 @@ const fullHtml = `<!DOCTYPE html>
             document.getElementById('sample-data-modal').style.display = 'none';
         }
 
+        // Sleek Non-Blocking Toast System (Replaces browser alert popups)
+        let toastTimeout = null;
+        function showToast(message, type = 'success', duration = 3500) {
+            let toast = document.getElementById('vlab-toast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'vlab-toast';
+                document.body.appendChild(toast);
+            }
+            toast.className = \`vlab-toast \${type} show\`;
+            const icon = type === 'success' ? '<i class="fas fa-check-circle" style="color:#10b981;"></i>' 
+                       : type === 'warning' ? '<i class="fas fa-exclamation-triangle" style="color:#f59e0b;"></i>' 
+                       : '<i class="fas fa-info-circle" style="color:#3b82f6;"></i>';
+            toast.innerHTML = \`\${icon} <span>\${message}</span>\`;
+            if (toastTimeout) clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, duration);
+        }
+
         // Student Authentication & Display
         function updateUserDisplay() {
             document.getElementById('points-count').textContent = userPoints;
@@ -2124,22 +2454,60 @@ const fullHtml = `<!DOCTYPE html>
         function updateProgressSummary() {
             const total = 75;
             const pct = Math.round((userSolved.length / total) * 100);
-            document.getElementById('progress-summary').textContent = \`\${userSolved.length} / \${total} Solved (\${pct}%)\`;
+            const sumEl = document.getElementById('progress-summary');
+            if (sumEl) sumEl.textContent = \`\${userSolved.length} / \${total} Solved (\${pct}%)\`;
+            const mobBadge = document.getElementById('mobile-tab-progress');
+            if (mobBadge) mobBadge.textContent = \`\${userSolved.length}/\${total}\`;
         }
+
+        let currentMobileView = 'editor';
+        function switchMobileView(view) {
+            currentMobileView = view;
+            const leftSidebar = document.querySelector('.sidebar-left');
+            const centerWorkspace = document.querySelector('.workspace-center');
+            const rightSidebar = document.querySelector('.sidebar-right');
+            
+            document.querySelectorAll('.mobile-tab-btn').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.getElementById('tab-btn-' + view);
+            if (activeBtn) activeBtn.classList.add('active');
+
+            if (window.innerWidth <= 860) {
+                if (leftSidebar) leftSidebar.style.display = (view === 'questions') ? 'flex' : 'none';
+                if (centerWorkspace) centerWorkspace.style.display = (view === 'editor') ? 'flex' : 'none';
+                if (rightSidebar) rightSidebar.style.display = (view === 'schema') ? 'flex' : 'none';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                if (leftSidebar) leftSidebar.style.display = 'flex';
+                if (centerWorkspace) centerWorkspace.style.display = 'flex';
+                if (rightSidebar) rightSidebar.style.display = 'flex';
+            }
+        }
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 860) {
+                const leftSidebar = document.querySelector('.sidebar-left');
+                const centerWorkspace = document.querySelector('.workspace-center');
+                const rightSidebar = document.querySelector('.sidebar-right');
+                if (leftSidebar) leftSidebar.style.display = 'flex';
+                if (centerWorkspace) centerWorkspace.style.display = 'flex';
+                if (rightSidebar) rightSidebar.style.display = 'flex';
+            } else {
+                switchMobileView(currentMobileView);
+            }
+        });
 
         function openLoginModal() { 
             const modal = document.getElementById('login-modal');
             const closeBtn = document.getElementById('login-modal-close-btn');
             if (modal) modal.style.display = 'flex';
-            if (closeBtn) closeBtn.style.display = currentUser ? 'block' : 'none';
+            if (closeBtn) closeBtn.style.display = 'block';
         }
         function closeLoginModal() { 
-            if (!currentUser) {
-                alert("Sign-in with your @juetguna.in Gmail is required to access the Virtual Lab.");
-                return;
-            }
             const modal = document.getElementById('login-modal');
             if (modal) modal.style.display = 'none'; 
+            if (!currentUser) {
+                showToast("Sign in anytime from the top bar to record your progress", "info", 3000);
+            }
         }
 
         function getApiBase() {
@@ -2332,12 +2700,7 @@ const fullHtml = `<!DOCTYPE html>
                 setModalAuthStatus('<i class="fas fa-spinner fa-spin"></i> Triggering Google One-Tap...');
                 google.accounts.id.prompt();
             } else {
-                const studentEmail = prompt("Enter your institutional @juetguna.in Google Email Address:");
-                if (studentEmail && studentEmail.includes('@')) {
-                    const defaultName = studentEmail.split('@')[0].toUpperCase();
-                    const studentName = prompt("Enter your Full Name:", defaultName) || defaultName;
-                    submitLabAuthAndComplete({ name: studentName.trim(), email: studentEmail.trim().toLowerCase() });
-                }
+                window.location.href = 'signup.html';
             }
         }
 
@@ -2379,7 +2742,7 @@ const fullHtml = `<!DOCTYPE html>
             // Synchronize with backend SQLite database and fetch server profile
             await syncUserProfileAndProgress();
             
-            alert(\`Welcome \${currentUser.name}! Authenticated via Gmail as \${currentUser.email} (Enrollment: \${currentUser.roll}). Your SQL practice progress is now actively tracked.\`);
+            showToast(\`Welcome \${currentUser.name}! Authenticated (\${currentUser.roll || currentUser.email})\`, 'success');
         }
 
         async function syncSingleSolvedToBackend(challengeId, points, queryText = '') {
@@ -2498,23 +2861,25 @@ const fullHtml = `<!DOCTYPE html>
         }
 
         function handleLogout() {
-            const studentLabel = currentUser ? \`\${currentUser.name} (\${currentUser.roll})\` : 'Student';
-            if (confirm(\`Are you sure you want to log out from \${studentLabel}?\`)) {
-                currentUser = null;
-                localStorage.removeItem('juet_sql_user');
-                userSolved = [];
-                userPoints = 0;
-                localStorage.removeItem('juet_sql_solved');
-                localStorage.removeItem('juet_sql_points');
-                updateUserDisplay();
-                renderModuleTabs();
-                renderQuestionsList(document.getElementById('search-questions-input') ? document.getElementById('search-questions-input').value.trim() : '');
-                openLoginModal();
-            }
+            currentUser = null;
+            localStorage.removeItem('juet_sql_user');
+            userSolved = [];
+            userPoints = 0;
+            localStorage.removeItem('juet_sql_solved');
+            localStorage.removeItem('juet_sql_points');
+            updateUserDisplay();
+            renderModuleTabs();
+            renderQuestionsList(document.getElementById('search-questions-input') ? document.getElementById('search-questions-input').value.trim() : '');
+            showToast('You have logged out.', 'info');
         }
 
         function showFaqModal() {
-            alert("JUET Virtual Lab - Dr. Jitendra Parmar\\n\\n1. How does Parallel Verification work?\\nWhen you click 'Run & Compare Query', your query output is displayed side-by-side with the expected output, checking both row count, column names, and cell values.\\n\\n2. 5 Topic-Wise Modules:\\nModule 1: DDL & DML Basics\\nModule 2: Aggregations & GROUP BY\\nModule 3: Relational JOINs\\nModule 4: Subqueries & Logic\\nModule 5: Window Functions & CTEs\\n\\n3. Google Institutional Sign-In:\\nUse your official @juetguna.in Gmail ID. Your enrollment number is automatically identified from your email to record your points and question progress.\\n\\n4. Keyboard Shortcut:\\nPress Ctrl+Enter or Cmd+Enter to execute queries instantly.");
+            const modal = document.getElementById('faq-modal');
+            if (modal) modal.style.display = 'flex';
+        }
+        function closeFaqModal() {
+            const modal = document.getElementById('faq-modal');
+            if (modal) modal.style.display = 'none';
         }
 
         // Initialize Virtual Lab
@@ -2522,13 +2887,26 @@ const fullHtml = `<!DOCTYPE html>
         updateUserDisplay();
         selectModule(0);
 
-        if (!currentUser) {
-            // First time user opens SQL practice module: pop up appears!
-            openLoginModal();
-        } else {
+        if (window.innerWidth <= 860) {
+            switchMobileView('editor');
+        }
+
+        if (currentUser) {
             // Returning user: saved always till logout! Synchronize progress
             syncUserProfileAndProgress();
         }
+
+        // Backdrop click & Escape key closes any active modal cleanly
+        window.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal-overlay')) {
+                e.target.style.display = 'none';
+            }
+        });
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none');
+            }
+        });
     </script>
 </body>
 </html>

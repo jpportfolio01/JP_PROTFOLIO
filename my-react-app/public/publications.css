@@ -439,3 +439,38 @@
         max-width: 100%;
     }
 }
+
+@media (max-width: 480px) {
+    .publications-header h1 {
+        font-size: 1.85rem;
+    }
+    .publications-subtitle {
+        font-size: 0.95rem;
+    }
+    .stat-pill {
+        width: 100%;
+        justify-content: center;
+        font-size: 0.82rem;
+    }
+    .publication-card {
+        padding: 1.15rem;
+    }
+    .publication-card-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    .publication-title {
+        font-size: 1.05rem;
+        line-height: 1.4;
+    }
+    .publication-footer {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+    .pub-action-btn {
+        justify-content: center;
+        width: 100%;
+    }
+}

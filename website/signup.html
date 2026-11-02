@@ -235,6 +235,26 @@
             font-size: 0.78rem;
             color: #94a3b8;
         }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 16px 12px;
+            }
+            .auth-card {
+                padding: 26px 18px 24px;
+                border-radius: 18px;
+            }
+            .auth-title {
+                font-size: 20px;
+            }
+            .auth-subtitle {
+                font-size: 13px;
+            }
+            .info-pill {
+                padding: 10px 12px;
+                font-size: 0.78rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -336,6 +356,14 @@
             const storedClientId = localStorage.getItem('juet_google_client_id');
             if (storedClientId && storedClientId.trim()) {
                 currentClientId = storedClientId.trim();
+                setupGoogleSDK(currentClientId);
+                return;
+            }
+
+            // Fallback to active configured Client ID
+            const FALLBACK_CLIENT_ID = '527537707643-40bp0kbvm46ahpqb19ul7k99ld3v4hc8.apps.googleusercontent.com';
+            if (FALLBACK_CLIENT_ID) {
+                currentClientId = FALLBACK_CLIENT_ID;
                 setupGoogleSDK(currentClientId);
                 return;
             }
@@ -479,16 +507,28 @@
         async function submitGoogleAuthToBackend({ name, email, picture, credential }) {
             try {
                 const apiBase = getApiBase();
-                const res = await fetch(`${apiBase}/api/auth/login`, {
+                const payload = JSON.stringify({
+                    name: name,
+                    email: email,
+                    picture: picture,
+                    credential: credential
+                });
+
+                // Hits the /signup endpoint directly
+                let res = await fetch(`${apiBase}/signup`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        name: name,
-                        email: email,
-                        picture: picture,
-                        credential: credential
-                    })
-                });
+                    body: payload
+                }).catch(() => null);
+
+                // Fallback to /api/auth/login if necessary
+                if (!res || !res.ok) {
+                    res = await fetch(`${apiBase}/api/auth/login`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: payload
+                    });
+                }
 
                 const data = await res.json();
 

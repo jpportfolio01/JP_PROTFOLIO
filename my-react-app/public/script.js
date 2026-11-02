@@ -16,6 +16,14 @@ navLinks.forEach(link => {
     });
 });
 
+// Close mobile menu when clicking outside
+document.addEventListener('click', (e) => {
+    if (navMenu && hamburger && !navMenu.contains(e.target) && !hamburger.contains(e.target) && navMenu.classList.contains('active')) {
+        hamburger.classList.remove('active');
+        navMenu.classList.remove('active');
+    }
+});
+
 // Handle external page navigation
 const externalLinks = document.querySelectorAll('a[href$=".html"]');
 externalLinks.forEach(link => {
@@ -120,7 +128,17 @@ function handleContactForm() {
         contactForm.addEventListener('submit', (e) => {
             e.preventDefault();
             // Handle form submission here
-            alert('Thank you for your message! Dr. Jitendra Parmar will get back to you soon.');
+            const submitBtn = contactForm.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                const orig = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Message Sent!';
+                submitBtn.style.background = '#10b981';
+                setTimeout(() => {
+                    submitBtn.innerHTML = orig;
+                    submitBtn.style.background = '';
+                    contactForm.reset();
+                }, 3000);
+            }
         });
     }
 }

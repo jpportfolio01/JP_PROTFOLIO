@@ -786,6 +786,101 @@
             from { transform: translateY(100%); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
+
+        /* ===================================================
+           MOBILE & TABLET RESPONSIVE ENHANCEMENTS
+           =================================================== */
+        @media (max-width: 900px) {
+            .admin-container {
+                padding: 18px 16px 60px 16px;
+            }
+            .hub-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 16px;
+            }
+            .stats-row {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .admin-nav {
+                padding: 10px 14px;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            .admin-brand-info h2 {
+                font-size: 0.98rem;
+            }
+            .admin-brand-info span {
+                display: none;
+            }
+            .admin-nav-actions {
+                width: 100%;
+                justify-content: space-between;
+                gap: 8px;
+            }
+            .nav-chip {
+                padding: 4px 8px;
+                font-size: 0.72rem;
+            }
+            .btn-view-site, .btn-logout {
+                padding: 5px 10px;
+                font-size: 0.76rem;
+            }
+            .admin-container {
+                padding: 14px 10px 50px 10px;
+            }
+            .portal-header h1 {
+                font-size: 1.45rem;
+            }
+            .hub-grid {
+                grid-template-columns: 1fr;
+            }
+            .hub-card {
+                padding: 22px 18px;
+            }
+            .stats-row {
+                grid-template-columns: 1fr;
+            }
+            .admin-tabs-bar {
+                gap: 4px;
+                padding-bottom: 4px;
+            }
+            .admin-tab-btn {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+            }
+            .panel-header-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .items-grid {
+                grid-template-columns: 1fr;
+            }
+            .item-card {
+                padding: 14px;
+            }
+            .admin-table th, .admin-table td {
+                padding: 9px 10px;
+                font-size: 0.8rem;
+            }
+            .table-responsive {
+                -webkit-overflow-scrolling: touch;
+            }
+            .toast {
+                left: 12px;
+                right: 12px;
+                bottom: 12px;
+                font-size: 0.82rem;
+                padding: 10px 14px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -2090,6 +2185,19 @@
     <!-- 3. JAVASCRIPT CONTROLLER                   -->
     <!-- ========================================== -->
     <script>
+        function getAdminApiBase() {
+            if (typeof JUET_BACKEND_URL !== 'undefined' && JUET_BACKEND_URL) {
+                return JUET_BACKEND_URL.replace(/\/+$/, '');
+            }
+            if (window.location.hostname.includes('vercel.app') || window.location.hostname.includes('github.io') || window.location.hostname.includes('netlify.app')) {
+                return 'https://jp-protfolio.onrender.com';
+            }
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                return window.location.port === '5001' ? '' : 'http://localhost:5001';
+            }
+            return '';
+        }
+
         // --- STATE & AUTHENTICATION ---
         let currentAuthToken = sessionStorage.getItem('juet_admin_auth') || localStorage.getItem('juet_admin_auth');
         let currentAdminSettings = {
@@ -2140,9 +2248,7 @@
             }
 
             try {
-                const apiBase = (window.location.protocol.startsWith('http') && (window.location.port === '5001' || window.location.port === ''))
-                    ? ''
-                    : 'http://localhost:5001';
+                const apiBase = getAdminApiBase();
 
                 const res = await fetch(`${apiBase}/api/admin/login`, {
                     method: 'POST',
@@ -2289,9 +2395,7 @@
         // --- ADMIN SECURITY & GATEWAY SETTINGS ---
         async function loadAdminSettingsData() {
             try {
-                const apiBase = (window.location.protocol.startsWith('http') && (window.location.port === '5001' || window.location.port === ''))
-                    ? ''
-                    : 'http://localhost:5001';
+                const apiBase = getAdminApiBase();
 
                 let res = await fetch('/api/admin/settings').catch(() => null);
                 if (!res || !res.ok) {
@@ -2385,9 +2489,7 @@
             }
 
             try {
-                const apiBase = (window.location.protocol.startsWith('http') && (window.location.port === '5001' || window.location.port === ''))
-                    ? ''
-                    : 'http://localhost:5001';
+                const apiBase = getAdminApiBase();
 
                 const res = await fetch(`${apiBase}/api/admin/change-password`, {
                     method: 'POST',
@@ -2437,9 +2539,7 @@
             }
 
             try {
-                const apiBase = (window.location.protocol.startsWith('http') && (window.location.port === '5001' || window.location.port === ''))
-                    ? ''
-                    : 'http://localhost:5001';
+                const apiBase = getAdminApiBase();
 
                 const res = await fetch(`${apiBase}/api/admin/settings`, {
                     method: 'POST',
@@ -2480,9 +2580,7 @@
             const clientId = (inputEl ? inputEl.value : '').trim();
 
             try {
-                const apiBase = (window.location.protocol.startsWith('http') && (window.location.port === '5001' || window.location.port === ''))
-                    ? ''
-                    : 'http://localhost:5001';
+                const apiBase = getAdminApiBase();
 
                 const res = await fetch(`${apiBase}/api/admin/settings`, {
                     method: 'POST',
@@ -2537,9 +2635,7 @@
 
         async function loadGitSyncStatus(silent = false) {
             try {
-                const apiBase = (window.location.protocol.startsWith('http') && (window.location.port === '5001' || window.location.port === ''))
-                    ? ''
-                    : 'http://localhost:5001';
+                const apiBase = getAdminApiBase();
 
                 const res = await fetch(`${apiBase}/api/admin/git-status`).catch(() => null);
                 if (res && res.ok) {
@@ -2729,9 +2825,7 @@
             if (tokenVal) payload.githubToken = tokenVal;
 
             try {
-                const apiBase = (window.location.protocol.startsWith('http') && (window.location.port === '5001' || window.location.port === ''))
-                    ? ''
-                    : 'http://localhost:5001';
+                const apiBase = getAdminApiBase();
 
                 const res = await fetch(`${apiBase}/api/admin/settings`, {
                     method: 'POST',
@@ -2760,9 +2854,7 @@
             }
 
             try {
-                const apiBase = (window.location.protocol.startsWith('http') && (window.location.port === '5001' || window.location.port === ''))
-                    ? ''
-                    : 'http://localhost:5001';
+                const apiBase = getAdminApiBase();
 
                 const res = await fetch(`${apiBase}/api/admin/git-sync`, {
                     method: 'POST',
@@ -2776,7 +2868,6 @@
                     showToast('✅ ' + (data.message || 'Pushed successfully to GitHub!'));
                 } else {
                     showToast('❌ Sync failed: ' + (data.error || 'Could not push to GitHub. Verify your GITHUB_TOKEN.'));
-                    alert('GitHub Sync Notice:\n\n' + (data.error || 'Could not push.'));
                 }
             } catch (err) {
                 showToast('Network error during sync: ' + err.message);
@@ -2790,9 +2881,7 @@
         }
 
         function handleExportData() {
-            const apiBase = (window.location.protocol.startsWith('http') && (window.location.port === '5001' || window.location.port === ''))
-                ? ''
-                : 'http://localhost:5001';
+            const apiBase = getAdminApiBase();
             window.location.href = `${apiBase}/api/admin/export-data`;
             showToast('Downloading complete lab backup JSON...');
         }
@@ -2811,9 +2900,7 @@
                 const text = await file.text();
                 const json = JSON.parse(text);
 
-                const apiBase = (window.location.protocol.startsWith('http') && (window.location.port === '5001' || window.location.port === ''))
-                    ? ''
-                    : 'http://localhost:5001';
+                const apiBase = getAdminApiBase();
 
                 const res = await fetch(`${apiBase}/api/admin/import-data`, {
                     method: 'POST',
@@ -2824,8 +2911,7 @@
                 const result = await res.json().catch(() => ({}));
 
                 if (res.ok && result && result.success) {
-                    showToast('✅ Full backup restored successfully!');
-                    alert(`Backup Restored Successfully!\n\nModules: ${result.counts.modules}\nQuestions: ${result.counts.questions}\nPublications: ${result.counts.publications}\nProjects: ${result.counts.projects}\nTeam Members: ${result.counts.team}\n\nThe platform has been synchronized.`);
+                    showToast(`✅ Backup Restored! Modules: ${result.counts.modules}, Questions: ${result.counts.questions}, Publications: ${result.counts.publications}`);
                     await loadAllInitialData();
                     await loadGitSyncStatus(true);
                 } else {
@@ -2841,9 +2927,7 @@
         // 1. STUDENT PROGRESS TELEMETRY
         async function loadStudentProgressData() {
             try {
-                const apiBase = (window.location.protocol.startsWith('http') && (window.location.port === '5001' || window.location.port === ''))
-                    ? ''
-                    : 'http://localhost:5001';
+                const apiBase = getAdminApiBase();
 
                 let res = await fetch('/api/admin/students').catch(() => null);
                 if (!res || !res.ok) {
@@ -2993,9 +3077,7 @@
                 return;
             }
             try {
-                const apiBase = (window.location.protocol.startsWith('http') && (window.location.port === '5001' || window.location.port === ''))
-                    ? ''
-                    : 'http://localhost:5001';
+                const apiBase = getAdminApiBase();
                 const res = await fetch(`${apiBase}/api/admin/students/clear`, { method: 'POST' });
                 const data = await res.json().catch(() => ({}));
                 if (res.ok && data.success) {

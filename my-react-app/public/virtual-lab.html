@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JUET Virtual Lab | Dr. Jitendra Parmar - Interactive SQL & CS Labs</title>
-    <meta name="title" content="JUET Virtual Lab | Dr. Jitendra Parmar - Interactive SQL & CS Labs">
-    <meta name="description" content="Explore JUET Virtual Lab platforms created by Dr. Jitendra Parmar at Jaypee University of Engineering and Technology, Guna. Featuring interactive in-browser SQL practice, relational database playgrounds, and automated query evaluation.">
-    <meta name="keywords" content="Jitendra Parmar Virtual Lab, Dr. Jitendra Parmar Lab, JUET Virtual Lab, SQL Virtual Lab, JUET Guna Virtual Lab, Interactive SQL Practice, SQL Grading Engine, Computer Science Virtual Lab">
+    <title>JUET Virtual Lab | Dr. Jitendra Parmar - JUET Guna</title>
+    <meta name="title" content="JUET Virtual Lab | Dr. Jitendra Parmar - JUET Guna">
+    <meta name="description" content="Explore JUET Virtual Lab platforms created by Dr. Jitendra Parmar (Jitendra Parmar JUET) at Jaypee University of Engineering and Technology, Guna. Featuring interactive in-browser SQL practice, relational database playgrounds, and automated query evaluation.">
+    <meta name="keywords" content="Jitendra Parmar, Jitendra Parmar JUET, Dr. Jitendra Parmar, Jitendra Parmar Virtual Lab, JUET Virtual Lab, SQL Virtual Lab, JUET Guna Virtual Lab, Interactive SQL Practice, SQL Grading Engine, Computer Science Virtual Lab">
     <meta name="author" content="Dr. Jitendra Parmar">
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <meta name="googlebot" content="index, follow">
 
     <!-- Favicon: Dr. Jitendra Parmar Photo -->
     <link rel="icon" type="image/png" href="dr_parmar.png">
@@ -525,7 +526,7 @@
                     </div>
                 </div>
                 <div class="tile-action-row">
-                    <button class="btn-vlab-ongoing" onclick="alert('Engine Active: Powers backend/controllers/sqlController.js with 75 verified modules!')">
+                    <button class="btn-vlab-ongoing" onclick="showVlabToast('Engine Active: Powers backend/controllers/sqlController.js with 75 verified modules!')">
                         <i class="fas fa-server"></i> Active Service Details
                     </button>
                 </div>
@@ -562,7 +563,7 @@
                     </div>
                 </div>
                 <div class="tile-action-row">
-                    <button class="btn-vlab-ongoing" onclick="alert('DBMS Query Optimizer Visualizer is currently under active development for Semester II classes under Dr. Jitendra Parmar.')">
+                    <button class="btn-vlab-ongoing" onclick="showVlabToast('DBMS Query Optimizer Visualizer is currently under active development for Semester II classes under Dr. Jitendra Parmar.')">
                         <i class="fas fa-tools"></i> View Development Progress
                     </button>
                 </div>
@@ -599,7 +600,7 @@
                     </div>
                 </div>
                 <div class="tile-action-row">
-                    <button class="btn-vlab-ongoing" onclick="alert('AI Diagnostic Tutor is being piloted with research students under Dr. Parmar to analyze student query errors.')">
+                    <button class="btn-vlab-ongoing" onclick="showVlabToast('AI Diagnostic Tutor is being piloted with research students under Dr. Parmar to analyze student query errors.')">
                         <i class="fas fa-robot"></i> Research Specs
                     </button>
                 </div>
@@ -636,7 +637,7 @@
                     </div>
                 </div>
                 <div class="tile-action-row">
-                    <button class="btn-vlab-ongoing" onclick="alert('Concurrency Simulator prototype scheduled for release in upcoming lab cycle.')">
+                    <button class="btn-vlab-ongoing" onclick="showVlabToast('Concurrency Simulator prototype scheduled for release in upcoming lab cycle.')">
                         <i class="fas fa-lock"></i> Prototype Overview
                     </button>
                 </div>
@@ -786,7 +787,7 @@
                                 ` : ''}
                             </div>
                             <div class="tile-action-row">
-                                <a href="${escapeHtml(v.launchUrl || 'javascript:void(0)')}" class="btn-vlab-ongoing" ${v.launchUrl && v.launchUrl !== 'javascript:void(0)' ? '' : `onclick="alert('${escapeHtml(v.title)} prototype is in active development with research scholars.')"`}>
+                                <a href="${escapeHtml(v.launchUrl || 'javascript:void(0)')}" class="btn-vlab-ongoing" ${v.launchUrl && v.launchUrl !== 'javascript:void(0)' ? '' : `onclick="showVlabToast('${escapeHtml(v.title)} prototype is in active development with research scholars.')"`}>
                                     <i class="fas fa-flask"></i> ${escapeHtml(v.launchText || 'Prototype Overview →')}
                                 </a>
                             </div>
@@ -831,6 +832,23 @@
                     tile.style.display = 'none';
                 }
             });
+        }
+
+        function showVlabToast(msg) {
+            let toast = document.getElementById('vlab-page-toast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'vlab-page-toast';
+                toast.style.cssText = 'position:fixed;bottom:24px;right:24px;background:#0f172a;color:#fff;padding:12px 20px;border-radius:10px;font-size:0.88rem;font-weight:600;box-shadow:0 10px 25px rgba(0,0,0,0.3);z-index:9999;border-left:4px solid #3b82f6;transition:all 0.3s ease;';
+                document.body.appendChild(toast);
+            }
+            toast.textContent = msg;
+            toast.style.display = 'block';
+            toast.style.opacity = '1';
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.style.display = 'none', 300);
+            }, 3500);
         }
 
         document.addEventListener('DOMContentLoaded', () => {

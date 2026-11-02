@@ -4,7 +4,7 @@
  */
 
 // If your frontend and backend are deployed on different services:
-// Enter your live Render backend URL below, e.g.: 'https://your-backend.onrender.com'
+// Enter your live Render backend URL below, e.g.: 'https://jp-protfolio.onrender.com'
 var JUET_BACKEND_URL = (function() {
     // 1. Check if user configured in window
     if (typeof window !== 'undefined' && window.BACKEND_API_URL) {
@@ -14,14 +14,25 @@ var JUET_BACKEND_URL = (function() {
     if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
         return window.location.port === '5001' ? '' : 'http://localhost:5001';
     }
-    // 3. In production: empty string means same-origin relative URLs (/api/...)
-    // If hosting frontend on Vercel/Netlify/GitHub Pages and backend on Render, enter your Render URL here:
+    // 3. Deployed frontend (Vercel, Netlify, GitHub Pages) talking to Render backend:
+    if (typeof window !== 'undefined' && (
+        window.location.hostname.includes('vercel.app') || 
+        window.location.hostname.includes('github.io') || 
+        window.location.hostname.includes('netlify.app')
+    )) {
+        return 'https://jp-protfolio.onrender.com';
+    }
+    // 4. In production on the Render backend domain itself:
     return '';
 })();
 
 function getApiUrl(endpoint) {
     var ep = endpoint.startsWith('/') ? endpoint : '/' + endpoint;
-    return JUET_BACKEND_URL + ep;
+    return (JUET_BACKEND_URL || '') + ep;
+}
+
+function getApiBase() {
+    return JUET_BACKEND_URL || '';
 }
 
 // Seamless Auto-Router: When JUET_BACKEND_URL is set (e.g. Render backend),
@@ -39,5 +50,5 @@ function getApiUrl(endpoint) {
 })();
 
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { JUET_BACKEND_URL, getApiUrl };
+    module.exports = { JUET_BACKEND_URL, getApiUrl, getApiBase };
 }
