@@ -433,6 +433,46 @@ const fullHtml = `<!DOCTYPE html>
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 12px;
+        }
+        .problem-header-left {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .problem-meta-badges {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .problem-nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        .btn-qnav {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            color: #334155;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .btn-qnav:hover:not(:disabled) {
+            background: #eff6ff;
+            border-color: #2563eb;
+            color: #2563eb;
+        }
+        .btn-qnav:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
         }
         .problem-title {
             font-size: 1.35rem;
@@ -1084,12 +1124,20 @@ const fullHtml = `<!DOCTYPE html>
                 overflow-x: hidden;
             }
             .top-navbar {
-                height: 52px;
+                height: 54px;
                 padding: 0 10px;
             }
+            .nav-left {
+                gap: 8px;
+                min-width: 0;
+                flex: 1;
+            }
+            .brand-text {
+                min-width: 0;
+            }
             .brand-title {
-                font-size: 0.84rem;
-                max-width: 140px;
+                font-size: 0.86rem;
+                max-width: 155px;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
@@ -1097,149 +1145,323 @@ const fullHtml = `<!DOCTYPE html>
             .brand-sub {
                 display: none;
             }
-            .btn-back {
-                width: 28px;
-                height: 28px;
-                font-size: 0.85rem;
-            }
-            .brand-logo-box {
-                width: 28px;
-                height: 28px;
-                font-size: 0.95rem;
+            .btn-back, .brand-logo-box {
+                width: 32px;
+                height: 32px;
+                min-width: 32px;
+                border-radius: 8px;
+                font-size: 0.92rem;
             }
             .nav-center {
                 display: none;
             }
+            .nav-right {
+                flex-shrink: 0;
+            }
             .btn-login-outline {
-                padding: 4px 10px;
-                font-size: 0.75rem;
+                padding: 6px 10px;
+                font-size: 0.74rem;
+                border-radius: 6px;
+                white-space: nowrap;
             }
             .user-profile-badge {
-                padding: 3px 8px;
-                font-size: 0.75rem;
+                padding: 4px 8px;
+                font-size: 0.74rem;
+                gap: 6px;
             }
             #user-display-name {
-                max-width: 75px;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
+                max-width: 70px;
+                font-size: 0.76rem;
+            }
+            #user-display-roll {
+                display: none;
             }
 
             .mobile-view-tabs {
                 display: flex;
+                height: 48px;
+            }
+            .mobile-tab-btn {
+                height: 48px;
+                padding: 0 4px;
+                font-size: 0.8rem;
+                -webkit-tap-highlight-color: transparent;
             }
 
             .workspace-container {
                 display: block;
                 height: auto;
-                min-height: calc(100vh - 96px);
+                min-height: calc(100vh - 102px);
                 overflow: visible;
             }
 
             /* Responsive Sidebar Left (Questions) */
             .sidebar-left {
-                width: 100%;
-                border-right: none;
-                height: auto;
-                max-height: none;
+                width: 100% !important;
+                border-right: none !important;
+                height: auto !important;
+                max-height: none !important;
                 display: none;
+                flex-direction: column !important;
+                background: #ffffff;
+            }
+            .module-nav-header {
+                padding: 10px 12px 6px !important;
+                background: #f8fafc;
+                border-bottom: 1px solid #e2e8f0;
+            }
+            .module-nav-title {
+                font-size: 0.72rem !important;
+                margin-bottom: 6px !important;
             }
             .module-tabs {
-                max-height: 140px;
+                display: flex !important;
+                flex-direction: row !important;
+                max-height: none !important;
+                overflow-x: auto !important;
+                white-space: nowrap !important;
+                gap: 6px !important;
+                padding: 2px 2px 8px 2px !important;
+                -webkit-overflow-scrolling: touch !important;
+                scrollbar-width: none;
+            }
+            .module-tabs::-webkit-scrollbar {
+                display: none;
+            }
+            .module-tab-pill {
+                flex-shrink: 0 !important;
+                padding: 6px 12px !important;
+                font-size: 0.78rem !important;
+                border-radius: 20px !important;
+                white-space: nowrap !important;
+            }
+            .search-box-wrap {
+                padding: 10px 12px 6px !important;
+            }
+            .search-input {
+                font-size: 16px !important; /* Prevents iOS auto-zoom */
+                padding: 9px 12px !important;
+                border-radius: 8px !important;
             }
             .challenge-list-container {
-                max-height: calc(100vh - 230px);
-                overflow-y: auto;
+                max-height: none !important;
+                overflow-y: visible !important;
+                padding: 8px 12px 24px !important;
+                gap: 8px !important;
+            }
+            .challenge-item {
+                padding: 11px 12px !important;
+                border-radius: 8px !important;
+            }
+            .challenge-item-title {
+                font-size: 0.86rem !important;
+            }
+            .challenge-preview {
+                font-size: 0.76rem !important;
             }
 
             /* Responsive Center Workspace (Editor & Output) */
             .workspace-center {
-                width: 100%;
-                height: auto;
-                overflow: visible;
-                padding: 14px 12px 30px;
+                width: 100% !important;
+                height: auto !important;
+                overflow: visible !important;
+                padding: 14px 12px 30px !important;
                 display: flex;
+                gap: 14px !important;
             }
             .problem-breadcrumb {
                 font-size: 0.7rem;
                 flex-wrap: wrap;
                 gap: 4px;
             }
+            .problem-header {
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 10px !important;
+            }
+            .problem-header-left {
+                width: 100%;
+            }
+            .problem-nav-controls {
+                width: 100% !important;
+                display: flex !important;
+                justify-content: space-between !important;
+                gap: 8px !important;
+            }
+            .btn-qnav {
+                flex: 1;
+                justify-content: center;
+                padding: 7px 12px;
+                font-size: 0.82rem;
+            }
             .problem-title {
-                font-size: 1.15rem;
+                font-size: 1.15rem !important;
+                line-height: 1.35 !important;
             }
             .problem-desc {
-                font-size: 0.86rem;
-                padding: 12px 14px;
+                font-size: 0.88rem !important;
+                padding: 12px 14px !important;
+                line-height: 1.5 !important;
             }
             .editor-header {
-                padding: 8px 12px;
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 6px;
+                height: auto !important;
+                min-height: 38px;
+                padding: 8px 10px !important;
+                flex-wrap: wrap !important;
+                gap: 6px !important;
             }
             .editor-header-actions {
-                width: 100%;
-                justify-content: flex-end;
-                gap: 6px;
+                width: 100% !important;
+                display: flex !important;
+                justify-content: space-between !important;
+                gap: 6px !important;
             }
             .btn-secondary-action {
-                font-size: 0.72rem;
-                padding: 4px 8px;
+                font-size: 0.74rem !important;
+                padding: 5px 8px !important;
+                background: #ffffff;
+                border: 1px solid #cbd5e1;
+                border-radius: 6px;
+                flex: 1;
+                justify-content: center;
+            }
+            .line-numbers {
+                width: 32px !important;
+                padding: 10px 4px !important;
+                font-size: 0.8rem !important;
             }
             .code-textarea {
-                font-size: 14px !important;
-                min-height: 150px;
-                line-height: 1.45;
+                font-size: 16px !important; /* Prevents iOS auto-zoom */
+                min-height: 140px !important;
+                padding: 10px 10px !important;
+                line-height: 1.45 !important;
             }
-            .action-bar {
-                flex-direction: column;
-                gap: 8px;
-                align-items: stretch;
+            .editor-footer {
+                flex-direction: column !important;
+                gap: 10px !important;
+                align-items: stretch !important;
+                padding: 10px 12px !important;
             }
-            .action-buttons-right {
-                flex-direction: column;
-                gap: 8px;
-                width: 100%;
+            .editor-footer > span {
+                display: none !important;
             }
-            .btn-run-query, .btn-submit-lab {
-                width: 100%;
+            .btn-run-query {
+                width: 100% !important;
+                justify-content: center !important;
+                padding: 12px 16px !important;
+                font-size: 0.95rem !important;
+                border-radius: 8px !important;
+            }
+            
+            /* Verification & Results */
+            .result-container {
+                margin-bottom: 20px !important;
+            }
+            .result-header {
+                height: auto !important;
+                min-height: 42px;
+                padding: 8px 12px !important;
+                flex-wrap: wrap !important;
+                gap: 8px !important;
+            }
+            .result-header > span {
+                font-size: 0.74rem;
+            }
+            .result-header-tools {
+                gap: 6px !important;
+                width: 100% !important;
+                justify-content: flex-end;
+            }
+            .view-toggle-btn {
+                font-size: 0.72rem !important;
+                padding: 4px 8px !important;
+                flex: 1;
                 justify-content: center;
-                padding: 11px 16px;
-                font-size: 0.9rem;
             }
-            .parallel-results-grid {
+            .parallel-output-grid {
                 grid-template-columns: 1fr !important;
-                gap: 16px;
+                gap: 14px !important;
             }
-            .output-table-wrap {
-                max-height: 280px;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
+            .table-scroll-wrap {
+                max-height: 280px !important;
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch !important;
+            }
+            .data-table th, .data-table td {
+                padding: 7px 10px !important;
+                font-size: 0.76rem !important;
+            }
+            .eval-status-banner {
+                padding: 12px 14px !important;
+                flex-direction: column !important;
+                gap: 8px !important;
             }
 
             /* Responsive Sidebar Right (Schema) */
             .sidebar-right {
-                width: 100%;
-                border-left: none;
-                height: auto;
+                width: 100% !important;
+                border-left: none !important;
+                height: auto !important;
                 display: none;
+                background: #ffffff;
+            }
+            .schema-header {
+                padding: 12px 14px !important;
+                font-size: 0.82rem !important;
+                border-bottom: 1px solid #e2e8f0;
             }
             .schema-cards {
-                max-height: none;
-                overflow: visible;
-                padding: 12px;
+                max-height: none !important;
+                overflow: visible !important;
+                padding: 12px 12px 30px !important;
+                gap: 12px !important;
+            }
+            .table-card {
+                border-radius: 8px !important;
+            }
+            .table-card-head {
+                padding: 11px 14px !important;
+                font-size: 0.88rem !important;
+            }
+            .col-item {
+                padding: 7px 14px !important;
+                font-size: 0.82rem !important;
+            }
+            .sample-preview-btn {
+                padding: 8px 12px !important;
+                font-size: 0.8rem !important;
+                margin: 8px 14px 12px !important;
+                border-radius: 6px !important;
             }
 
             /* Modals */
+            .modal-overlay {
+                padding: 10px !important;
+            }
             .modal-card {
-                width: 95% !important;
-                max-width: 95% !important;
-                margin: 10px;
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 !important;
+                border-radius: 12px !important;
+                max-height: 85vh !important;
             }
             .modal-body {
-                padding: 16px;
-                max-height: 80vh;
+                padding: 14px !important;
+                max-height: 75vh !important;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .brand-title {
+                max-width: 115px !important;
+                font-size: 0.78rem !important;
+            }
+            .btn-login-outline {
+                padding: 5px 8px !important;
+                font-size: 0.7rem !important;
+            }
+            .btn-login-outline span {
+                display: none;
             }
         }
 
@@ -1383,10 +1605,20 @@ const fullHtml = `<!DOCTYPE html>
             </div>
 
             <div class="problem-header">
-                <h1 class="problem-title" id="current-title">Create Departments Table</h1>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <span class="difficulty-badge diff-easy" id="current-diff">Easy</span>
-                    <span class="streak-pill" id="current-pts">+10 pts</span>
+                <div class="problem-header-left">
+                    <h1 class="problem-title" id="current-title">Create Departments Table</h1>
+                    <div class="problem-meta-badges">
+                        <span class="difficulty-badge diff-easy" id="current-diff">Easy</span>
+                        <span class="streak-pill" id="current-pts">+10 pts</span>
+                    </div>
+                </div>
+                <div class="problem-nav-controls">
+                    <button type="button" class="btn-qnav" onclick="navPrevQuestion()" id="btn-prev-q" title="Previous Challenge">
+                        <i class="fas fa-chevron-left"></i> <span>Prev</span>
+                    </button>
+                    <button type="button" class="btn-qnav" onclick="navNextQuestion()" id="btn-next-q" title="Next Challenge">
+                        <span>Next</span> <i class="fas fa-chevron-right"></i>
+                    </button>
                 </div>
             </div>
 
@@ -1696,14 +1928,54 @@ const fullHtml = `<!DOCTYPE html>
             renderQuestionsList(text);
         }
 
+        // Navigation between challenges
+        function navPrevQuestion() {
+            const mod = SQL_MODULES[currentModuleIndex];
+            if (!mod || !mod.questions) return;
+            if (currentQuestionIndex > 0) {
+                loadQuestion(currentQuestionIndex - 1);
+            } else if (currentModuleIndex > 0) {
+                selectModule(currentModuleIndex - 1);
+                const prevMod = SQL_MODULES[currentModuleIndex];
+                if (prevMod && prevMod.questions && prevMod.questions.length > 0) {
+                    loadQuestion(prevMod.questions.length - 1);
+                }
+            }
+        }
+
+        function navNextQuestion() {
+            const mod = SQL_MODULES[currentModuleIndex];
+            if (!mod || !mod.questions) return;
+            if (currentQuestionIndex < mod.questions.length - 1) {
+                loadQuestion(currentQuestionIndex + 1);
+            } else if (currentModuleIndex < SQL_MODULES.length - 1) {
+                selectModule(currentModuleIndex + 1);
+                loadQuestion(0);
+            }
+        }
+
         // Load specific question into center editor
         function loadQuestion(index) {
             currentQuestionIndex = index;
             if (window.innerWidth <= 860) {
                 switchMobileView('editor');
+                const topTarget = document.getElementById('problem-breadcrumb') || document.querySelector('.problem-header');
+                if (topTarget) topTarget.scrollIntoView({ behavior: 'smooth' });
             }
             const mod = SQL_MODULES[currentModuleIndex];
             const q = mod.questions[index];
+
+            // Update Prev / Next buttons
+            const prevBtn = document.getElementById('btn-prev-q');
+            const nextBtn = document.getElementById('btn-next-q');
+            if (prevBtn) {
+                prevBtn.disabled = (currentModuleIndex === 0 && currentQuestionIndex === 0);
+            }
+            if (nextBtn) {
+                const isLastMod = currentModuleIndex === SQL_MODULES.length - 1;
+                const isLastQ = currentQuestionIndex === mod.questions.length - 1;
+                nextBtn.disabled = (isLastMod && isLastQ);
+            }
 
             document.getElementById('problem-breadcrumb').innerHTML = \`
                 <span>MODULE \${mod.module_id}</span> &bull; 
