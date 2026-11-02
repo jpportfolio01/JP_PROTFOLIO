@@ -1,0 +1,200 @@
+[
+  {
+    "id": "j1",
+    "type": "journal",
+    "title": "Open-world machine learning: Applications, challenges, and opportunities",
+    "authors": "J. Parmar, S. S. Chouhan, V. Raychoudhury, and S. S. Rathore",
+    "venue": "ACM Computing Surveys (CSUR)",
+    "details": "vol. 55, no. 10, pp. 1–37, Feb. 2023, ISSN: 0360-0300",
+    "impact": "SCI-Q1 | Impact Factor: 30.4",
+    "ranking": "Ranked #1 of 147 in CS Theory",
+    "link": "https://doi.org/10.1145/3561381"
+  },
+  {
+    "id": "j2",
+    "type": "journal",
+    "title": "A machine learning based framework to identify unseen classes in open-world text classification",
+    "authors": "J. Parmar, S. S. Chouhan, and V. Raychoudhury",
+    "venue": "Information Processing & Management (IP&M)",
+    "details": "vol. 60, no. 2, p. 103214, 2023, ISSN: 0306-4573",
+    "impact": "SCI-Q1 | Impact Factor: 8.1",
+    "ranking": "Elsevier Premier Journal",
+    "link": "https://doi.org/10.1016/j.ipm.2022.103214"
+  },
+  {
+    "id": "j3",
+    "type": "journal",
+    "title": "Systematic literature review on software code smell detection approaches",
+    "authors": "P. S. Thakur, S. S. Chouhan, S. S. Rathore, and J. Parmar",
+    "venue": "Journal of Systems and Software (JSS)",
+    "details": "p. 112784, 2026, ISSN: 0164-1212",
+    "impact": "SCI-Q1 | Impact Factor: 4.1",
+    "ranking": "Top SE Venue",
+    "link": "https://doi.org/10.1016/j.jss.2025.112784"
+  },
+  {
+    "id": "j4",
+    "type": "journal",
+    "title": "Vaemrs: Variational autoencoder based movie recommender system",
+    "authors": "G. Behera, B. K. Swain, R. K. Soni, and J. Parmar",
+    "venue": "Journal of Engineering Science & Technology Review",
+    "details": "vol. 17, no. 6, 2024, ISSN: 1791-2377",
+    "impact": "Scopus Indexed",
+    "ranking": null,
+    "link": "https://scholar.google.com/citations?user=toHDoiwAAAAJ&hl=en&authuser=1"
+  },
+  {
+    "id": "c1",
+    "type": "conference",
+    "title": "A survey of machine learning techniques for enhancing scene description in assistive systems",
+    "authors": "S. Labhaniya, J. Parmar, S. Pandey, D. Katkade, and D. Mathur",
+    "venue": "2025 Eighth International Conference on Image Information Processing (ICIIP)",
+    "details": "IEEE, 2025, pp. 407–414",
+    "impact": "IEEE Xplore",
+    "ranking": null,
+    "link": "https://ieeexplore.ieee.org/"
+  },
+  {
+    "id": "c2",
+    "type": "conference",
+    "title": "Ensemble-based diabetic retinopathy detection using CNN, Random Forest, and AdaBoost",
+    "authors": "J. Parmar",
+    "venue": "2025 IEEE International Conference on Recent Advances in Computing and Systems (REACS)",
+    "details": "IEEE, 2025, pp. 1–6",
+    "impact": "IEEE Xplore",
+    "ranking": null,
+    "link": "https://ieeexplore.ieee.org/"
+  },
+  {
+    "id": "c3",
+    "type": "conference",
+    "title": "Predictive modeling for chronic kidney disease with machine learning algorithms",
+    "authors": "P. J. Barot, J. Parmar, and R. Mishra",
+    "venue": "International Conference on Robotics, Control, Automation and Artificial Intelligence (RCAAI)",
+    "details": "Springer, 2024, pp. 73–85",
+    "impact": "Springer LNNS",
+    "ranking": null,
+    "link": "https://link.springer.com/"
+  },
+  {
+    "id": "c4",
+    "type": "conference",
+    "title": "A comprehensive comparative study of breast cancer detection using machine learning techniques to improve diagnosis",
+    "authors": "G. Behera, B. K. Swain, J. Parmar, M. Sahu, and B. Panda",
+    "venue": "International Conference on Computing, Communication and Learning",
+    "details": "Springer, 2024, pp. 151–164",
+    "impact": "Springer CCIS",
+    "ranking": null,
+    "link": "https://link.springer.com/"
+  },
+  {
+    "id": "c5",
+    "type": "conference",
+    "title": "Identity verification: A decentralized KYC approach using blockchain",
+    "authors": "A. Chouke, V. K. Jain, J. Parmar, S. S. P. Shukla, and A. K. Verma",
+    "venue": "International Conference on Cyber Warfare, Security and Space Computing",
+    "details": "Springer, 2024, pp. 252–264",
+    "impact": "Springer Lecture Notes",
+    "ranking": null,
+    "link": "https://link.springer.com/"
+  },
+  {
+    "id": "c6",
+    "type": "conference",
+    "title": "Eauthenticate: Enhancing security with machine learning based real-time open-world anti-spoofing method",
+    "authors": "O. Delvadia, J. Parmar, P. Gupta, K. L. H. Vardhan, D. Gandhi, and A. K. Verma",
+    "venue": "International Conference on Computation of Artificial Intelligence & Machine Learning",
+    "details": "Springer, 2024, pp. 305–318",
+    "impact": "Springer",
+    "ranking": null,
+    "link": "https://link.springer.com/"
+  },
+  {
+    "id": "c7",
+    "type": "conference",
+    "title": "Active learning framework for anomaly detection in astronomical data",
+    "authors": "G. H. S. Dixit, J. Parmar, A. K. Verma, R. Mishra, and G. Behera",
+    "venue": "2024 15th International Conference on Computing Communication and Networking Technologies (ICCCNT)",
+    "details": "IEEE, 2024, pp. 1–8",
+    "impact": "IEEE Xplore",
+    "ranking": null,
+    "link": "https://ieeexplore.ieee.org/"
+  },
+  {
+    "id": "c8",
+    "type": "conference",
+    "title": "DisEvd: A benchmark dataset for disruptive event identification from online social network",
+    "authors": "A. Seetha, J. Parmar, S. S. Chouhan, E. S. Pilli, and A. Jain",
+    "venue": "International Conference on Big Data Analytics (BDA)",
+    "details": "Springer, 2024, pp. 55–74",
+    "impact": "Springer LNCS",
+    "ranking": null,
+    "link": "https://link.springer.com/"
+  },
+  {
+    "id": "c9",
+    "type": "conference",
+    "title": "Open-world machine learning for unknown class identification in human-machine interaction systems",
+    "authors": "J. Parmar and S. S. Chouhan",
+    "venue": "10th International Conference on Frontiers in Intelligent Computing: Theory and Applications (FICTA)",
+    "details": "Springer, 2023, pp. 335–343",
+    "impact": "Springer Smart Innovation",
+    "ranking": null,
+    "link": "https://link.springer.com/"
+  },
+  {
+    "id": "c10",
+    "type": "conference",
+    "title": "OWI: Open-world intent identification framework for dialog based system",
+    "authors": "J. Parmar, S. Soni, and S. S. Chouhan",
+    "venue": "8th International Conference on Big Data Analytics (BDA)",
+    "details": "Springer, 2020, pp. 329–343",
+    "impact": "Springer LNCS",
+    "ranking": null,
+    "link": "https://link.springer.com/"
+  },
+  {
+    "id": "c11",
+    "type": "conference",
+    "title": "A classification based approach to create database policy for intrusion detection and respond anomaly requests",
+    "authors": "J. Parmar",
+    "venue": "Conference on IT in Business, Industry and Government (CSIBIG)",
+    "details": "IEEE, 2014, pp. 1–7",
+    "impact": "IEEE Xplore",
+    "ranking": null,
+    "link": "https://ieeexplore.ieee.org/"
+  },
+  {
+    "id": "c12",
+    "type": "conference",
+    "title": "Data security, intrusion detection, database access control, policy creation and anomaly response systems: A review",
+    "authors": "J. Parmar",
+    "venue": "International Conference on Advances in Engineering & Technology Research (ICAETR)",
+    "details": "IEEE, 2014, pp. 1–6",
+    "impact": "IEEE Xplore",
+    "ranking": null,
+    "link": "https://ieeexplore.ieee.org/"
+  },
+  {
+    "id": "c13",
+    "type": "conference",
+    "title": "A different approach of intrusion detection and response system for relational databases",
+    "authors": "J. Parmar and P. Jain",
+    "venue": "International Conference on Green Computing, Communication and Conservation of Energy (ICGCE)",
+    "details": "IEEE, 2013, pp. 894–899",
+    "impact": "IEEE Xplore",
+    "ranking": null,
+    "link": "https://ieeexplore.ieee.org/"
+  },
+  {
+    "id": "b1",
+    "type": "conference",
+    "title": "Object detection and trajectory prediction using Faster R-CNN and Kalman filter",
+    "authors": "C. Sarkar, J. Parmar, G. Behera, and M. Dhawan",
+    "venue": "Intelligent Computing Techniques and Applications",
+    "details": "CRC Press (Taylor & Francis Group), 2025, pp. 92–95",
+    "impact": "CRC Press Book Chapter",
+    "ranking": null,
+    "link": "https://scholar.google.com/citations?user=toHDoiwAAAAJ&hl=en&authuser=1"
+  }
+]

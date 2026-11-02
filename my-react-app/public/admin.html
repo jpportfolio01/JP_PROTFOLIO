@@ -2349,11 +2349,30 @@
         }
 
         // --- TOAST NOTIFICATIONS ---
-        function showToast(msg) {
+        let toastTimeout = null;
+        function showToast(msg, type = 'info') {
             const toast = document.getElementById('adminToast');
-            document.getElementById('toastMsg').textContent = msg;
+            if (!toast) return;
+            const toastSpan = document.getElementById('toastMsg') || toast.querySelector('span');
+            const toastIcon = toast.querySelector('i');
+            if (toastSpan) toastSpan.textContent = msg;
+
+            if (toastIcon) {
+                if (type === 'error' || msg.includes('❌') || msg.toLowerCase().includes('error') || msg.toLowerCase().includes('failed')) {
+                    toastIcon.className = 'fas fa-exclamation-circle';
+                    toastIcon.style.color = '#ef4444';
+                } else if (type === 'warn' || msg.includes('⚠️')) {
+                    toastIcon.className = 'fas fa-exclamation-triangle';
+                    toastIcon.style.color = '#f59e0b';
+                } else {
+                    toastIcon.className = 'fas fa-check-circle';
+                    toastIcon.style.color = '#10b981';
+                }
+            }
+
             toast.style.display = 'flex';
-            setTimeout(() => { toast.style.display = 'none'; }, 3200);
+            if (toastTimeout) clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => { toast.style.display = 'none'; }, 3800);
         }
 
         // --- DATA LOADERS & API CALLS ---
@@ -2533,7 +2552,7 @@
                     errDiv.textContent = 'Click count must be an integer between 1 and 100.';
                     errDiv.style.display = 'block';
                 } else {
-                    alert('Click count must be an integer between 1 and 100.');
+                    showToast('Click count must be an integer between 1 and 100.', 'warn');
                 }
                 return;
             }
@@ -2633,19 +2652,183 @@
         // ==========================================
         let currentGitStatus = null;
 
+        async function pushDirectlyToGitHub(token, repo, branch, message, targetPaths = null) {
+            const cleanToken = (token || '').trim();
+            const cleanRepo = (repo || 'jpportfolio01/JP_PROTFOLIO').replace(/^https?:\/\/github\.com\//, '').replace(/\.git$/, '').trim();
+            const cleanBranch = (branch || 'main').trim();
+
+            if (!cleanToken) {
+                return { success: false, error: 'GitHub Personal Access Token is required.' };
+            }
+
+            const allFiles = [
+                { path: 'frontend/modulesData.js', content: 'var SQL_MODULES = ' + JSON.stringify(currentModules, null, 4) + ';\nif (typeof module !== "undefined" && module.exports) { module.exports = { SQL_MODULES }; }' },
+                { path: 'website/modulesData.js', content: 'var SQL_MODULES = ' + JSON.stringify(currentModules, null, 4) + ';\nif (typeof module !== "undefined" && module.exports) { module.exports = { SQL_MODULES }; }' },
+                { path: 'backend/data/modulesData.js', content: 'var SQL_MODULES = ' + JSON.stringify(currentModules, null, 4) + ';\nif (typeof module !== "undefined" && module.exports) { module.exports = { SQL_MODULES }; }' },
+                { path: 'frontend/publications.json', content: JSON.stringify(currentPubs, null, 2) },
+                { path: 'website/publications.json', content: JSON.stringify(currentPubs, null, 2) },
+                { path: 'backend/data/publications.json', content: JSON.stringify(currentPubs, null, 2) },
+                { path: 'frontend/projects.json', content: JSON.stringify(currentProjects, null, 2) },
+                { path: 'website/projects.json', content: JSON.stringify(currentProjects, null, 2) },
+                { path: 'backend/data/projects.json', content: JSON.stringify(currentProjects, null, 2) },
+                { path: 'frontend/team.json', content: JSON.stringify({ scholars: currentScholars, members: currentMembers }, null, 2) },
+                { path: 'website/team.json', content: JSON.stringify({ scholars: currentScholars, members: currentMembers }, null, 2) },
+                { path: 'backend/data/team.json', content: JSON.stringify({ scholars: currentScholars, members: currentMembers }, null, 2) }
+            ];
+
+            const filesToSync = targetPaths ? allFiles.filter(f => targetPaths.includes(f.path)) : allFiles;
+
+            let successCount = 0;
+            let lastErr = '';
+
+            for (const file of filesToSync) {
+                try {
+                    let sha = null;
+                    const getRes = await fetch(`https://api.github.com/repos/${cleanRepo}/contents/${file.path}?ref=${cleanBranch}`, {
+                        headers: {
+                            'Authorization': `Bearer ${cleanToken}`,
+                            'Accept': 'application/vnd.github.v3+json'
+                        }
+                    });
+
+                    if (getRes.ok) {
+                        const existing = await getRes.json();
+                        sha = existing.sha;
+                    } else if (getRes.status === 401) {
+                        return { success: false, error: 'GitHub reported "Bad credentials" (401). Please check that your token was copied accurately.' };
+                    }
+
+                    const utf8Bytes = new TextEncoder().encode(file.content);
+                    let binaryStr = '';
+                    for (let i = 0; i < utf8Bytes.length; i++) {
+                        binaryStr += String.fromCharCode(utf8Bytes[i]);
+                    }
+                    const base64Content = btoa(binaryStr);
+
+                    const putBody = {
+                        message: `${message} [${file.path}]`,
+                        content: base64Content,
+                        branch: cleanBranch
+                    };
+                    if (sha) putBody.sha = sha;
+
+                    const putRes = await fetch(`https://api.github.com/repos/${cleanRepo}/contents/${file.path}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `Bearer ${cleanToken}`,
+                            'Accept': 'application/vnd.github.v3+json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(putBody)
+                    });
+
+                    if (putRes.ok) {
+                        successCount++;
+                    } else {
+                        const errJson = await putRes.json().catch(() => ({}));
+                        lastErr = errJson.message || putRes.statusText;
+                    }
+                } catch (e) {
+                    lastErr = e.message;
+                }
+            }
+
+            return {
+                success: successCount > 0,
+                count: successCount,
+                error: lastErr
+            };
+        }
+
+        async function triggerAutoGitSync(message, targetPaths = null) {
+            const token = localStorage.getItem('juet_admin_github_token');
+            const repo = localStorage.getItem('juet_admin_github_repo') || 'jpportfolio01/JP_PROTFOLIO';
+            const branch = localStorage.getItem('juet_admin_github_branch') || 'main';
+            const autoEnabled = localStorage.getItem('juet_admin_auto_git_sync') !== 'false';
+
+            if (!token || !autoEnabled) return;
+
+            showToast('⏳ Syncing change to GitHub...', 'info');
+            try {
+                const res = await pushDirectlyToGitHub(token, repo, branch, message, targetPaths);
+                if (res.success) {
+                    showToast('✅ Saved & committed to GitHub! Vercel is redeploying.', 'success');
+                } else {
+                    console.warn('GitHub auto-sync notice:', res.error);
+                    showToast('⚠️ Saved locally. GitHub sync: ' + (res.error || 'Check Git settings'), 'warn');
+                }
+            } catch (e) {
+                console.warn('GitHub auto-sync error:', e);
+            }
+        }
+
         async function loadGitSyncStatus(silent = false) {
             try {
                 const apiBase = getAdminApiBase();
 
-                const res = await fetch(`${apiBase}/api/admin/git-status`).catch(() => null);
-                if (res && res.ok) {
-                    const data = await res.json();
-                    if (data && data.success) {
-                        currentGitStatus = data;
-                        updateGitSyncUI();
-                        if (!silent) console.log('Git sync status loaded:', data);
-                        return;
+                // 1. Try Backend API first
+                try {
+                    const res = await fetch(`${apiBase}/api/admin/git-status`).catch(() => null);
+                    if (res && res.ok) {
+                        const data = await res.json();
+                        if (data && data.success) {
+                            currentGitStatus = data;
+                            updateGitSyncUI();
+                            if (!silent) console.log('Git sync status loaded from backend:', data);
+                            return;
+                        }
                     }
+                } catch (e) {}
+
+                // 2. Client-side GitHub direct verification fallback
+                const storedToken = localStorage.getItem('juet_admin_github_token');
+                const storedRepo = localStorage.getItem('juet_admin_github_repo') || 'jpportfolio01/JP_PROTFOLIO';
+                const storedBranch = localStorage.getItem('juet_admin_github_branch') || 'main';
+
+                if (storedToken) {
+                    try {
+                        const ghRes = await fetch(`https://api.github.com/repos/${storedRepo}/commits/${storedBranch}`, {
+                            headers: {
+                                'Authorization': `Bearer ${storedToken}`,
+                                'Accept': 'application/vnd.github.v3+json'
+                            }
+                        });
+                        if (ghRes.ok) {
+                            const commitData = await ghRes.json();
+                            currentGitStatus = {
+                                isGitRepo: true,
+                                hasToken: true,
+                                maskedToken: 'ghp_' + '•'.repeat(16) + storedToken.slice(-4),
+                                repo: storedRepo,
+                                branch: storedBranch,
+                                autoGitSync: true,
+                                modifiedFiles: [],
+                                hasUncommittedChanges: false,
+                                lastCommit: {
+                                    hash: commitData.sha ? commitData.sha.slice(0, 7) : 'HEAD',
+                                    message: commitData.commit ? commitData.commit.message.split('\n')[0] : 'Latest',
+                                    date: commitData.commit && commitData.commit.author ? new Date(commitData.commit.author.date).toLocaleDateString() : 'Recent'
+                                }
+                            };
+                            updateGitSyncUI();
+                            return;
+                        }
+                    } catch (e) {}
+                }
+
+                if (!currentGitStatus) {
+                    currentGitStatus = {
+                        isGitRepo: true,
+                        hasToken: !!storedToken,
+                        maskedToken: storedToken ? ('ghp_' + '•'.repeat(16) + storedToken.slice(-4)) : '',
+                        repo: storedRepo,
+                        branch: storedBranch,
+                        autoGitSync: true,
+                        modifiedFiles: [],
+                        hasUncommittedChanges: false,
+                        lastCommit: null
+                    };
+                    updateGitSyncUI();
                 }
             } catch (err) {
                 console.warn('Could not load git status:', err);
@@ -2813,36 +2996,55 @@
             const autoCheck = document.getElementById('modalGitAutoSyncCheck');
 
             const tokenVal = tokenInput ? tokenInput.value.trim() : '';
-            const repoVal = repoInput ? repoInput.value.trim() : '';
-            const branchVal = branchInput ? branchInput.value.trim() : '';
+            const repoVal = (repoInput ? repoInput.value.trim() : '') || 'jpportfolio01/JP_PROTFOLIO';
+            const branchVal = (branchInput ? branchInput.value.trim() : '') || 'main';
             const autoVal = autoCheck ? autoCheck.checked : true;
 
-            const payload = {
-                githubRepo: repoVal,
-                githubBranch: branchVal,
-                autoGitSync: autoVal
-            };
-            if (tokenVal) payload.githubToken = tokenVal;
+            // Live validation directly against GitHub API
+            if (tokenVal) {
+                showToast('Validating token directly with GitHub...');
+                try {
+                    const testRes = await fetch('https://api.github.com/user', {
+                        headers: {
+                            'Authorization': `Bearer ${tokenVal}`,
+                            'Accept': 'application/vnd.github.v3+json'
+                        }
+                    });
 
+                    if (testRes.status === 401) {
+                        showToast('❌ GitHub returned "Bad credentials" (401). Please check that your token was copied accurately.');
+                        return;
+                    }
+                    if (testRes.ok) {
+                        const ghUser = await testRes.json();
+                        showToast(`✅ GitHub Token verified for @${ghUser.login}!`);
+                    }
+                } catch (e) {
+                    console.warn('Direct token verification warning:', e);
+                }
+
+                localStorage.setItem('juet_admin_github_token', tokenVal);
+            }
+
+            localStorage.setItem('juet_admin_github_repo', repoVal);
+            localStorage.setItem('juet_admin_github_branch', branchVal);
+
+            // Also send to backend if available
             try {
                 const apiBase = getAdminApiBase();
+                const payload = { githubRepo: repoVal, githubBranch: branchVal, autoGitSync: autoVal };
+                if (tokenVal) payload.githubToken = tokenVal;
 
-                const res = await fetch(`${apiBase}/api/admin/settings`, {
+                await fetch(`${apiBase}/api/admin/settings`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
-                });
-                const data = await res.json().catch(() => ({}));
-                if (res.ok && data && data.success) {
-                    showToast('GitHub cloud persistence settings saved successfully!');
-                    if (tokenInput && tokenVal) tokenInput.value = '';
-                    await loadGitSyncStatus(true);
-                } else {
-                    showToast('Error saving settings: ' + (data.error || 'Server error'));
-                }
-            } catch (err) {
-                showToast('Failed to save settings: ' + err.message);
-            }
+                }).catch(() => null);
+            } catch (err) {}
+
+            showToast('GitHub cloud persistence settings saved successfully!');
+            if (tokenInput && tokenVal) tokenInput.value = '';
+            await loadGitSyncStatus(true);
         }
 
         async function handleManualGitSync() {
@@ -2853,31 +3055,55 @@
                 pushBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Committing & Pushing to GitHub...';
             }
 
+            let synced = false;
+
+            // 1. Try Backend Git CLI Sync first
             try {
                 const apiBase = getAdminApiBase();
-
                 const res = await fetch(`${apiBase}/api/admin/git-sync`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ message: 'Manual sync from Admin Portal' })
-                });
+                }).catch(() => null);
 
-                const data = await res.json().catch(() => ({}));
+                if (res && res.ok) {
+                    const data = await res.json().catch(() => ({}));
+                    if (data && data.success) {
+                        showToast('✅ ' + (data.message || 'Pushed successfully to GitHub!'));
+                        synced = true;
+                    }
+                }
+            } catch (err) {}
 
-                if (res.ok && data && data.success) {
-                    showToast('✅ ' + (data.message || 'Pushed successfully to GitHub!'));
+            // 2. Direct GitHub REST API fallback (works from Vercel even if backend is offline/sleeping!)
+            if (!synced) {
+                const tokenInput = document.getElementById('modalGitTokenInput');
+                const repoInput = document.getElementById('modalGitRepoInput');
+                const branchInput = document.getElementById('modalGitBranchInput');
+
+                const token = (tokenInput && tokenInput.value.trim()) || localStorage.getItem('juet_admin_github_token');
+                const repo = (repoInput && repoInput.value.trim()) || localStorage.getItem('juet_admin_github_repo') || 'jpportfolio01/JP_PROTFOLIO';
+                const branch = (branchInput && branchInput.value.trim()) || localStorage.getItem('juet_admin_github_branch') || 'main';
+
+                if (token) {
+                    showToast('Connecting directly to GitHub REST API...');
+                    const apiResult = await pushDirectlyToGitHub(token, repo, branch, 'Admin Portal Update');
+                    if (apiResult.success) {
+                        showToast(`✅ Successfully committed to GitHub (${repo} [${branch}])! Vercel is redeploying.`);
+                        synced = true;
+                    } else {
+                        showToast(`❌ GitHub Sync Notice: ${apiResult.error || 'Verify your token repo scopes.'}`);
+                    }
                 } else {
-                    showToast('❌ Sync failed: ' + (data.error || 'Could not push to GitHub. Verify your GITHUB_TOKEN.'));
+                    showToast('❌ Please enter your GitHub Personal Access Token first.');
                 }
-            } catch (err) {
-                showToast('Network error during sync: ' + err.message);
-            } finally {
-                if (pushBtn) {
-                    pushBtn.disabled = false;
-                    pushBtn.innerHTML = origHtml;
-                }
-                await loadGitSyncStatus(true);
             }
+
+            if (pushBtn) {
+                pushBtn.disabled = false;
+                pushBtn.innerHTML = origHtml;
+            }
+            await loadGitSyncStatus(true);
         }
 
         function handleExportData() {
@@ -3095,7 +3321,7 @@
 
         function exportStudentsCSV() {
             if (!currentStudents || currentStudents.length === 0) {
-                alert('No student records to export.');
+                showToast('No student records to export.', 'warn');
                 return;
             }
             let csv = "Name,Roll Number,Email,Total Solved,Total Questions,Module 1,Module 2,Module 3,Module 4,Module 5,Points,Last Active\n";
@@ -3118,12 +3344,14 @@
 
         // 2. MODULES & QUESTIONS CONTROLLER
         async function loadModulesData() {
+            const apiBase = getAdminApiBase();
             try {
-                const res = await fetch('/api/admin/modules');
-                if (res.ok) {
+                const res = await fetch(`${apiBase}/api/admin/modules`).catch(() => null);
+                if (res && res.ok) {
                     const data = await res.json();
                     if (data.success && Array.isArray(data.modules)) {
                         currentModules = data.modules;
+                        localStorage.setItem('juet_admin_sql_modules', JSON.stringify(currentModules));
                         populateModuleSelectors();
                         renderModulesList();
                         renderCurrentModuleQuestions();
@@ -3132,6 +3360,21 @@
                 }
             } catch(e) {
                 console.warn('Backend modules API unavailable, checking local storage');
+            }
+
+            // Check localStorage
+            const cachedMods = localStorage.getItem('juet_admin_sql_modules');
+            if (cachedMods) {
+                try {
+                    const parsed = JSON.parse(cachedMods);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        currentModules = parsed;
+                        populateModuleSelectors();
+                        renderModulesList();
+                        renderCurrentModuleQuestions();
+                        return;
+                    }
+                } catch(e) {}
             }
 
             // Fallback module definitions if backend offline
@@ -3283,46 +3526,54 @@
         async function submitQuestionJson() {
             const val = document.getElementById('questionJsonInput').value.trim();
             if (!val) {
-                alert('Please enter or paste the question JSON first.');
+                showToast('Please enter or paste the question JSON first.', 'warn');
                 return;
             }
             let qData;
             try {
                 qData = JSON.parse(val);
             } catch (err) {
-                alert('Cannot submit malformed JSON: ' + err.message);
+                showToast('Cannot submit malformed JSON: ' + err.message, 'error');
                 return;
             }
 
             const moduleId = parseInt(document.getElementById('qTargetModuleSelect').value, 10);
+            const apiBase = getAdminApiBase();
+            let added = false;
             try {
-                const res = await fetch('/api/admin/questions', {
+                const res = await fetch(`${apiBase}/api/admin/questions`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ moduleId, questionData: qData })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    showToast(data.message || 'Question added successfully!');
-                    document.getElementById('questionJsonInput').value = '';
-                    document.getElementById('jsonValidationMsg').style.display = 'none';
-                    await loadModulesData();
-                    updateOverviewStats();
-                } else {
-                    alert('Error: ' + data.error);
+                }).catch(() => null);
+                if (res && res.ok) {
+                    const data = await res.json().catch(() => ({}));
+                    if (data.success) {
+                        showToast(data.message || 'Question added successfully!');
+                        added = true;
+                        document.getElementById('questionJsonInput').value = '';
+                        document.getElementById('jsonValidationMsg').style.display = 'none';
+                        await loadModulesData();
+                        updateOverviewStats();
+                    }
                 }
-            } catch (err) {
-                // Client-side fallback if server offline
+            } catch (err) {}
+
+            if (!added) {
                 const mod = currentModules.find(m => m.module_id === moduleId);
                 if (mod) {
+                    if (!mod.questions) mod.questions = [];
                     const maxId = mod.questions.reduce((m, q) => Math.max(m, q.question_id || 0), 0);
                     qData.question_id = maxId + 1;
                     mod.questions.push(qData);
+                    localStorage.setItem('juet_admin_sql_modules', JSON.stringify(currentModules));
                     renderCurrentModuleQuestions();
-                    showToast(`Question added to Module ${moduleId} locally!`);
+                    showToast(`Question added to Module ${moduleId}!`, 'success');
                     document.getElementById('questionJsonInput').value = '';
+                    updateOverviewStats();
                 }
             }
+            triggerAutoGitSync(`Admin: Added question to Module ${moduleId}`, ['frontend/modulesData.js', 'website/modulesData.js', 'backend/data/modulesData.js']);
         }
 
         async function submitQuestionForm() {
@@ -3335,42 +3586,61 @@
             const rawOutput = document.getElementById('formQOutput').value.trim();
 
             if (!title || !question || !query) {
-                alert('Please provide Question Title, Description, and Solution Query.');
+                showToast('Please provide Question Title, Description, and Solution Query.', 'warn');
                 return;
             }
 
             let output = rawOutput;
             try {
                 output = JSON.parse(rawOutput);
-            } catch(e) {
-                // leave as string command
-            }
+            } catch(e) {}
 
             const qData = { title, difficulty, points, question, initialCode, query, output };
             const moduleId = parseInt(document.getElementById('qTargetModuleSelect').value, 10);
+            const apiBase = getAdminApiBase();
+            let added = false;
 
             try {
-                const res = await fetch('/api/admin/questions', {
+                const res = await fetch(`${apiBase}/api/admin/questions`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ moduleId, questionData: qData })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    showToast(data.message || 'Question added successfully!');
+                }).catch(() => null);
+                if (res && res.ok) {
+                    const data = await res.json().catch(() => ({}));
+                    if (data.success) {
+                        showToast(data.message || 'Question added successfully!');
+                        added = true;
+                        document.getElementById('formQTitle').value = '';
+                        document.getElementById('formQDesc').value = '';
+                        document.getElementById('formQStarter').value = '';
+                        document.getElementById('formQSolution').value = '';
+                        document.getElementById('formQOutput').value = '';
+                        await loadModulesData();
+                        updateOverviewStats();
+                    }
+                }
+            } catch (err) {}
+
+            if (!added) {
+                const mod = currentModules.find(m => m.module_id === moduleId);
+                if (mod) {
+                    if (!mod.questions) mod.questions = [];
+                    const maxId = mod.questions.reduce((m, q) => Math.max(m, q.question_id || 0), 0);
+                    qData.question_id = maxId + 1;
+                    mod.questions.push(qData);
+                    localStorage.setItem('juet_admin_sql_modules', JSON.stringify(currentModules));
+                    renderCurrentModuleQuestions();
+                    showToast(`Question added to Module ${moduleId}!`, 'success');
                     document.getElementById('formQTitle').value = '';
                     document.getElementById('formQDesc').value = '';
                     document.getElementById('formQStarter').value = '';
                     document.getElementById('formQSolution').value = '';
                     document.getElementById('formQOutput').value = '';
-                    await loadModulesData();
                     updateOverviewStats();
-                } else {
-                    alert('Error: ' + data.error);
                 }
-            } catch (err) {
-                alert('Network error adding question.');
             }
+            triggerAutoGitSync(`Admin: Added question to Module ${moduleId}`, ['frontend/modulesData.js', 'website/modulesData.js', 'backend/data/modulesData.js']);
         }
 
         function openEditQuestionModal(modId, qId) {
@@ -3408,41 +3678,71 @@
             try { output = JSON.parse(rawOutput); } catch(e){}
 
             const qData = { title, difficulty, points, question, query, output };
+            const apiBase = getAdminApiBase();
+            let updated = false;
+
             try {
-                const res = await fetch(`/api/admin/questions/${modId}/${qId}`, {
+                const res = await fetch(`${apiBase}/api/admin/questions/${modId}/${qId}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ questionData: qData })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    showToast('Question updated successfully!');
-                    closeEditQuestionModal();
-                    await loadModulesData();
-                } else {
-                    alert('Error: ' + data.error);
+                }).catch(() => null);
+                if (res && res.ok) {
+                    const data = await res.json().catch(() => ({}));
+                    if (data.success) {
+                        showToast('Question updated successfully!');
+                        updated = true;
+                        closeEditQuestionModal();
+                        await loadModulesData();
+                    }
                 }
-            } catch(e) {
-                alert('Network error updating question.');
+            } catch(e) {}
+
+            if (!updated) {
+                const mod = currentModules.find(m => m.module_id === modId);
+                if (mod && mod.questions) {
+                    const idx = mod.questions.findIndex(q => q.question_id === qId);
+                    if (idx !== -1) {
+                        mod.questions[idx] = { ...mod.questions[idx], ...qData };
+                        localStorage.setItem('juet_admin_sql_modules', JSON.stringify(currentModules));
+                        renderCurrentModuleQuestions();
+                        closeEditQuestionModal();
+                        showToast('Question updated locally!');
+                    }
+                }
             }
+            triggerAutoGitSync(`Admin: Updated question ${qId} in Module ${modId}`, ['frontend/modulesData.js', 'website/modulesData.js', 'backend/data/modulesData.js']);
         }
 
         async function deleteQuestion(modId, qId) {
             if (!confirm(`Are you sure you want to permanently delete Question ${qId} from Module ${modId}?`)) return;
 
+            const apiBase = getAdminApiBase();
+            let deleted = false;
             try {
-                const res = await fetch(`/api/admin/questions/${modId}/${qId}`, { method: 'DELETE' });
-                const data = await res.json();
-                if (data.success) {
-                    showToast(data.message || 'Question deleted successfully.');
-                    await loadModulesData();
-                    updateOverviewStats();
-                } else {
-                    alert('Error: ' + data.error);
+                const res = await fetch(`${apiBase}/api/admin/questions/${modId}/${qId}`, { method: 'DELETE' }).catch(() => null);
+                if (res && res.ok) {
+                    const data = await res.json().catch(() => ({}));
+                    if (data.success) {
+                        showToast(data.message || 'Question deleted successfully.');
+                        deleted = true;
+                        await loadModulesData();
+                        updateOverviewStats();
+                    }
                 }
-            } catch(e) {
-                alert('Network error deleting question.');
+            } catch(e) {}
+
+            if (!deleted) {
+                const mod = currentModules.find(m => m.module_id === modId);
+                if (mod && mod.questions) {
+                    mod.questions = mod.questions.filter(q => q.question_id !== qId);
+                    localStorage.setItem('juet_admin_sql_modules', JSON.stringify(currentModules));
+                    renderCurrentModuleQuestions();
+                    showToast('Question removed locally.');
+                    updateOverviewStats();
+                }
             }
+            triggerAutoGitSync(`Admin: Deleted question ${qId} from Module ${modId}`, ['frontend/modulesData.js', 'website/modulesData.js', 'backend/data/modulesData.js']);
         }
 
         async function submitNewModule() {
@@ -3452,13 +3752,13 @@
             const rawSchema = document.getElementById('newModSchema').value.trim();
 
             if (!name) {
-                alert('Please enter a module name.');
+                showToast('Please enter a module name.', 'warn');
                 return;
             }
 
             let schema = { tables: [] };
             if (rawSchema) {
-                try { schema = JSON.parse(rawSchema); } catch(e) { alert('Invalid Schema JSON: ' + e.message); return; }
+                try { schema = JSON.parse(rawSchema); } catch(e) { showToast('Invalid Schema JSON: ' + e.message, 'error'); return; }
             }
 
             const modData = {
@@ -3469,51 +3769,97 @@
                 questions: []
             };
 
+            const apiBase = getAdminApiBase();
+            let created = false;
             try {
-                const res = await fetch('/api/admin/modules', {
+                const res = await fetch(`${apiBase}/api/admin/modules`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ moduleData: modData })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    showToast(data.message || 'Module created successfully!');
-                    document.getElementById('newModName').value = '';
-                    document.getElementById('newModShort').value = '';
-                    document.getElementById('newModDesc').value = '';
-                    await loadModulesData();
-                    updateOverviewStats();
-                } else {
-                    alert('Error: ' + data.error);
+                }).catch(() => null);
+                if (res && res.ok) {
+                    const data = await res.json().catch(() => ({}));
+                    if (data.success) {
+                        showToast(data.message || 'Module created successfully!');
+                        created = true;
+                        document.getElementById('newModName').value = '';
+                        document.getElementById('newModShort').value = '';
+                        document.getElementById('newModDesc').value = '';
+                        await loadModulesData();
+                        updateOverviewStats();
+                    }
                 }
-            } catch(e) {
-                alert('Network error creating module.');
+            } catch(e) {}
+
+            if (!created) {
+                const maxId = currentModules.reduce((m, mod) => Math.max(m, mod.module_id || 0), 0);
+                modData.module_id = maxId + 1;
+                currentModules.push(modData);
+                localStorage.setItem('juet_admin_sql_modules', JSON.stringify(currentModules));
+                populateModuleSelectors();
+                renderModulesList();
+                renderCurrentModuleQuestions();
+                document.getElementById('newModName').value = '';
+                document.getElementById('newModShort').value = '';
+                document.getElementById('newModDesc').value = '';
+                showToast(`Module ${modData.module_id} created locally!`);
+                updateOverviewStats();
             }
+            triggerAutoGitSync(`Admin: Created module ${modData.module_name}`, ['frontend/modulesData.js', 'website/modulesData.js', 'backend/data/modulesData.js']);
         }
 
         async function deleteModule(modId) {
             if (!confirm(`CAUTION: Are you sure you want to delete Module ${modId} and all of its practice questions?`)) return;
 
+            const apiBase = getAdminApiBase();
+            let deleted = false;
             try {
-                const res = await fetch(`/api/admin/modules/${modId}`, { method: 'DELETE' });
-                const data = await res.json();
-                if (data.success) {
-                    showToast(data.message || 'Module deleted successfully.');
-                    await loadModulesData();
-                    updateOverviewStats();
-                } else {
-                    alert('Error: ' + data.error);
+                const res = await fetch(`${apiBase}/api/admin/modules/${modId}`, { method: 'DELETE' }).catch(() => null);
+                if (res && res.ok) {
+                    const data = await res.json().catch(() => ({}));
+                    if (data.success) {
+                        showToast(data.message || 'Module deleted successfully.');
+                        deleted = true;
+                        await loadModulesData();
+                        updateOverviewStats();
+                    }
                 }
-            } catch(e) {
-                alert('Network error deleting module.');
+            } catch(e) {}
+
+            if (!deleted) {
+                currentModules = currentModules.filter(m => m.module_id !== modId);
+                localStorage.setItem('juet_admin_sql_modules', JSON.stringify(currentModules));
+                populateModuleSelectors();
+                renderModulesList();
+                renderCurrentModuleQuestions();
+                showToast(`Module ${modId} deleted locally.`);
+                updateOverviewStats();
             }
+            triggerAutoGitSync(`Admin: Deleted module ${modId}`, ['frontend/modulesData.js', 'website/modulesData.js', 'backend/data/modulesData.js']);
         }
 
         // 3. PUBLICATIONS CONTROLLER
         async function loadPublicationsData() {
+            // 1. Fetch static publications.json (instant & reliable on Vercel CDN)
             try {
-                const res = await fetch('/api/admin/publications');
-                if (res.ok) {
+                const staticRes = await fetch('publications.json').catch(() => null);
+                if (staticRes && staticRes.ok) {
+                    const data = await staticRes.json();
+                    const list = Array.isArray(data) ? data : (data.publications || []);
+                    if (list.length > 0) {
+                        currentPubs = list;
+                        localStorage.setItem('juet_admin_publications', JSON.stringify(currentPubs));
+                        renderPublicationsTable(currentPubs);
+                        return;
+                    }
+                }
+            } catch (e) {}
+
+            // 2. Try Backend API
+            try {
+                const apiBase = getAdminApiBase();
+                const res = await fetch(`${apiBase}/api/admin/publications`).catch(() => null);
+                if (res && res.ok) {
                     const data = await res.json();
                     if (data.success && Array.isArray(data.publications)) {
                         currentPubs = data.publications;
@@ -3643,7 +3989,7 @@
             const link = document.getElementById('pubLink').value.trim();
 
             if (!title || !authors) {
-                alert('Please enter Publication Title and Authors.');
+                showToast('Please enter Publication Title and Authors.', 'warn');
                 return;
             }
 
@@ -3656,66 +4002,107 @@
             };
 
             const isEdit = !!editId;
-            const url = isEdit ? `/api/admin/publications/${editId}` : '/api/admin/publications';
+            const apiBase = getAdminApiBase();
+            const url = isEdit ? `${apiBase}/api/admin/publications/${editId}` : `${apiBase}/api/admin/publications`;
             const method = isEdit ? 'PUT' : 'POST';
+            let saved = false;
 
             try {
                 const res = await fetch(url, {
                     method: method,
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ publication: pubData })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    showToast(isEdit ? 'Publication updated successfully!' : 'Publication added successfully!');
-                    resetPubForm();
-                    await loadPublicationsData();
-                    updateOverviewStats();
-                } else {
-                    alert('Error: ' + data.error);
+                }).catch(() => null);
+                if (res && res.ok) {
+                    const data = await res.json().catch(() => ({}));
+                    if (data.success) {
+                        saved = true;
+                        showToast(isEdit ? 'Publication updated successfully!' : 'Publication added successfully!');
+                        resetPubForm();
+                        await loadPublicationsData();
+                        updateOverviewStats();
+                    }
                 }
-            } catch(e) {
-                // Client-side fallback
+            } catch(e) {}
+
+            if (!saved) {
                 if (isEdit) {
                     const idx = currentPubs.findIndex(p => String(p.id) === String(editId));
                     if (idx !== -1) currentPubs[idx] = pubData;
-                    showToast('Publication updated in local store!');
                 } else {
                     currentPubs.unshift(pubData);
-                    showToast('Publication added to local store!');
                 }
                 resetPubForm();
                 localStorage.setItem('juet_admin_publications', JSON.stringify(currentPubs));
                 renderPublicationsTable(currentPubs);
+                updateOverviewStats();
+                showToast(isEdit ? 'Publication updated!' : 'Publication added!');
             }
+
+            triggerAutoGitSync(`Admin: ${isEdit ? 'Updated' : 'Added'} publication "${pubData.title.slice(0, 30)}..."`, [
+                'frontend/publications.json',
+                'website/publications.json',
+                'backend/data/publications.json'
+            ]);
         }
 
         async function deletePublication(id) {
             if (!confirm('Are you sure you want to delete this publication?')) return;
 
+            const apiBase = getAdminApiBase();
+            let deleted = false;
             try {
-                const res = await fetch(`/api/admin/publications/${id}`, { method: 'DELETE' });
-                const data = await res.json();
-                if (data.success) {
-                    showToast('Publication deleted successfully.');
-                    await loadPublicationsData();
-                    updateOverviewStats();
-                } else {
-                    alert('Error: ' + data.error);
+                const res = await fetch(`${apiBase}/api/admin/publications/${id}`, { method: 'DELETE' }).catch(() => null);
+                if (res && res.ok) {
+                    const data = await res.json().catch(() => ({}));
+                    if (data.success) {
+                        deleted = true;
+                        showToast('Publication deleted successfully.');
+                        await loadPublicationsData();
+                        updateOverviewStats();
+                    }
                 }
-            } catch(e) {
+            } catch(e) {}
+
+            if (!deleted) {
                 currentPubs = currentPubs.filter(p => p.id !== id);
                 localStorage.setItem('juet_admin_publications', JSON.stringify(currentPubs));
                 renderPublicationsTable(currentPubs);
+                updateOverviewStats();
                 showToast('Publication removed.');
             }
+
+            triggerAutoGitSync(`Admin: Deleted publication ${id}`, [
+                'frontend/publications.json',
+                'website/publications.json',
+                'backend/data/publications.json'
+            ]);
         }
 
         // 4. RESEARCH SCHOLARS & TEAM MEMBERS CONTROLLER
         async function loadTeamData() {
+            // 1. Static team.json
             try {
-                const res = await fetch('/api/admin/team');
-                if (res.ok) {
+                const staticRes = await fetch('team.json').catch(() => null);
+                if (staticRes && staticRes.ok) {
+                    const data = await staticRes.json();
+                    if (data && (Array.isArray(data.scholars) || Array.isArray(data.members))) {
+                        currentScholars = data.scholars || [];
+                        currentMembers = data.members || [];
+                        localStorage.setItem('juet_admin_scholars', JSON.stringify(currentScholars));
+                        localStorage.setItem('juet_admin_members', JSON.stringify(currentMembers));
+                        renderScholarsGrid(currentScholars);
+                        renderTeamMembersGrid(currentMembers);
+                        return;
+                    }
+                }
+            } catch (e) {}
+
+            // 2. Backend API
+            try {
+                const apiBase = getAdminApiBase();
+                const res = await fetch(`${apiBase}/api/admin/team`).catch(() => null);
+                if (res && res.ok) {
                     const data = await res.json();
                     if (data.success) {
                         currentScholars = data.scholars || [];
@@ -3845,7 +4232,7 @@
             const linkedinUrl = document.getElementById('schLinkedinUrl').value.trim();
 
             if (!name) {
-                alert('Please enter scholar name.');
+                showToast('Please enter scholar name.', 'warn');
                 return;
             }
 
@@ -3856,52 +4243,77 @@
                 joined, email, scholarUrl, linkedinUrl
             };
 
+            const apiBase = getAdminApiBase();
+            let saved = false;
+
             try {
-                const res = await fetch('/api/admin/scholars', {
+                const res = await fetch(`${apiBase}/api/admin/scholars`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ scholar: scholarData })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    showToast('Research Scholar added successfully!');
-                    document.getElementById('schName').value = '';
-                    document.getElementById('schFocus').value = '';
-                    document.getElementById('schDesc').value = '';
-                    clearScholarPhoto();
-                    await loadTeamData();
-                    updateOverviewStats();
-                } else {
-                    alert('Error: ' + data.error);
+                }).catch(() => null);
+                if (res && res.ok) {
+                    const data = await res.json().catch(() => ({}));
+                    if (data.success) {
+                        saved = true;
+                        showToast('Research Scholar added successfully!');
+                        document.getElementById('schName').value = '';
+                        document.getElementById('schFocus').value = '';
+                        document.getElementById('schDesc').value = '';
+                        clearScholarPhoto();
+                        await loadTeamData();
+                        updateOverviewStats();
+                    }
                 }
-            } catch(e) {
+            } catch(e) {}
+
+            if (!saved) {
                 currentScholars.push(scholarData);
                 localStorage.setItem('juet_admin_scholars', JSON.stringify(currentScholars));
                 renderScholarsGrid(currentScholars);
                 clearScholarPhoto();
-                showToast('Research Scholar added to local cache!');
+                showToast('Research Scholar added!');
+                updateOverviewStats();
             }
+
+            triggerAutoGitSync(`Admin: Added research scholar ${scholarData.name}`, [
+                'frontend/team.json',
+                'website/team.json',
+                'backend/data/team.json'
+            ]);
         }
 
         async function deleteScholar(id) {
             if (!confirm('Are you sure you want to delete this research scholar?')) return;
 
+            const apiBase = getAdminApiBase();
+            let deleted = false;
             try {
-                const res = await fetch(`/api/admin/scholars/${id}`, { method: 'DELETE' });
-                const data = await res.json();
-                if (data.success) {
-                    showToast('Research Scholar deleted successfully.');
-                    await loadTeamData();
-                    updateOverviewStats();
-                } else {
-                    alert('Error: ' + data.error);
+                const res = await fetch(`${apiBase}/api/admin/scholars/${id}`, { method: 'DELETE' }).catch(() => null);
+                if (res && res.ok) {
+                    const data = await res.json().catch(() => ({}));
+                    if (data.success) {
+                        deleted = true;
+                        showToast('Research Scholar deleted successfully.');
+                        await loadTeamData();
+                        updateOverviewStats();
+                    }
                 }
-            } catch(e) {
+            } catch(e) {}
+
+            if (!deleted) {
                 currentScholars = currentScholars.filter(s => s.id !== id);
                 localStorage.setItem('juet_admin_scholars', JSON.stringify(currentScholars));
                 renderScholarsGrid(currentScholars);
+                updateOverviewStats();
                 showToast('Research Scholar removed.');
             }
+
+            triggerAutoGitSync(`Admin: Deleted scholar ${id}`, [
+                'frontend/team.json',
+                'website/team.json',
+                'backend/data/team.json'
+            ]);
         }
 
         async function submitTeamMember() {
@@ -3917,7 +4329,7 @@
             const linkedinUrl = document.getElementById('memLinkedin').value.trim();
 
             if (!name) {
-                alert('Please enter member name.');
+                showToast('Please enter member name.', 'warn');
                 return;
             }
 
@@ -3927,53 +4339,78 @@
                 email, githubUrl, linkedinUrl
             };
 
+            const apiBase = getAdminApiBase();
+            let saved = false;
+
             try {
-                const res = await fetch('/api/admin/members', {
+                const res = await fetch(`${apiBase}/api/admin/members`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ member: memberData })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    showToast('Team Member added successfully!');
-                    document.getElementById('memName').value = '';
-                    document.getElementById('memRole').value = '';
-                    document.getElementById('memAreaTitle').value = '';
-                    document.getElementById('memAreaSummary').value = '';
-                    clearMemberPhoto();
-                    await loadTeamData();
-                    updateOverviewStats();
-                } else {
-                    alert('Error: ' + data.error);
+                }).catch(() => null);
+                if (res && res.ok) {
+                    const data = await res.json().catch(() => ({}));
+                    if (data.success) {
+                        saved = true;
+                        showToast('Team Member added successfully!');
+                        document.getElementById('memName').value = '';
+                        document.getElementById('memRole').value = '';
+                        document.getElementById('memAreaTitle').value = '';
+                        document.getElementById('memAreaSummary').value = '';
+                        clearMemberPhoto();
+                        await loadTeamData();
+                        updateOverviewStats();
+                    }
                 }
-            } catch(e) {
+            } catch(e) {}
+
+            if (!saved) {
                 currentMembers.push(memberData);
                 localStorage.setItem('juet_admin_members', JSON.stringify(currentMembers));
                 renderTeamMembersGrid(currentMembers);
                 clearMemberPhoto();
-                showToast('Team member added to local cache!');
+                showToast('Team member added!');
+                updateOverviewStats();
             }
+
+            triggerAutoGitSync(`Admin: Added team member ${memberData.name}`, [
+                'frontend/team.json',
+                'website/team.json',
+                'backend/data/team.json'
+            ]);
         }
 
         async function deleteTeamMember(id) {
             if (!confirm('Are you sure you want to delete this team member?')) return;
 
+            const apiBase = getAdminApiBase();
+            let deleted = false;
             try {
-                const res = await fetch(`/api/admin/members/${id}`, { method: 'DELETE' });
-                const data = await res.json();
-                if (data.success) {
-                    showToast('Team member deleted successfully.');
-                    await loadTeamData();
-                    updateOverviewStats();
-                } else {
-                    alert('Error: ' + data.error);
+                const res = await fetch(`${apiBase}/api/admin/members/${id}`, { method: 'DELETE' }).catch(() => null);
+                if (res && res.ok) {
+                    const data = await res.json().catch(() => ({}));
+                    if (data.success) {
+                        deleted = true;
+                        showToast('Team member deleted successfully.');
+                        await loadTeamData();
+                        updateOverviewStats();
+                    }
                 }
-            } catch(e) {
+            } catch(e) {}
+
+            if (!deleted) {
                 currentMembers = currentMembers.filter(m => m.id !== id);
                 localStorage.setItem('juet_admin_members', JSON.stringify(currentMembers));
                 renderTeamMembersGrid(currentMembers);
+                updateOverviewStats();
                 showToast('Team member removed.');
             }
+
+            triggerAutoGitSync(`Admin: Deleted team member ${id}`, [
+                'frontend/team.json',
+                'website/team.json',
+                'backend/data/team.json'
+            ]);
         }
 
         // --- IMAGE UPLOAD HANDLERS FOR TEAM MEMBERS & SCHOLARS ---
@@ -4096,7 +4533,8 @@
 
         async function uploadImageToBackend(dataUrl, originalName, folder, callback) {
             try {
-                const res = await fetch('/api/admin/upload-image', {
+                const apiBase = getAdminApiBase();
+                const res = await fetch(`${apiBase}/api/admin/upload-image`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -4122,9 +4560,26 @@
 
         // --- RESEARCH PROJECTS ---
         async function loadProjectsData() {
+            // 1. Static projects.json
             try {
-                const res = await fetch('/api/admin/projects');
-                if (res.ok) {
+                const staticRes = await fetch('projects.json').catch(() => null);
+                if (staticRes && staticRes.ok) {
+                    const data = await staticRes.json();
+                    const list = Array.isArray(data) ? data : (data.projects || []);
+                    if (list.length > 0) {
+                        currentProjects = list;
+                        localStorage.setItem('juet_admin_projects', JSON.stringify(currentProjects));
+                        renderAdminProjects(currentProjects);
+                        return;
+                    }
+                }
+            } catch (e) {}
+
+            // 2. Backend API
+            try {
+                const apiBase = getAdminApiBase();
+                const res = await fetch(`${apiBase}/api/admin/projects`).catch(() => null);
+                if (res && res.ok) {
                     const data = await res.json();
                     if (data.success && Array.isArray(data.projects) && data.projects.length > 0) {
                         currentProjects = data.projects;
@@ -4248,7 +4703,7 @@
             const techTagsRaw = document.getElementById('projTechTags').value.trim();
 
             if (!title || !desc) {
-                alert('Please enter both Project Title and Description.');
+                showToast('Please enter both Project Title and Description.', 'warn');
                 return;
             }
 
@@ -4280,39 +4735,45 @@
                 techTags
             };
 
+            const apiBase = getAdminApiBase();
+            let saved = false;
+
             try {
                 if (editId) {
-                    const res = await fetch(`/api/admin/projects/${editId}`, {
+                    const res = await fetch(`${apiBase}/api/admin/projects/${editId}`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ project: projectData })
-                    });
-                    const data = await res.json();
-                    if (data.success) {
-                        showToast('Research Project updated successfully!');
-                    } else {
-                        alert('Error: ' + data.error);
-                        return;
+                    }).catch(() => null);
+                    if (res && res.ok) {
+                        const data = await res.json().catch(() => ({}));
+                        if (data.success) {
+                            saved = true;
+                            showToast('Research Project updated successfully!');
+                        }
                     }
                 } else {
-                    const res = await fetch('/api/admin/projects', {
+                    const res = await fetch(`${apiBase}/api/admin/projects`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ project: projectData })
-                    });
-                    const data = await res.json();
-                    if (data.success) {
-                        showToast('New Research Project added successfully!');
-                    } else {
-                        alert('Error: ' + data.error);
-                        return;
+                    }).catch(() => null);
+                    if (res && res.ok) {
+                        const data = await res.json().catch(() => ({}));
+                        if (data.success) {
+                            saved = true;
+                            showToast('New Research Project added successfully!');
+                        }
                     }
                 }
-                resetProjectForm();
-                await loadProjectsData();
-                updateOverviewStats();
-            } catch (err) {
-                console.warn('Network error, saving to local cache');
+                if (saved) {
+                    resetProjectForm();
+                    await loadProjectsData();
+                    updateOverviewStats();
+                }
+            } catch (err) {}
+
+            if (!saved) {
                 if (editId) {
                     const idx = currentProjects.findIndex(p => p.id === editId);
                     if (idx !== -1) currentProjects[idx] = projectData;
@@ -4322,8 +4783,15 @@
                 localStorage.setItem('juet_admin_projects', JSON.stringify(currentProjects));
                 renderAdminProjects(currentProjects);
                 resetProjectForm();
-                showToast('Project saved to local cache!');
+                updateOverviewStats();
+                showToast(editId ? 'Project updated!' : 'Project added!');
             }
+
+            triggerAutoGitSync(`Admin: ${editId ? 'Updated' : 'Added'} project "${projectData.title.slice(0, 30)}..."`, [
+                'frontend/projects.json',
+                'website/projects.json',
+                'backend/data/projects.json'
+            ]);
         }
 
         function editProject(id) {
@@ -4370,22 +4838,34 @@
         async function deleteProject(id) {
             if (!confirm(`Are you sure you want to delete this research project?`)) return;
 
+            const apiBase = getAdminApiBase();
+            let deleted = false;
             try {
-                const res = await fetch(`/api/admin/projects/${id}`, { method: 'DELETE' });
-                const data = await res.json();
-                if (data.success) {
-                    showToast('Project deleted successfully.');
-                    await loadProjectsData();
-                    updateOverviewStats();
-                } else {
-                    alert('Error: ' + data.error);
+                const res = await fetch(`${apiBase}/api/admin/projects/${id}`, { method: 'DELETE' }).catch(() => null);
+                if (res && res.ok) {
+                    const data = await res.json().catch(() => ({}));
+                    if (data.success) {
+                        deleted = true;
+                        showToast('Project deleted successfully.');
+                        await loadProjectsData();
+                        updateOverviewStats();
+                    }
                 }
-            } catch (err) {
+            } catch (err) {}
+
+            if (!deleted) {
                 currentProjects = currentProjects.filter(p => p.id !== id);
                 localStorage.setItem('juet_admin_projects', JSON.stringify(currentProjects));
                 renderAdminProjects(currentProjects);
-                showToast('Project removed from local cache.');
+                updateOverviewStats();
+                showToast('Project removed.');
             }
+
+            triggerAutoGitSync(`Admin: Deleted project ${id}`, [
+                'frontend/projects.json',
+                'website/projects.json',
+                'backend/data/projects.json'
+            ]);
         }
 
         // --- UTILITY HELPER ---

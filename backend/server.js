@@ -9,7 +9,16 @@ const authController = require('./controllers/authController');
 const app = express();
 
 // CORS
-app.use(cors());
+// CORS Configuration
+app.use(cors({
+    origin: function (origin, callback) {
+        // Allow all origins (localhost, all Vercel deployments, Render)
+        return callback(null, true);
+    },
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+}));
 
 // Parse incoming requests
 app.use(express.json({ limit: '25mb' }));

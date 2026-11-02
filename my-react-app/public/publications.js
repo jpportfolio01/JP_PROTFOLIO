@@ -366,18 +366,34 @@ function setupFilters() {
 
     renderPublications();
 
-    // Also attempt fresh fetch from backend
-    fetch('/api/admin/publications')
+    // Also attempt fresh fetch from static JSON (Vercel CDN) and backend
+    fetch('publications.json')
         .then(res => res.json())
         .then(data => {
-            if (data.success && Array.isArray(data.publications)) {
-                PUBLICATIONS = data.publications;
-                localStorage.setItem('juet_admin_publications', JSON.stringify(data.publications));
+            const list = Array.isArray(data) ? data : (data && data.publications ? data.publications : []);
+            if (list.length > 0) {
+                PUBLICATIONS = list;
+                localStorage.setItem('juet_admin_publications', JSON.stringify(list));
                 updateCounts();
                 renderPublications();
             }
         })
-        .catch(() => {});
+        .catch(() => {
+            const apiBase = (typeof JUET_BACKEND_URL !== 'undefined' && JUET_BACKEND_URL) ? JUET_BACKEND_URL.replace(/\/+$/, '') : '';
+            if (apiBase) {
+                fetch(`${apiBase}/api/admin/publications`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success && Array.isArray(data.publications)) {
+                            PUBLICATIONS = data.publications;
+                            localStorage.setItem('juet_admin_publications', JSON.stringify(data.publications));
+                            updateCounts();
+                            renderPublications();
+                        }
+                    })
+                    .catch(() => {});
+            }
+        });
 }
 
 if (typeof document !== 'undefined') {

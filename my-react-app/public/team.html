@@ -1130,11 +1130,11 @@
                 } catch(e) {}
             }
 
-            // 2. Fetch fresh data from backend
-            fetch('/api/admin/team')
+            // 2. Fetch fresh data from static JSON (Vercel CDN) and backend
+            fetch('team.json')
                 .then(r => r.json())
                 .then(d => {
-                    if (d.success) {
+                    if (d) {
                         if (Array.isArray(d.scholars) && d.scholars.length > 0) {
                             localStorage.setItem('juet_admin_scholars', JSON.stringify(d.scholars));
                             renderScholars(d.scholars);
@@ -1145,7 +1145,26 @@
                         }
                     }
                 })
-                .catch(() => {});
+                .catch(() => {
+                    const apiBase = (typeof JUET_BACKEND_URL !== 'undefined' && JUET_BACKEND_URL) ? JUET_BACKEND_URL.replace(/\/+$/, '') : '';
+                    if (apiBase) {
+                        fetch(`${apiBase}/api/admin/team`)
+                            .then(r => r.json())
+                            .then(d => {
+                                if (d && d.success) {
+                                    if (Array.isArray(d.scholars) && d.scholars.length > 0) {
+                                        localStorage.setItem('juet_admin_scholars', JSON.stringify(d.scholars));
+                                        renderScholars(d.scholars);
+                                    }
+                                    if (Array.isArray(d.members) && d.members.length > 0) {
+                                        localStorage.setItem('juet_admin_members', JSON.stringify(d.members));
+                                        renderMembers(d.members);
+                                    }
+                                }
+                            })
+                            .catch(() => {});
+                    }
+                });
         }
 
         function renderScholars(scholars) {
