@@ -81,9 +81,32 @@ function getGitStatus() {
     lastCommit = { hash, message: msg, date };
     isGitRepo = true;
 
+    // Discard any accidental lockfile changes created during npm install/build on hosting platforms
+    try {
+      execSync('git reset HEAD -- package-lock.json backend/package-lock.json', { cwd: ROOT_DIR, stdio: 'pipe' });
+      execSync('git checkout -- package-lock.json backend/package-lock.json', { cwd: ROOT_DIR, stdio: 'pipe' });
+    } catch (e) {}
+
     const rawStatus = execSync('git status --porcelain', { cwd: ROOT_DIR }).toString().trim();
     if (rawStatus) {
-      modifiedFiles = rawStatus.split('\n').map(l => l.trim()).filter(Boolean);
+      const allFiles = rawStatus.split('\n').map(l => l.trim()).filter(Boolean);
+      modifiedFiles = allFiles.filter(line => {
+        const filePath = line.replace(/^[MADRCU?! ]+\s+/, '').trim();
+        if (!filePath) return false;
+        if (
+          filePath.includes('package-lock.json') ||
+          filePath.includes('node_modules') ||
+          filePath.endsWith('.sqlite') ||
+          filePath.endsWith('.sqlite-journal') ||
+          filePath.includes('.DS_Store') ||
+          filePath.startsWith('.npm') ||
+          filePath.includes('npm-debug.log') ||
+          filePath.endsWith('.log')
+        ) {
+          return false;
+        }
+        return true;
+      });
     }
   } catch (e) {
     // Git might not be in a standard state
@@ -135,38 +158,18 @@ async function commitAndPush(customMessage) {
   const commitMsg = customMessage || `Admin update: ${new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' })}`;
 
   try {
+    // 0. Discard any ambient lockfile modifications
+    try {
+      execSync('git reset HEAD -- package-lock.json backend/package-lock.json', { cwd: ROOT_DIR, stdio: 'pipe' });
+      execSync('git checkout -- package-lock.json backend/package-lock.json', { cwd: ROOT_DIR, stdio: 'pipe' });
+    } catch (e) {}
+
     // 1. Stage modified dynamic files (data, scripts, images, modules)
     const stagePaths = [
-      'backend/data/modulesData.js',
-      'backend/data/publications.json',
-      'backend/data/projects.json',
-      'backend/data/team.json',
-      'backend/data/vlab_projects.json',
-      'backend/data/admin_settings.json',
-      'frontend/modulesData.js',
-      'frontend/publications.js',
-      'frontend/publications.json',
-      'frontend/projectsData.js',
-      'frontend/projects.json',
-      'frontend/team.json',
-      'frontend/sql-practice.html',
-      'frontend/images/',
-      'website/modulesData.js',
-      'website/publications.js',
-      'website/publications.json',
-      'website/projectsData.js',
-      'website/projects.json',
-      'website/team.json',
-      'website/sql-practice.html',
-      'website/images/',
-      'my-react-app/public/modulesData.js',
-      'my-react-app/public/publications.js',
-      'my-react-app/public/publications.json',
-      'my-react-app/public/projectsData.js',
-      'my-react-app/public/projects.json',
-      'my-react-app/public/team.json',
-      'my-react-app/public/sql-practice.html',
-      'my-react-app/public/images/',
+      'backend/data/',
+      'frontend/',
+      'website/',
+      'my-react-app/public/',
       'backend/generate-html.js'
     ];
 
@@ -175,6 +178,25 @@ async function commitAndPush(customMessage) {
         execSync(`git add "${p}"`, { cwd: ROOT_DIR, stdio: 'pipe' });
       } catch (e) {}
     });
+
+    // Also stage any specific modified files detected by getGitStatus
+    const status = getGitStatus();
+    if (status.modifiedFiles && status.modifiedFiles.length > 0) {
+      status.modifiedFiles.forEach(line => {
+        const filePath = line.replace(/^[MADRCU?! ]+\s+/, '').trim();
+        if (filePath) {
+          try {
+            execSync(`git add "${filePath}"`, { cwd: ROOT_DIR, stdio: 'pipe' });
+          } catch (e) {}
+        }
+      });
+    }
+
+    // Safety: ensure lockfiles are never staged
+    try {
+      execSync('git reset HEAD -- package-lock.json backend/package-lock.json', { cwd: ROOT_DIR, stdio: 'pipe' });
+      execSync('git checkout -- package-lock.json backend/package-lock.json', { cwd: ROOT_DIR, stdio: 'pipe' });
+    } catch (e) {}
 
     // Check if anything was staged
     let staged = '';
@@ -315,20 +337,27 @@ async function pushViaGitHubApi(token, repo, branch, message) {
     { localPath: path.join(__dirname, '..', 'data', 'modulesData.js'), remotePath: 'backend/data/modulesData.js' },
     { localPath: path.join(__dirname, '..', '..', 'frontend', 'modulesData.js'), remotePath: 'frontend/modulesData.js' },
     { localPath: path.join(__dirname, '..', '..', 'website', 'modulesData.js'), remotePath: 'website/modulesData.js' },
+    { localPath: path.join(__dirname, '..', '..', 'my-react-app', 'public', 'modulesData.js'), remotePath: 'my-react-app/public/modulesData.js' },
 
     { localPath: path.join(__dirname, '..', 'data', 'publications.json'), remotePath: 'backend/data/publications.json' },
     { localPath: path.join(__dirname, '..', '..', 'frontend', 'publications.json'), remotePath: 'frontend/publications.json' },
     { localPath: path.join(__dirname, '..', '..', 'website', 'publications.json'), remotePath: 'website/publications.json' },
+    { localPath: path.join(__dirname, '..', '..', 'my-react-app', 'public', 'publications.json'), remotePath: 'my-react-app/public/publications.json' },
 
     { localPath: path.join(__dirname, '..', 'data', 'projects.json'), remotePath: 'backend/data/projects.json' },
     { localPath: path.join(__dirname, '..', '..', 'frontend', 'projects.json'), remotePath: 'frontend/projects.json' },
     { localPath: path.join(__dirname, '..', '..', 'website', 'projects.json'), remotePath: 'website/projects.json' },
+    { localPath: path.join(__dirname, '..', '..', 'my-react-app', 'public', 'projects.json'), remotePath: 'my-react-app/public/projects.json' },
 
     { localPath: path.join(__dirname, '..', 'data', 'team.json'), remotePath: 'backend/data/team.json' },
     { localPath: path.join(__dirname, '..', '..', 'frontend', 'team.json'), remotePath: 'frontend/team.json' },
     { localPath: path.join(__dirname, '..', '..', 'website', 'team.json'), remotePath: 'website/team.json' },
+    { localPath: path.join(__dirname, '..', '..', 'my-react-app', 'public', 'team.json'), remotePath: 'my-react-app/public/team.json' },
 
     { localPath: path.join(__dirname, '..', 'data', 'vlab_projects.json'), remotePath: 'backend/data/vlab_projects.json' },
+    { localPath: path.join(__dirname, '..', '..', 'frontend', 'vlab_projects.json'), remotePath: 'frontend/vlab_projects.json' },
+    { localPath: path.join(__dirname, '..', '..', 'website', 'vlab_projects.json'), remotePath: 'website/vlab_projects.json' },
+    { localPath: path.join(__dirname, '..', '..', 'my-react-app', 'public', 'vlab_projects.json'), remotePath: 'my-react-app/public/vlab_projects.json' },
     { localPath: path.join(__dirname, '..', 'data', 'admin_settings.json'), remotePath: 'backend/data/admin_settings.json' }
   ];
 

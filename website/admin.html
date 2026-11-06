@@ -2998,7 +2998,7 @@
                     navBtn.style.color = '#c2410c';
                     navBtn.style.borderColor = '#fed7aa';
                     navText.innerHTML = '<i class="fas fa-exclamation-circle"></i> GitHub: Setup Token';
-                } else if (currentGitStatus.hasUncommittedChanges) {
+                } else if (currentGitStatus.hasUncommittedChanges && currentGitStatus.modifiedFiles && currentGitStatus.modifiedFiles.length > 0) {
                     navBtn.style.background = '#fefce8';
                     navBtn.style.color = '#854d0e';
                     navBtn.style.borderColor = '#fef08a';
@@ -3029,7 +3029,7 @@
                             Connect GitHub Token
                         </button>
                     `;
-                } else if (currentGitStatus.hasUncommittedChanges) {
+                } else if (currentGitStatus.hasUncommittedChanges && currentGitStatus.modifiedFiles && currentGitStatus.modifiedFiles.length > 0) {
                     hubAlert.style.display = 'flex';
                     hubAlert.style.background = '#fefce8';
                     hubAlert.style.border = '1px solid #fef08a';
@@ -3073,7 +3073,7 @@
                 if (!currentGitStatus.hasToken) {
                     dot.style.background = '#ea580c';
                     title.textContent = 'GitHub Token Required for Cloud Persistence';
-                } else if (currentGitStatus.hasUncommittedChanges) {
+                } else if (currentGitStatus.hasUncommittedChanges && currentGitStatus.modifiedFiles && currentGitStatus.modifiedFiles.length > 0) {
                     dot.style.background = '#eab308';
                     title.textContent = `${currentGitStatus.modifiedFiles.length} uncommitted file(s) waiting to be pushed`;
                 } else {
@@ -3083,7 +3083,7 @@
             }
 
             if (pendingBox && pendingCount) {
-                if (currentGitStatus.hasUncommittedChanges) {
+                if (currentGitStatus.hasUncommittedChanges && currentGitStatus.modifiedFiles && currentGitStatus.modifiedFiles.length > 0) {
                     pendingBox.style.display = 'block';
                     pendingCount.textContent = currentGitStatus.modifiedFiles.length;
                 } else {
