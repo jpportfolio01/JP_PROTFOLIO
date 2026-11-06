@@ -320,9 +320,10 @@
         let googleTokenClient = null;
 
         function getApiBase() {
-            return (window.location.protocol.startsWith('http') && (window.location.port === '5001' || window.location.port === ''))
-                ? ''
-                : 'http://localhost:5001';
+            if (typeof JUET_BACKEND_URL !== 'undefined' && JUET_BACKEND_URL) {
+                return JUET_BACKEND_URL.replace(/\/+$/, '');
+            }
+            return 'https://jp-protfolio-1.onrender.com';
         }
 
         function setStatus(type, message) {
