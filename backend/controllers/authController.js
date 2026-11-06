@@ -126,13 +126,25 @@ exports.loginOrRegister = (req, res) => {
     ? name.trim() 
     : (derivedRoll ? `Student (${derivedRoll})` : 'Student');
 
-  // 4. Save into SQLite database and JSON student store
-  const user = db.upsertUser({
-    name: finalName,
-    email: normalized,
-    roll: derivedRoll,
-    picture: picture || ''
-  });
+  // 4. Save into SQLite database and JSON student store (with client-side self-healing merge)
+  let user;
+  if ((Array.isArray(req.body.solved) && req.body.solved.length > 0) || req.body.points) {
+    user = db.bulkSyncUser({
+      name: finalName,
+      email: normalized,
+      roll: derivedRoll,
+      picture: picture || '',
+      solved: req.body.solved || [],
+      points: req.body.points || 0
+    });
+  } else {
+    user = db.upsertUser({
+      name: finalName,
+      email: normalized,
+      roll: derivedRoll,
+      picture: picture || ''
+    });
+  }
 
   res.json({
     success: true,
@@ -190,4 +202,35 @@ exports.syncProgress = (req, res) => {
     message: "Progress synced to SQLite database.",
     user: updatedUser
   });
+};
+
+exports.bulkSync = (req, res) => {
+  try {
+    const { email, name, roll, solved, points, picture } = req.body || {};
+    const headerEmail = req.headers['x-user-email'];
+    const headerName = req.headers['x-user-name'] ? decodeURIComponent(req.headers['x-user-name']) : '';
+    const headerRoll = req.headers['x-user-roll'] ? decodeURIComponent(req.headers['x-user-roll']) : '';
+
+    const targetEmail = (email || headerEmail || req.juetUserEmail || '').trim().toLowerCase();
+    if (!targetEmail) {
+      return res.status(400).json({ success: false, error: 'Email is required for student bulk sync.' });
+    }
+
+    const updatedUser = db.bulkSyncUser({
+      email: targetEmail,
+      name: name || headerName,
+      roll: roll || headerRoll,
+      solved: solved || [],
+      points: points || 0,
+      picture: picture
+    });
+
+    res.json({
+      success: true,
+      message: 'Student progress bulk-synchronized successfully.',
+      user: updatedUser
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
 };

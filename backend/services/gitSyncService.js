@@ -358,6 +358,7 @@ async function pushViaGitHubApi(token, repo, branch, message) {
     { localPath: path.join(__dirname, '..', '..', 'frontend', 'vlab_projects.json'), remotePath: 'frontend/vlab_projects.json' },
     { localPath: path.join(__dirname, '..', '..', 'website', 'vlab_projects.json'), remotePath: 'website/vlab_projects.json' },
     { localPath: path.join(__dirname, '..', '..', 'my-react-app', 'public', 'vlab_projects.json'), remotePath: 'my-react-app/public/vlab_projects.json' },
+    { localPath: path.join(__dirname, '..', 'data', 'students_store.json'), remotePath: 'backend/data/students_store.json' },
     { localPath: path.join(__dirname, '..', 'data', 'admin_settings.json'), remotePath: 'backend/data/admin_settings.json' }
   ];
 
@@ -556,6 +557,12 @@ function exportFullData() {
     if (fs.existsSync(vlabPath)) vlabProjects = JSON.parse(fs.readFileSync(vlabPath, 'utf8'));
   } catch (e) {}
 
+  const studentsPath = path.join(__dirname, '..', 'data', 'students_store.json');
+  let students = {};
+  try {
+    if (fs.existsSync(studentsPath)) students = JSON.parse(fs.readFileSync(studentsPath, 'utf8'));
+  } catch (e) {}
+
   return {
     platform: 'JUET SQL Virtual Lab & Dr. Jitendra Parmar Portfolio',
     exportedAt: new Date().toISOString(),
@@ -566,6 +573,7 @@ function exportFullData() {
       projects,
       team,
       vlabProjects,
+      students,
       publicSettings: {
         triggerClickCount: settings.triggerClickCount || 8,
         googleClientId: settings.googleClientId || ''

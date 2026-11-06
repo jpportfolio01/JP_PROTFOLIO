@@ -3049,40 +3049,47 @@ const fullHtml = `<!DOCTYPE html>
         async function syncAllSolvedToBackend() {
             if (!currentUser || !currentUser.email) return;
             const apiBase = getApiBase();
-            for (const qKey of userSolved) {
-                try {
-                    await fetch(\`\${apiBase}/api/student/sync-progress\`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'x-user-email': currentUser.email,
-                            'x-user-name': encodeURIComponent(currentUser.name),
-                            'x-user-roll': encodeURIComponent(currentUser.roll || '')
-                        },
-                        body: JSON.stringify({
-                            challengeId: qKey,
-                            pointsAwarded: 10,
-                            userEmail: currentUser.email,
-                            name: currentUser.name,
-                            roll: currentUser.roll || ''
-                        })
-                    });
-                } catch(e) {}
-            }
+            try {
+                await fetch(\`\${apiBase}/api/student/bulk-sync\`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-user-email': currentUser.email,
+                        'x-user-name': encodeURIComponent(currentUser.name),
+                        'x-user-roll': encodeURIComponent(currentUser.roll || '')
+                    },
+                    body: JSON.stringify({
+                        email: currentUser.email,
+                        name: currentUser.name,
+                        roll: currentUser.roll || '',
+                        solved: userSolved,
+                        points: userPoints,
+                        picture: currentUser.picture || ''
+                    })
+                });
+            } catch(e) {}
         }
 
         async function syncUserProfileAndProgress() {
             if (!currentUser || !currentUser.email) return;
             const apiBase = getApiBase();
             try {
-                // 1. Sync authentication in SQLite
-                const res = await fetch(\`\${apiBase}/api/auth/login\`, {
+                // 1. Self-Healing Bulk Sync: Instantly restore student progress into backend (persisting across redeployments)
+                const res = await fetch(\`\${apiBase}/api/student/bulk-sync\`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-user-email': currentUser.email,
+                        'x-user-name': encodeURIComponent(currentUser.name),
+                        'x-user-roll': encodeURIComponent(currentUser.roll || '')
+                    },
                     body: JSON.stringify({
-                        name: currentUser.name,
                         email: currentUser.email,
-                        roll: currentUser.roll
+                        name: currentUser.name,
+                        roll: currentUser.roll || '',
+                        solved: userSolved,
+                        points: userPoints,
+                        picture: currentUser.picture || ''
                     })
                 });
                 if (res.ok) {

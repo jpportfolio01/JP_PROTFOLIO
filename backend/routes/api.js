@@ -16,6 +16,7 @@ router.post('/auth/google-login', authController.loginOrRegister);
 router.get('/auth/profile', requireJuetAuth, authController.getProfile);
 router.get('/student/points', requireJuetAuth, authController.getProfile);
 router.post('/student/sync-progress', requireJuetAuth, authController.syncProgress);
+router.post('/student/bulk-sync', authController.bulkSync);
 
 // SQL Challenges & Execution
 router.get('/sql/modules', sqlController.getModules);

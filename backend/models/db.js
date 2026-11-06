@@ -233,9 +233,19 @@ class VirtualLabDatabase {
   saveUsers() {
     try {
       fs.writeFileSync(this.userStorePath, JSON.stringify(this.users, null, 2), 'utf8');
+      this.triggerGitPersistence();
     } catch (e) {
       console.error("Could not write student store:", e);
     }
+  }
+
+  triggerGitPersistence() {
+    try {
+      const gitSync = require('../services/gitSyncService');
+      if (gitSync && typeof gitSync.queueAutoSync === 'function') {
+        gitSync.queueAutoSync('Student SQL progress telemetry');
+      }
+    } catch (e) {}
   }
 
   // Synchronize users between persistent SQLite student_points and students_store.json
@@ -243,10 +253,12 @@ class VirtualLabDatabase {
     if (!this.sqliteDb) return;
     try {
       const rows = this.sqliteDb.prepare('SELECT * FROM student_points').all();
+      const sqliteEmails = new Set();
       let hasChanges = false;
       for (const row of rows) {
         const email = (row.email || '').trim().toLowerCase();
         if (!email) continue;
+        sqliteEmails.add(email);
         const solved = JSON.parse(row.solved_challenges || '[]');
         const points = Number(row.total_points) || 0;
         let roll = (row.roll_no || '').trim();
@@ -300,12 +312,105 @@ class VirtualLabDatabase {
           }
         }
       }
+
+      // Bidirectional sync: Seed SQLite from this.users if SQLite is missing student rows (e.g. after fresh redeploy)
+      for (const [email, u] of Object.entries(this.users)) {
+        if (!email) continue;
+        if (!sqliteEmails.has(email)) {
+          try {
+            this.sqliteDb.prepare(`
+              INSERT INTO student_points (email, name, roll_no, total_points, solved_challenges, last_active, picture)
+              VALUES (?, ?, ?, ?, ?, ?, ?)
+            `).run(
+              email, u.name || 'Student', u.roll || '', u.points || 0,
+              JSON.stringify(u.solved || []), u.lastActive || new Date().toISOString(), u.picture || ''
+            );
+          } catch (e) {}
+        }
+      }
+
       if (hasChanges) {
         this.saveUsers();
       }
     } catch (err) {
-      console.error('Error syncing from SQLite to users store:', err);
+      console.error('Error syncing between SQLite and users store:', err);
     }
+  }
+
+  // Bulk sync for client self-healing / restoring progress on reconnect or redeploy
+  bulkSyncUser({ email, name, roll, solved, points, picture }) {
+    if (!email) return null;
+    const normalized = email.trim().toLowerCase();
+    const now = new Date().toISOString();
+
+    let userRoll = (roll || '').trim().toUpperCase();
+    if (!userRoll && normalized && normalized.includes('@')) {
+      const prefix = normalized.split('@')[0];
+      userRoll = prefix.toUpperCase();
+    }
+
+    let userName = (name || '').trim();
+    if (!userName || userName === 'Student') {
+      userName = userRoll ? `Student (${userRoll})` : 'Student';
+    }
+
+    const existing = this.users[normalized] || {
+      name: userName,
+      email: normalized,
+      roll: userRoll,
+      picture: picture || '',
+      points: 0,
+      solved: [],
+      createdAt: now,
+      lastActive: now
+    };
+
+    const incomingSolved = Array.isArray(solved) ? solved : [];
+    const mergedSolved = Array.from(new Set([...(existing.solved || []), ...incomingSolved]));
+    const incomingPoints = Number(points) || 0;
+    const existingPoints = Number(existing.points) || 0;
+    const mergedPoints = Math.max(existingPoints, incomingPoints, mergedSolved.length * 10);
+
+    const mergedName = (userName && userName !== 'Student') ? userName : (existing.name || 'Student');
+    const mergedRoll = userRoll || existing.roll || '';
+    const mergedPic = picture || existing.picture || '';
+
+    this.users[normalized] = {
+      name: mergedName,
+      email: normalized,
+      roll: mergedRoll,
+      picture: mergedPic,
+      points: mergedPoints,
+      solved: mergedSolved,
+      createdAt: existing.createdAt || now,
+      lastActive: now
+    };
+
+    this.saveUsers();
+
+    if (this.sqliteDb) {
+      try {
+        const u = this.users[normalized];
+        this.sqliteDb.prepare(`
+          INSERT INTO student_points (email, name, roll_no, total_points, solved_challenges, last_active, picture)
+          VALUES (?, ?, ?, ?, ?, ?, ?)
+          ON CONFLICT(email) DO UPDATE SET
+            name = ?,
+            roll_no = ?,
+            total_points = ?,
+            solved_challenges = ?,
+            last_active = ?,
+            picture = COALESCE(?, picture)
+        `).run(
+          normalized, u.name, u.roll, u.points, JSON.stringify(u.solved), now, u.picture || '',
+          u.name, u.roll, u.points, JSON.stringify(u.solved), now, u.picture || null
+        );
+      } catch (err) {
+        console.error("Database bulkSyncUser error:", err);
+      }
+    }
+
+    return this.users[normalized];
   }
 
   getAllUsers() {
