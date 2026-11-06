@@ -1130,8 +1130,8 @@
                 } catch(e) {}
             }
 
-            // 2. Fetch fresh data from static JSON (Vercel CDN) and backend
-            fetch('team.json')
+            // 2. Fetch fresh data from static JSON (Vercel CDN) and backend with cache-busting
+            fetch('team.json?_t=' + Date.now(), { cache: 'no-cache' })
                 .then(r => r.json())
                 .then(d => {
                     if (d) {

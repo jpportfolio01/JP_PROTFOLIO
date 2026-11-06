@@ -281,9 +281,7 @@ function initAdminSecretTrigger() {
     // Fetch dynamic trigger clicks setting from backend
     async function fetchClickCountSetting() {
         try {
-            const apiBase = (window.location.protocol.startsWith('http') && (window.location.port === '5001' || window.location.port === ''))
-                ? ''
-                : 'http://localhost:5001';
+            const apiBase = (typeof getApiBase === 'function') ? getApiBase() : 'https://jp-protfolio-1.onrender.com';
             const res = await fetch(`${apiBase}/api/admin/settings`);
             if (res.ok) {
                 const data = await res.json();
@@ -386,9 +384,7 @@ function openAdminGatewayModal() {
             const err = document.getElementById('gwError');
 
             try {
-                const apiBase = (window.location.protocol.startsWith('http') && (window.location.port === '5001' || window.location.port === ''))
-                    ? ''
-                    : 'http://localhost:5001';
+                const apiBase = (typeof getApiBase === 'function') ? getApiBase() : 'https://jp-protfolio-1.onrender.com';
                 const res = await fetch(`${apiBase}/api/admin/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },

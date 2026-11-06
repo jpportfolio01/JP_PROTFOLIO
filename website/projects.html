@@ -805,9 +805,9 @@
         let projectsList = [];
 
         async function initProjects() {
-            // Check static JSON (Vercel CDN) and API first
+            // Check static JSON (Vercel CDN) and API first with cache-busting
             try {
-                const staticRes = await fetch('projects.json').catch(() => null);
+                const staticRes = await fetch('projects.json?_t=' + Date.now(), { cache: 'no-cache' }).catch(() => null);
                 if (staticRes && staticRes.ok) {
                     const data = await staticRes.json();
                     const list = Array.isArray(data) ? data : (data && data.projects ? data.projects : []);

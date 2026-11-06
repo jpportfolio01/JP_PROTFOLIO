@@ -4,26 +4,24 @@
  */
 
 // If your frontend and backend are deployed on different services:
-// Enter your live Render backend URL below, e.g.: 'https://jp-protfolio.onrender.com'
+// Live Render backend URL:
 var JUET_BACKEND_URL = (function() {
-    // 1. Check if user configured in window
+    // 1. Check if explicitly configured on window
     if (typeof window !== 'undefined' && window.BACKEND_API_URL) {
         return window.BACKEND_API_URL.replace(/\/+$/, '');
     }
     // 2. Local development fallback: automatically routes to port 5001
-    if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-        return window.location.port === '5001' ? '' : 'http://localhost:5001';
+    if (typeof window !== 'undefined') {
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:') {
+            return window.location.port === '5001' ? '' : 'http://localhost:5001';
+        }
+        // 3. In production on the Render backend domain itself:
+        if (window.location.hostname === 'jp-protfolio-1.onrender.com') {
+            return '';
+        }
     }
-    // 3. Deployed frontend (Vercel, Netlify, GitHub Pages) talking to Render backend:
-    if (typeof window !== 'undefined' && (
-        window.location.hostname.includes('vercel.app') || 
-        window.location.hostname.includes('github.io') || 
-        window.location.hostname.includes('netlify.app')
-    )) {
-        return 'https://jp-protfolio.onrender.com';
-    }
-    // 4. In production on the Render backend domain itself:
-    return '';
+    // 4. Deployed frontend (Vercel, Netlify, GitHub Pages, or any custom domain) talking to Render backend:
+    return 'https://jp-protfolio-1.onrender.com';
 })();
 
 function getApiUrl(endpoint) {
@@ -36,14 +34,16 @@ function getApiBase() {
 }
 
 // Seamless Auto-Router: When JUET_BACKEND_URL is set (e.g. Render backend),
-// any fetch('/api/...') is automatically routed to the remote backend!
+// any fetch('/api/...') or fetch('/signup') is automatically routed to the remote backend!
 (function() {
     if (typeof window === 'undefined' || !window.fetch) return;
     var nativeFetch = window.fetch;
     window.fetch = function(input, init) {
-        if (typeof input === 'string' && input.startsWith('/api') && JUET_BACKEND_URL) {
-            var target = JUET_BACKEND_URL.replace(/\/+$/, '') + input;
-            return nativeFetch(target, init);
+        if (typeof input === 'string' && JUET_BACKEND_URL) {
+            if (input.startsWith('/api') || input.startsWith('/signup')) {
+                var target = JUET_BACKEND_URL.replace(/\/+$/, '') + input;
+                return nativeFetch(target, init);
+            }
         }
         return nativeFetch(input, init);
     };

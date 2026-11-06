@@ -366,8 +366,8 @@ function setupFilters() {
 
     renderPublications();
 
-    // Also attempt fresh fetch from static JSON (Vercel CDN) and backend
-    fetch('publications.json')
+    // Also attempt fresh fetch from static JSON (Vercel CDN) and backend with cache-busting
+    fetch('publications.json?_t=' + Date.now(), { cache: 'no-cache' })
         .then(res => res.json())
         .then(data => {
             const list = Array.isArray(data) ? data : (data && data.publications ? data.publications : []);

@@ -2087,12 +2087,17 @@
                 <div id="modalGitPendingFilesBox" style="display: none; background: #fff7ed; border: 1px solid #ffedd5; border-radius: 8px; padding: 10px 12px; margin-bottom: 14px; font-size: 0.8rem; color: #9a3412;">
                     <i class="fas fa-exclamation-triangle"></i> <strong>Pending Changes:</strong> <span id="modalGitPendingCount">0</span> uncommitted files waiting to be pushed to GitHub.
                 </div>
-                <div style="display: flex; gap: 10px;">
+                <div style="display: flex; gap: 10px; margin-bottom: 10px;">
                     <button type="button" id="btnModalPushNow" class="btn-primary" onclick="handleManualGitSync()" style="flex: 1; justify-content: center; padding: 10px 18px; font-weight: 700; font-size: 0.88rem; background: #0f172a;">
                         <i class="fas fa-cloud-upload-alt"></i> Commit & Push to GitHub Now
                     </button>
                     <button type="button" class="btn-secondary" onclick="loadGitSyncStatus(true)" style="padding: 10px 14px;" title="Refresh Git status">
                         <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" id="btnModalRedeployNow" class="btn-primary" onclick="handleTriggerRedeploy()" style="flex: 1; justify-content: center; padding: 10px 18px; font-weight: 700; font-size: 0.88rem; background: linear-gradient(135deg, #2563eb, #1d4ed8); border: none; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);">
+                        <i class="fas fa-rocket"></i> Trigger Redeploy Live Website (Vercel / Render)
                     </button>
                 </div>
             </div>
@@ -2103,7 +2108,7 @@
                     <i class="fas fa-key" style="color: #4f46e5;"></i> GitHub Personal Access Token (PAT)
                 </h4>
                 <p style="font-size: 0.8rem; color: #64748b; line-height: 1.5; margin-bottom: 12px;">
-                    To let the backend automatically commit changes permanently to your GitHub repository (preventing data loss when Render redeploys), provide a GitHub token with <strong>repo</strong> permissions:
+                    To let the backend automatically commit changes permanently to your GitHub repository in <strong>1 single atomic commit</strong> (preventing data loss when Render redeploys and ensuring Vercel auto-deploys):
                 </p>
                 <div style="margin-bottom: 12px;">
                     <div style="display: flex; gap: 8px; margin-bottom: 6px;">
@@ -2126,15 +2131,38 @@
                         <input type="text" id="modalGitBranchInput" value="main" class="form-control" style="width: 100%; font-family: monospace; font-size: 0.85rem;">
                     </div>
                 </div>
+
+                <!-- AUTO-DEPLOY HOOKS SECTION -->
+                <div style="border-top: 1px solid #e2e8f0; padding-top: 14px; margin-top: 14px; margin-bottom: 12px;">
+                    <h5 style="margin: 0 0 6px 0; font-size: 0.88rem; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 6px;">
+                        <i class="fas fa-bolt" style="color: #eab308;"></i> Instant Auto-Deploy Hooks (Guaranteed Redeployment)
+                    </h5>
+                    <p style="font-size: 0.76rem; color: #64748b; line-height: 1.4; margin-bottom: 10px;">
+                        When GitHub Webhooks are filtered, delayed, or branch diffs are skipped, Deploy Hooks trigger an immediate live rebuild on Vercel and Render:
+                    </p>
+                    <div style="margin-bottom: 10px;">
+                        <label style="display: block; font-size: 0.76rem; font-weight: 700; color: #334155; margin-bottom: 3px;">
+                            <i class="fab fa-cloudflare" style="display: none;"></i> Vercel Deploy Hook URL <span style="font-weight: 400; color: #64748b;">(Vercel &rarr; Settings &rarr; Git &rarr; Deploy Hooks &rarr; Create Hook)</span>
+                        </label>
+                        <input type="url" id="modalVercelDeployHookInput" placeholder="https://api.vercel.com/v1/integrations/deploy/prj_.../..." class="form-control" style="width: 100%; font-family: monospace; font-size: 0.82rem;">
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <label style="display: block; font-size: 0.76rem; font-weight: 700; color: #334155; margin-bottom: 3px;">
+                            Render Deploy Hook URL <span style="font-weight: 400; color: #64748b;">(Render &rarr; Web Service Settings &rarr; Deploy Hook)</span>
+                        </label>
+                        <input type="url" id="modalRenderDeployHookInput" placeholder="https://api.render.com/deploy/srv-...?... " class="form-control" style="width: 100%; font-family: monospace; font-size: 0.82rem;">
+                    </div>
+                </div>
+
                 <div style="margin-bottom: 16px;">
                     <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.84rem; font-weight: 600; color: #334155;">
                         <input type="checkbox" id="modalGitAutoSyncCheck" checked style="width: 16px; height: 16px;">
-                        <span>Automatically commit and push to GitHub on every save (Questions, Publications, Projects, Scholars)</span>
+                        <span>Automatically commit, push, and trigger redeploy on every save (Questions, Publications, Projects, Scholars)</span>
                     </label>
                 </div>
                 <div style="display: flex; justify-content: flex-end;">
                     <button type="button" class="btn-primary" onclick="handleSaveGitSettings()" style="padding: 9px 18px; font-size: 0.88rem;">
-                        <i class="fas fa-save"></i> Save GitHub Settings
+                        <i class="fas fa-save"></i> Save GitHub & Deploy Settings
                     </button>
                 </div>
             </div>
@@ -2189,13 +2217,15 @@
             if (typeof JUET_BACKEND_URL !== 'undefined' && JUET_BACKEND_URL) {
                 return JUET_BACKEND_URL.replace(/\/+$/, '');
             }
-            if (window.location.hostname.includes('vercel.app') || window.location.hostname.includes('github.io') || window.location.hostname.includes('netlify.app')) {
-                return 'https://jp-protfolio.onrender.com';
+            if (typeof window !== 'undefined') {
+                if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:') {
+                    return window.location.port === '5001' ? '' : 'http://localhost:5001';
+                }
+                if (window.location.hostname === 'jp-protfolio-1.onrender.com') {
+                    return '';
+                }
             }
-            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-                return window.location.port === '5001' ? '' : 'http://localhost:5001';
-            }
-            return '';
+            return 'https://jp-protfolio-1.onrender.com';
         }
 
         // --- STATE & AUTHENTICATION ---
@@ -2677,7 +2707,81 @@
             ];
 
             const filesToSync = targetPaths ? allFiles.filter(f => targetPaths.includes(f.path)) : allFiles;
+            if (filesToSync.length === 0) return { success: true, count: 0 };
 
+            const headers = {
+                'Authorization': `Bearer ${cleanToken}`,
+                'Accept': 'application/vnd.github.v3+json',
+                'Content-Type': 'application/json'
+            };
+
+            // 1. ATOMIC GIT TREE COMMIT: Commit all modified files in ONE single commit!
+            // This prevents Vercel from auto-cancelling the deployment or skipping Root Directory changes.
+            try {
+                const refRes = await fetch(`https://api.github.com/repos/${cleanRepo}/git/ref/heads/${cleanBranch}`, { headers });
+                if (refRes.status === 401) {
+                    return { success: false, error: 'GitHub reported "Bad credentials" (401). Please verify your token.' };
+                }
+                if (refRes.ok) {
+                    const refData = await refRes.json();
+                    const latestCommitSha = refData.object.sha;
+
+                    const commitRes = await fetch(`https://api.github.com/repos/${cleanRepo}/git/commits/${latestCommitSha}`, { headers });
+                    if (commitRes.ok) {
+                        const commitData = await commitRes.json();
+                        const baseTreeSha = commitData.tree.sha;
+
+                        const treeItems = filesToSync.map(f => ({
+                            path: f.path,
+                            mode: '100644',
+                            type: 'blob',
+                            content: f.content
+                        }));
+
+                        const treeRes = await fetch(`https://api.github.com/repos/${cleanRepo}/git/trees`, {
+                            method: 'POST',
+                            headers,
+                            body: JSON.stringify({ base_tree: baseTreeSha, tree: treeItems })
+                        });
+
+                        if (treeRes.ok) {
+                            const treeData = await treeRes.json();
+                            const newCommitRes = await fetch(`https://api.github.com/repos/${cleanRepo}/git/commits`, {
+                                method: 'POST',
+                                headers,
+                                body: JSON.stringify({
+                                    message: `${message} [Atomic Update]`,
+                                    tree: treeData.sha,
+                                    parents: [latestCommitSha]
+                                })
+                            });
+
+                            if (newCommitRes.ok) {
+                                const newCommitData = await newCommitRes.json();
+                                const updateRefRes = await fetch(`https://api.github.com/repos/${cleanRepo}/git/refs/heads/${cleanBranch}`, {
+                                    method: 'PATCH',
+                                    headers,
+                                    body: JSON.stringify({ sha: newCommitData.sha, force: false })
+                                });
+
+                                if (updateRefRes.ok) {
+                                    const shortHash = newCommitData.sha.substring(0, 7);
+                                    return {
+                                        success: true,
+                                        count: filesToSync.length,
+                                        commitHash: shortHash,
+                                        method: 'git-tree-atomic'
+                                    };
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (treeErr) {
+                console.warn('Atomic git tree commit failed, falling back to sequential PUT:', treeErr.message);
+            }
+
+            // Fallback: Sequential PUT (existing logic)
             let successCount = 0;
             let lastErr = '';
 
@@ -2685,10 +2789,7 @@
                 try {
                     let sha = null;
                     const getRes = await fetch(`https://api.github.com/repos/${cleanRepo}/contents/${file.path}?ref=${cleanBranch}`, {
-                        headers: {
-                            'Authorization': `Bearer ${cleanToken}`,
-                            'Accept': 'application/vnd.github.v3+json'
-                        }
+                        headers
                     });
 
                     if (getRes.ok) {
@@ -2736,8 +2837,43 @@
             return {
                 success: successCount > 0,
                 count: successCount,
-                error: lastErr
+                error: lastErr,
+                method: 'sequential-put'
             };
+        }
+
+        async function triggerClientDeployHooks() {
+            const vercelHook = (localStorage.getItem('juet_admin_vercel_deploy_hook') || '').trim();
+            const renderHook = (localStorage.getItem('juet_admin_render_deploy_hook') || '').trim();
+            let triggered = false;
+
+            if (vercelHook) {
+                try {
+                    await fetch(vercelHook, { method: 'POST', mode: 'no-cors' });
+                    triggered = true;
+                    console.log('Client triggered Vercel Deploy Hook');
+                } catch (e) {
+                    console.warn('Could not trigger Vercel deploy hook from client:', e);
+                }
+            }
+
+            if (renderHook) {
+                try {
+                    await fetch(renderHook, { method: 'POST', mode: 'no-cors' });
+                    triggered = true;
+                    console.log('Client triggered Render Deploy Hook');
+                } catch (e) {
+                    console.warn('Could not trigger Render deploy hook from client:', e);
+                }
+            }
+
+            // Also trigger via backend (server-to-server)
+            try {
+                const apiBase = getAdminApiBase();
+                await fetch(`${apiBase}/api/admin/redeploy`, { method: 'POST' }).catch(() => null);
+            } catch (e) {}
+
+            return triggered;
         }
 
         async function triggerAutoGitSync(message, targetPaths = null) {
@@ -2752,7 +2888,14 @@
             try {
                 const res = await pushDirectlyToGitHub(token, repo, branch, message, targetPaths);
                 if (res.success) {
-                    showToast('✅ Saved & committed to GitHub! Vercel is redeploying.', 'success');
+                    const hashLabel = res.commitHash ? ` (${res.commitHash})` : '';
+                    const hookTriggered = await triggerClientDeployHooks();
+
+                    if (hookTriggered) {
+                        showToast(`✅ Saved & committed to GitHub${hashLabel}! Vercel redeployment triggered.`, 'success');
+                    } else {
+                        showToast(`✅ Saved & committed to GitHub${hashLabel} in 1 atomic commit! Vercel build started.`, 'success');
+                    }
                 } else {
                     console.warn('GitHub auto-sync notice:', res.error);
                     showToast('⚠️ Saved locally. GitHub sync: ' + (res.error || 'Check Git settings'), 'warn');
@@ -2773,6 +2916,12 @@
                         const data = await res.json();
                         if (data && data.success) {
                             currentGitStatus = data;
+                            if (data.vercelDeployHookUrl && !localStorage.getItem('juet_admin_vercel_deploy_hook')) {
+                                localStorage.setItem('juet_admin_vercel_deploy_hook', data.vercelDeployHookUrl);
+                            }
+                            if (data.renderDeployHookUrl && !localStorage.getItem('juet_admin_render_deploy_hook')) {
+                                localStorage.setItem('juet_admin_render_deploy_hook', data.renderDeployHookUrl);
+                            }
                             updateGitSyncUI();
                             if (!silent) console.log('Git sync status loaded from backend:', data);
                             return;
@@ -2965,6 +3114,15 @@
                     if (autoCheck) {
                         autoCheck.checked = currentGitStatus.autoGitSync !== false;
                     }
+
+                    const vercelInput = document.getElementById('modalVercelDeployHookInput');
+                    const renderInput = document.getElementById('modalRenderDeployHookInput');
+                    if (vercelInput) {
+                        vercelInput.value = localStorage.getItem('juet_admin_vercel_deploy_hook') || currentGitStatus.vercelDeployHookUrl || '';
+                    }
+                    if (renderInput) {
+                        renderInput.value = localStorage.getItem('juet_admin_render_deploy_hook') || currentGitStatus.renderDeployHookUrl || '';
+                    }
                 }
                 loadGitSyncStatus(true);
             }
@@ -3028,11 +3186,26 @@
 
             localStorage.setItem('juet_admin_github_repo', repoVal);
             localStorage.setItem('juet_admin_github_branch', branchVal);
+            localStorage.setItem('juet_admin_auto_git_sync', autoVal ? 'true' : 'false');
+
+            const vercelInput = document.getElementById('modalVercelDeployHookInput');
+            const renderInput = document.getElementById('modalRenderDeployHookInput');
+            const vercelVal = vercelInput ? vercelInput.value.trim() : '';
+            const renderVal = renderInput ? renderInput.value.trim() : '';
+
+            localStorage.setItem('juet_admin_vercel_deploy_hook', vercelVal);
+            localStorage.setItem('juet_admin_render_deploy_hook', renderVal);
 
             // Also send to backend if available
             try {
                 const apiBase = getAdminApiBase();
-                const payload = { githubRepo: repoVal, githubBranch: branchVal, autoGitSync: autoVal };
+                const payload = { 
+                    githubRepo: repoVal, 
+                    githubBranch: branchVal, 
+                    autoGitSync: autoVal,
+                    vercelDeployHookUrl: vercelVal,
+                    renderDeployHookUrl: renderVal
+                };
                 if (tokenVal) payload.githubToken = tokenVal;
 
                 await fetch(`${apiBase}/api/admin/settings`, {
@@ -3042,9 +3215,67 @@
                 }).catch(() => null);
             } catch (err) {}
 
-            showToast('GitHub cloud persistence settings saved successfully!');
+            showToast('GitHub cloud persistence & deploy settings saved successfully!');
             if (tokenInput && tokenVal) tokenInput.value = '';
             await loadGitSyncStatus(true);
+        }
+
+        async function handleTriggerRedeploy() {
+            const btn = document.getElementById('btnModalRedeployNow');
+            const origHtml = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Triggering Redeploy...';
+            }
+
+            const vercelInput = document.getElementById('modalVercelDeployHookInput');
+            const renderInput = document.getElementById('modalRenderDeployHookInput');
+            const vercelHook = (vercelInput ? vercelInput.value.trim() : '') || localStorage.getItem('juet_admin_vercel_deploy_hook') || '';
+            const renderHook = (renderInput ? renderInput.value.trim() : '') || localStorage.getItem('juet_admin_render_deploy_hook') || '';
+
+            if (vercelHook) localStorage.setItem('juet_admin_vercel_deploy_hook', vercelHook);
+            if (renderHook) localStorage.setItem('juet_admin_render_deploy_hook', renderHook);
+
+            let triggeredAny = false;
+
+            if (vercelHook) {
+                try {
+                    await fetch(vercelHook, { method: 'POST', mode: 'no-cors' });
+                    triggeredAny = true;
+                } catch (e) {
+                    console.warn('Vercel hook client trigger notice:', e);
+                }
+            }
+
+            if (renderHook) {
+                try {
+                    await fetch(renderHook, { method: 'POST', mode: 'no-cors' });
+                    triggeredAny = true;
+                } catch (e) {
+                    console.warn('Render hook client trigger notice:', e);
+                }
+            }
+
+            // Also request backend redeploy endpoint
+            try {
+                const apiBase = getAdminApiBase();
+                const res = await fetch(`${apiBase}/api/admin/redeploy`, { method: 'POST' }).catch(() => null);
+                if (res && res.ok) {
+                    const data = await res.json().catch(() => ({}));
+                    if (data && data.success) triggeredAny = true;
+                }
+            } catch (e) {}
+
+            if (triggeredAny) {
+                showToast('🚀 Redeployment request sent! Live website is rebuilding now.', 'success');
+            } else {
+                showToast('ℹ️ Please configure your Vercel Deploy Hook URL above to enable 1-click live redeploys.', 'warn');
+            }
+
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = origHtml;
+            }
         }
 
         async function handleManualGitSync() {
@@ -3089,7 +3320,12 @@
                     showToast('Connecting directly to GitHub REST API...');
                     const apiResult = await pushDirectlyToGitHub(token, repo, branch, 'Admin Portal Update');
                     if (apiResult.success) {
-                        showToast(`✅ Successfully committed to GitHub (${repo} [${branch}])! Vercel is redeploying.`);
+                        const hookTriggered = await triggerClientDeployHooks();
+                        if (hookTriggered) {
+                            showToast(`✅ Successfully committed to GitHub (${repo} [${branch}])! Redeployment hook triggered.`);
+                        } else {
+                            showToast(`✅ Successfully committed to GitHub (${repo} [${branch}]) in 1 atomic commit! Vercel build started.`);
+                        }
                         synced = true;
                     } else {
                         showToast(`❌ GitHub Sync Notice: ${apiResult.error || 'Verify your token repo scopes.'}`);

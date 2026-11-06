@@ -8,17 +8,29 @@ const authController = require('./controllers/authController');
 
 const app = express();
 
-// CORS
 // CORS Configuration
 app.use(cors({
     origin: function (origin, callback) {
-        // Allow all origins (localhost, all Vercel deployments, Render)
+        // Allow all origins (localhost, www.jitendraparmar.in, jitendraparmar.in, all Vercel deployments, Render)
         return callback(null, true);
     },
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true
+    allowedHeaders: [
+        'Content-Type',
+        'Authorization',
+        'x-user-email',
+        'x-user-name',
+        'x-user-roll',
+        'Accept',
+        'Origin',
+        'X-Requested-With'
+    ],
+    exposedHeaders: ['Content-Disposition'],
+    credentials: true,
+    optionsSuccessStatus: 204
 }));
+
+app.options('*', cors());
 
 // Parse incoming requests
 app.use(express.json({ limit: '25mb' }));
@@ -83,7 +95,7 @@ const server = app.listen(PORT, '0.0.0.0', () => {
     console.log('====================================================');
     console.log('🚀 JUET Virtual Lab Backend API Running!');
     console.log('👨‍🏫 Faculty: Dr. Jitendra Parmar (JUET Guna)');
-    console.log(`🔗 API URL: https://your-backend.onrender.com/api`);
+    console.log(`🔗 API URL: https://jp-protfolio-1.onrender.com/api`);
     console.log('💾 SQLite Database Initialized');
     console.log(`🚀 Server Port: ${PORT}`);
     console.log('====================================================');

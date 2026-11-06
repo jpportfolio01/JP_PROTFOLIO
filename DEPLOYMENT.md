@@ -46,12 +46,18 @@ You can deploy `frontend/` to any static hosting provider for free (Vercel, Netl
 
 ### Option 1: Vercel (Recommended)
 1. Import your GitHub repository into [Vercel](https://vercel.com).
-2. Set **Root Directory** to `frontend`.
+2. Set **Root Directory** to `frontend` (or leave default root as the repo now includes root `vercel.json`).
 3. Framework Preset: **Other**.
 4. Click **Deploy**.
-5. Once your backend is deployed on Render (e.g. `https://your-api.onrender.com`), open [`frontend/config.js`](file:///Users/narayansingh/Desktop/JITENDRA_PARMAR/frontend/config.js) and set `JUET_BACKEND_URL`:
+5. **Set up Instant Deploy Hook (Recommended for 100% reliable auto-deployments)**:
+   - In your Vercel project dashboard, go to **Settings** &rarr; **Git** &rarr; **Deploy Hooks**.
+   - Create a new hook named `admin-auto-sync` with branch `main`.
+   - Copy the generated URL (`https://api.vercel.com/v1/integrations/deploy/...`).
+   - In the live Admin Portal, open the **GitHub Cloud Sync** modal, paste the URL into **Vercel Deploy Hook URL**, and click **Save Settings**.
+   - Now, whenever you add/edit questions, team members, publications, or projects, the Admin Portal commits all changes in **1 single atomic commit** AND pings the Deploy Hook to trigger an immediate live deployment!
+6. Your backend is deployed on Render at `https://jp-protfolio-1.onrender.com`, and configured in [`frontend/config.js`](file:///Users/narayansingh/Desktop/JITENDRA_PARMAR/frontend/config.js):
    ```javascript
-   var JUET_BACKEND_URL = 'https://your-backend.onrender.com';
+   var JUET_BACKEND_URL = 'https://jp-protfolio-1.onrender.com';
    ```
 
 ### Option 2: Netlify
@@ -99,8 +105,7 @@ In [`frontend/config.js`](file:///Users/narayansingh/Desktop/JITENDRA_PARMAR/fro
 
 ```javascript
 var JUET_BACKEND_URL = (function() {
-    // Replace with your live Render backend URL:
-    return 'https://your-backend.onrender.com';
+    return 'https://jp-protfolio-1.onrender.com';
 })();
 ```
 

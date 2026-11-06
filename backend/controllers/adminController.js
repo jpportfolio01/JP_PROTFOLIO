@@ -109,9 +109,10 @@ function loadPublications() {
 }
 
 function savePublications(pubs) {
-  fs.writeFileSync(PUBLICATIONS_PATH, JSON.stringify(pubs, null, 2), 'utf8');
+  const jsonContent = JSON.stringify(pubs, null, 2);
+  fs.writeFileSync(PUBLICATIONS_PATH, jsonContent, 'utf8');
 
-  // Also rewrite frontend/publications.js, website/publications.js and my-react-app/public/publications.js
+  // Also rewrite frontend, website and my-react-app copies of publications.json & publications.js
   const targetDirs = [
     path.join(__dirname, '..', '..', 'frontend'),
     path.join(__dirname, '..', '..', 'website'),
@@ -120,14 +121,17 @@ function savePublications(pubs) {
 
   targetDirs.forEach(dir => {
     try {
-      const pubPath = path.join(dir, 'publications.js');
-      if (fs.existsSync(pubPath)) {
-        const curContent = fs.readFileSync(pubPath, 'utf8');
-        const updated = curContent.replace(/(?:let|var|const)\s+PUBLICATIONS\s*=\s*\[[\s\S]*?\];/, `var PUBLICATIONS = ${JSON.stringify(pubs, null, 4)};`);
-        fs.writeFileSync(pubPath, updated, 'utf8');
+      if (fs.existsSync(dir)) {
+        fs.writeFileSync(path.join(dir, 'publications.json'), jsonContent, 'utf8');
+        const pubPath = path.join(dir, 'publications.js');
+        if (fs.existsSync(pubPath)) {
+          const curContent = fs.readFileSync(pubPath, 'utf8');
+          const updated = curContent.replace(/(?:let|var|const)\s+PUBLICATIONS\s*=\s*\[[\s\S]*?\];/, `var PUBLICATIONS = ${JSON.stringify(pubs, null, 4)};`);
+          fs.writeFileSync(pubPath, updated, 'utf8');
+        }
       }
     } catch (err) {
-      console.error(`Error syncing publications.js to ${dir}:`, err.message);
+      console.error(`Error syncing publications to ${dir}:`, err.message);
     }
   });
 
@@ -149,7 +153,25 @@ function loadTeam() {
 }
 
 function saveTeam(team) {
-  fs.writeFileSync(TEAM_PATH, JSON.stringify(team, null, 2), 'utf8');
+  const jsonContent = JSON.stringify(team, null, 2);
+  fs.writeFileSync(TEAM_PATH, jsonContent, 'utf8');
+
+  const targetDirs = [
+    path.join(__dirname, '..', '..', 'frontend'),
+    path.join(__dirname, '..', '..', 'website'),
+    path.join(__dirname, '..', '..', 'my-react-app', 'public')
+  ];
+
+  targetDirs.forEach(dir => {
+    try {
+      if (fs.existsSync(dir)) {
+        fs.writeFileSync(path.join(dir, 'team.json'), jsonContent, 'utf8');
+      }
+    } catch (e) {
+      console.error(`Error syncing team.json to ${dir}:`, e.message);
+    }
+  });
+
   try {
     gitSync.queueAutoSync('Updated scholars and team members');
   } catch (e) {}
@@ -168,7 +190,8 @@ function loadProjects() {
 }
 
 function saveProjects(projects) {
-  fs.writeFileSync(PROJECTS_PATH, JSON.stringify(projects, null, 2), 'utf8');
+  const jsonContent = JSON.stringify(projects, null, 2);
+  fs.writeFileSync(PROJECTS_PATH, jsonContent, 'utf8');
   const jsContent = `var RESEARCH_PROJECTS = ${JSON.stringify(projects, null, 2)};\nif (typeof module !== 'undefined' && module.exports) { module.exports = { RESEARCH_PROJECTS }; }\n`;
 
   const targetDirs = [
@@ -180,10 +203,11 @@ function saveProjects(projects) {
   targetDirs.forEach(dir => {
     try {
       if (fs.existsSync(dir)) {
+        fs.writeFileSync(path.join(dir, 'projects.json'), jsonContent, 'utf8');
         fs.writeFileSync(path.join(dir, 'projectsData.js'), jsContent, 'utf8');
       }
     } catch (e) {
-      console.error(`Error syncing projectsData.js to ${dir}:`, e.message);
+      console.error(`Error syncing projects to ${dir}:`, e.message);
     }
   });
 
@@ -205,17 +229,26 @@ function loadVlabProjects() {
 }
 
 function saveVlabProjects(vlabs) {
-  fs.writeFileSync(VLAB_PROJECTS_PATH, JSON.stringify(vlabs, null, 2), 'utf8');
+  const jsonContent = JSON.stringify(vlabs, null, 2);
+  fs.writeFileSync(VLAB_PROJECTS_PATH, jsonContent, 'utf8');
   const jsContent = `var VLAB_PROJECTS = ${JSON.stringify(vlabs, null, 2)};\nif (typeof module !== 'undefined' && module.exports) { module.exports = { VLAB_PROJECTS }; }\n`;
-  try {
-    fs.writeFileSync(path.join(__dirname, '..', '..', 'website', 'vlabData.js'), jsContent, 'utf8');
-    const reactPath = path.join(__dirname, '..', '..', 'my-react-app', 'public', 'vlabData.js');
-    if (fs.existsSync(path.dirname(reactPath))) {
-      fs.writeFileSync(reactPath, jsContent, 'utf8');
+
+  const targetDirs = [
+    path.join(__dirname, '..', '..', 'frontend'),
+    path.join(__dirname, '..', '..', 'website'),
+    path.join(__dirname, '..', '..', 'my-react-app', 'public')
+  ];
+
+  targetDirs.forEach(dir => {
+    try {
+      if (fs.existsSync(dir)) {
+        fs.writeFileSync(path.join(dir, 'vlab_projects.json'), jsonContent, 'utf8');
+        fs.writeFileSync(path.join(dir, 'vlabData.js'), jsContent, 'utf8');
+      }
+    } catch (e) {
+      console.error(`Error syncing vlabData.js to ${dir}:`, e.message);
     }
-  } catch (e) {
-    console.error('Error syncing vlabData.js:', e.message);
-  }
+  });
 
   try {
     gitSync.queueAutoSync('Updated virtual lab projects');
@@ -247,6 +280,9 @@ exports.getSettings = (req, res) => {
   try {
     const settings = loadAdminSettings();
     const gitStatus = gitSync.getGitStatus();
+    const vercelDeployHookUrl = settings.vercelDeployHookUrl || process.env.VERCEL_DEPLOY_HOOK_URL || '';
+    const renderDeployHookUrl = settings.renderDeployHookUrl || process.env.RENDER_DEPLOY_HOOK_URL || '';
+
     res.json({
       success: true,
       username: settings.username,
@@ -257,6 +293,8 @@ exports.getSettings = (req, res) => {
       hasGithubToken: gitStatus.hasToken,
       maskedGithubToken: gitStatus.maskedToken,
       autoGitSync: settings.autoGitSync !== false,
+      vercelDeployHookUrl,
+      renderDeployHookUrl,
       gitStatus,
       settings: {
         username: settings.username,
@@ -265,7 +303,9 @@ exports.getSettings = (req, res) => {
         githubRepo: settings.githubRepo || gitStatus.repo || 'jpportfolio01/JP_PROTFOLIO',
         githubBranch: settings.githubBranch || gitStatus.branch || 'main',
         hasGithubToken: gitStatus.hasToken,
-        autoGitSync: settings.autoGitSync !== false
+        autoGitSync: settings.autoGitSync !== false,
+        vercelDeployHookUrl,
+        renderDeployHookUrl
       }
     });
   } catch (err) {
@@ -276,7 +316,7 @@ exports.getSettings = (req, res) => {
 // Admin Settings: Update settings
 exports.updateSettings = (req, res) => {
   try {
-    const { triggerClickCount, googleClientId, githubToken, githubRepo, githubBranch, autoGitSync } = req.body;
+    const { triggerClickCount, googleClientId, githubToken, githubRepo, githubBranch, autoGitSync, vercelDeployHookUrl, renderDeployHookUrl } = req.body;
     const settings = loadAdminSettings();
 
     if (triggerClickCount !== undefined) {
@@ -311,6 +351,14 @@ exports.updateSettings = (req, res) => {
       settings.autoGitSync = !!autoGitSync;
     }
 
+    if (vercelDeployHookUrl !== undefined) {
+      settings.vercelDeployHookUrl = vercelDeployHookUrl.trim();
+    }
+
+    if (renderDeployHookUrl !== undefined) {
+      settings.renderDeployHookUrl = renderDeployHookUrl.trim();
+    }
+
     saveAdminSettings(settings);
 
     const gitStatus = gitSync.getGitStatus();
@@ -323,6 +371,8 @@ exports.updateSettings = (req, res) => {
       githubBranch: settings.githubBranch || gitStatus.branch,
       hasGithubToken: gitStatus.hasToken,
       autoGitSync: settings.autoGitSync !== false,
+      vercelDeployHookUrl: settings.vercelDeployHookUrl || '',
+      renderDeployHookUrl: settings.renderDeployHookUrl || '',
       gitStatus,
       settings: {
         username: settings.username,
@@ -331,7 +381,9 @@ exports.updateSettings = (req, res) => {
         githubRepo: settings.githubRepo || gitStatus.repo,
         githubBranch: settings.githubBranch || gitStatus.branch,
         hasGithubToken: gitStatus.hasToken,
-        autoGitSync: settings.autoGitSync !== false
+        autoGitSync: settings.autoGitSync !== false,
+        vercelDeployHookUrl: settings.vercelDeployHookUrl || '',
+        renderDeployHookUrl: settings.renderDeployHookUrl || ''
       },
       message: 'Admin settings updated successfully.'
     });
@@ -1065,6 +1117,31 @@ exports.triggerGitSync = async (req, res) => {
     const { message } = req.body || {};
     const result = await gitSync.commitAndPush(message);
     res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
+exports.triggerRedeploy = async (req, res) => {
+  try {
+    const results = await gitSync.triggerDeployHooks();
+    const hasAnyHook = (results.vercel !== null && results.vercel !== undefined) || 
+                       (results.render !== null && results.render !== undefined);
+    if (!hasAnyHook) {
+      return res.status(400).json({
+        success: false,
+        error: 'No Vercel or Render Deploy Hook URL configured in Admin Settings. Please configure a Deploy Hook URL first.'
+      });
+    }
+    const vercelOk = results.vercel ? results.vercel.success : null;
+    const renderOk = results.render ? results.render.success : null;
+    const overallSuccess = (vercelOk !== false) && (renderOk !== false);
+
+    return res.json({
+      success: overallSuccess,
+      message: overallSuccess ? 'Redeployment hook(s) triggered successfully!' : 'Deploy hook trigger had errors.',
+      results
+    });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }

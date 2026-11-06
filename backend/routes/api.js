@@ -31,6 +31,7 @@ router.post('/admin/settings', adminController.updateSettings);
 router.post('/admin/change-password', adminController.changePassword);
 router.get('/admin/git-status', adminController.getGitSyncStatus);
 router.post('/admin/git-sync', adminController.triggerGitSync);
+router.post('/admin/redeploy', adminController.triggerRedeploy);
 router.get('/admin/export-data', adminController.exportData);
 router.post('/admin/import-data', adminController.importData);
 router.get('/admin/students', adminController.getStudentProgress);

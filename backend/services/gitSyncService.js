@@ -142,19 +142,30 @@ async function commitAndPush(customMessage) {
       'backend/data/projects.json',
       'backend/data/team.json',
       'backend/data/vlab_projects.json',
+      'backend/data/admin_settings.json',
       'frontend/modulesData.js',
       'frontend/publications.js',
+      'frontend/publications.json',
       'frontend/projectsData.js',
+      'frontend/projects.json',
+      'frontend/team.json',
+      'frontend/sql-practice.html',
       'frontend/images/',
       'website/modulesData.js',
       'website/publications.js',
+      'website/publications.json',
       'website/projectsData.js',
-      'website/vlabData.js',
+      'website/projects.json',
+      'website/team.json',
+      'website/sql-practice.html',
       'website/images/',
       'my-react-app/public/modulesData.js',
       'my-react-app/public/publications.js',
+      'my-react-app/public/publications.json',
       'my-react-app/public/projectsData.js',
-      'my-react-app/public/vlabData.js',
+      'my-react-app/public/projects.json',
+      'my-react-app/public/team.json',
+      'my-react-app/public/sql-practice.html',
       'my-react-app/public/images/',
       'backend/generate-html.js'
     ];
@@ -208,18 +219,23 @@ async function commitAndPush(customMessage) {
     const newHash = execSync('git rev-parse --short HEAD', { cwd: ROOT_DIR }).toString().trim();
     isSyncing = false;
 
+    // Trigger deployment hooks if configured (Vercel / Render)
+    const deployResults = await triggerDeployHooks();
+
     lastSyncStatus = {
       success: true,
       timestamp: new Date().toISOString(),
       message: `Committed and pushed successfully to GitHub ${branch} (${newHash})!`,
       commitHash: newHash,
-      method: 'git-cli'
+      method: 'git-cli',
+      deployHooks: deployResults
     };
 
     return {
       success: true,
       commitHash: newHash,
       method: 'git-cli',
+      deployHooks: deployResults,
       message: `Successfully committed and pushed to GitHub ${repo} [${branch}]!`
     };
 
@@ -230,14 +246,17 @@ async function commitAndPush(customMessage) {
     try {
       const apiResult = await pushViaGitHubApi(token, repo, branch, commitMsg);
       isSyncing = false;
+      const deployResults = await triggerDeployHooks();
+
       lastSyncStatus = {
         success: true,
         timestamp: new Date().toISOString(),
         message: `Committed via GitHub REST API (${apiResult.commitHash || 'API'})`,
         commitHash: apiResult.commitHash || null,
-        method: 'github-api'
+        method: 'github-api',
+        deployHooks: deployResults
       };
-      return apiResult;
+      return { ...apiResult, deployHooks: deployResults };
     } catch (apiErr) {
       isSyncing = false;
       const combinedError = `Git push failed (${gitErr.message}). API fallback failed: ${apiErr.message}`;
@@ -256,17 +275,140 @@ async function commitAndPush(customMessage) {
   }
 }
 
-// Fallback: Commit core JSON data files directly via GitHub REST API
+// Trigger configured Vercel or Render Deploy Hooks
+async function triggerDeployHooks() {
+  const settings = getAdminSettings();
+  const vercelHook = (settings.vercelDeployHookUrl || process.env.VERCEL_DEPLOY_HOOK_URL || '').trim();
+  const renderHook = (settings.renderDeployHookUrl || process.env.RENDER_DEPLOY_HOOK_URL || '').trim();
+  const results = { vercel: null, render: null };
+
+  if (vercelHook) {
+    try {
+      const res = await fetch(vercelHook, { method: 'POST' });
+      const data = await res.json().catch(() => ({}));
+      results.vercel = { success: res.ok, status: res.status, data };
+      console.log(`[DeployHook] Vercel deploy hook triggered (HTTP ${res.status})`);
+    } catch (e) {
+      results.vercel = { success: false, error: e.message };
+      console.warn(`[DeployHook] Vercel deploy hook error:`, e.message);
+    }
+  }
+
+  if (renderHook) {
+    try {
+      const res = await fetch(renderHook, { method: 'POST' });
+      const text = await res.text().catch(() => '');
+      results.render = { success: res.ok, status: res.status, text };
+      console.log(`[DeployHook] Render deploy hook triggered (HTTP ${res.status})`);
+    } catch (e) {
+      results.render = { success: false, error: e.message };
+      console.warn(`[DeployHook] Render deploy hook error:`, e.message);
+    }
+  }
+
+  return results;
+}
+
+// Commit JSON & data files to GitHub via REST API
 async function pushViaGitHubApi(token, repo, branch, message) {
   const filesToSync = [
     { localPath: path.join(__dirname, '..', 'data', 'modulesData.js'), remotePath: 'backend/data/modulesData.js' },
+    { localPath: path.join(__dirname, '..', '..', 'frontend', 'modulesData.js'), remotePath: 'frontend/modulesData.js' },
+    { localPath: path.join(__dirname, '..', '..', 'website', 'modulesData.js'), remotePath: 'website/modulesData.js' },
+
     { localPath: path.join(__dirname, '..', 'data', 'publications.json'), remotePath: 'backend/data/publications.json' },
+    { localPath: path.join(__dirname, '..', '..', 'frontend', 'publications.json'), remotePath: 'frontend/publications.json' },
+    { localPath: path.join(__dirname, '..', '..', 'website', 'publications.json'), remotePath: 'website/publications.json' },
+
     { localPath: path.join(__dirname, '..', 'data', 'projects.json'), remotePath: 'backend/data/projects.json' },
+    { localPath: path.join(__dirname, '..', '..', 'frontend', 'projects.json'), remotePath: 'frontend/projects.json' },
+    { localPath: path.join(__dirname, '..', '..', 'website', 'projects.json'), remotePath: 'website/projects.json' },
+
     { localPath: path.join(__dirname, '..', 'data', 'team.json'), remotePath: 'backend/data/team.json' },
+    { localPath: path.join(__dirname, '..', '..', 'frontend', 'team.json'), remotePath: 'frontend/team.json' },
+    { localPath: path.join(__dirname, '..', '..', 'website', 'team.json'), remotePath: 'website/team.json' },
+
     { localPath: path.join(__dirname, '..', 'data', 'vlab_projects.json'), remotePath: 'backend/data/vlab_projects.json' },
     { localPath: path.join(__dirname, '..', 'data', 'admin_settings.json'), remotePath: 'backend/data/admin_settings.json' }
   ];
 
+  const headers = {
+    'Authorization': `Bearer ${token}`,
+    'Accept': 'application/vnd.github.v3+json',
+    'Content-Type': 'application/json',
+    'User-Agent': 'JUET-Virtual-Lab-Admin'
+  };
+
+  // 1. Attempt Atomic Git Trees commit first (1 commit for all files)
+  try {
+    const refRes = await fetch(`https://api.github.com/repos/${repo}/git/ref/heads/${branch}`, { headers });
+    if (refRes.ok) {
+      const refData = await refRes.json();
+      const latestCommitSha = refData.object.sha;
+
+      const commitRes = await fetch(`https://api.github.com/repos/${repo}/git/commits/${latestCommitSha}`, { headers });
+      if (commitRes.ok) {
+        const commitData = await commitRes.json();
+        const baseTreeSha = commitData.tree.sha;
+
+        const treeItems = [];
+        for (const item of filesToSync) {
+          if (!fs.existsSync(item.localPath)) continue;
+          const content = fs.readFileSync(item.localPath, 'utf8');
+          treeItems.push({
+            path: item.remotePath,
+            mode: '100644',
+            type: 'blob',
+            content
+          });
+        }
+
+        if (treeItems.length > 0) {
+          const treeRes = await fetch(`https://api.github.com/repos/${repo}/git/trees`, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({ base_tree: baseTreeSha, tree: treeItems })
+          });
+
+          if (treeRes.ok) {
+            const treeData = await treeRes.json();
+            const newCommitRes = await fetch(`https://api.github.com/repos/${repo}/git/commits`, {
+              method: 'POST',
+              headers,
+              body: JSON.stringify({
+                message: `${message} [Atomic Data Sync]`,
+                tree: treeData.sha,
+                parents: [latestCommitSha]
+              })
+            });
+
+            if (newCommitRes.ok) {
+              const newCommitData = await newCommitRes.json();
+              const updateRefRes = await fetch(`https://api.github.com/repos/${repo}/git/refs/heads/${branch}`, {
+                method: 'PATCH',
+                headers,
+                body: JSON.stringify({ sha: newCommitData.sha, force: false })
+              });
+
+              if (updateRefRes.ok) {
+                const shortSha = newCommitData.sha.substring(0, 7);
+                return {
+                  success: true,
+                  commitHash: shortSha,
+                  method: 'github-api-atomic',
+                  message: `Successfully synchronized ${treeItems.length} files to GitHub in 1 atomic commit (${shortSha})!`
+                };
+              }
+            }
+          }
+        }
+      }
+    }
+  } catch (treeErr) {
+    console.warn('Atomic Git Tree sync failed, falling back to sequential PUT:', treeErr.message);
+  }
+
+  // Fallback: Sequential PUT
   let syncedCount = 0;
 
   for (const item of filesToSync) {
@@ -278,11 +420,7 @@ async function pushViaGitHubApi(token, repo, branch, message) {
     let fileSha = null;
     try {
       const getRes = await fetch(`https://api.github.com/repos/${repo}/contents/${item.remotePath}?ref=${branch}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Accept': 'application/vnd.github.v3+json',
-          'User-Agent': 'JUET-Virtual-Lab-Admin'
-        }
+        headers
       });
       if (getRes.ok) {
         const fileData = await getRes.json();
@@ -300,12 +438,7 @@ async function pushViaGitHubApi(token, repo, branch, message) {
 
     const putRes = await fetch(`https://api.github.com/repos/${repo}/contents/${item.remotePath}`, {
       method: 'PUT',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Accept': 'application/vnd.github.v3+json',
-        'Content-Type': 'application/json',
-        'User-Agent': 'JUET-Virtual-Lab-Admin'
-      },
+      headers,
       body: JSON.stringify(putBody)
     });
 
@@ -418,5 +551,6 @@ module.exports = {
   queueAutoSync,
   getAdminSettings,
   saveAdminSettings,
-  exportFullData
+  exportFullData,
+  triggerDeployHooks
 };

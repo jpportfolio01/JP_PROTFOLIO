@@ -1824,9 +1824,9 @@ const fullHtml = `<!DOCTYPE html>
         function resetActiveModuleDatabase(userQuery = '') {
             const mod = SQL_MODULES[currentModuleIndex];
             try {
-                const isCreateDept = /CREATE\s+TABLE\s+departments/i.test(userQuery);
-                const isCreateEmp = /CREATE\s+TABLE\s+employees/i.test(userQuery);
-                const isDropPerfRating = /DROP\s+COLUMN\s+performance_rating/i.test(userQuery);
+                const isCreateDept = /CREATE\\s+TABLE\\s+departments/i.test(userQuery);
+                const isCreateEmp = /CREATE\\s+TABLE\\s+employees/i.test(userQuery);
+                const isDropPerfRating = /DROP\\s+COLUMN\\s+performance_rating/i.test(userQuery);
 
                 mod.schema.tables.forEach(t => {
                     try { alasql('DROP TABLE IF EXISTS ' + t.table_name); } catch(e){}
@@ -2336,9 +2336,7 @@ const fullHtml = `<!DOCTYPE html>
 
             // 1. Try Backend Node.js Server first
             try {
-                const apiBase = (window.location.protocol.startsWith('http') && !window.location.port.includes('3000'))
-                    ? (window.location.port === '5001' ? '' : window.location.origin)
-                    : 'http://localhost:5001';
+                const apiBase = (typeof getApiBase === 'function') ? getApiBase() : 'https://jp-protfolio-1.onrender.com';
                 const userEmail = currentUser.email;
                 const userName = currentUser.name;
                 const userRoll = currentUser.roll;
