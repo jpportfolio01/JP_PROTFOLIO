@@ -2798,6 +2798,11 @@ const fullHtml = `<!DOCTYPE html>
         }
 
         async function initLabGoogleAuth() {
+            if (typeof JUET_GOOGLE_CLIENT_ID !== 'undefined' && JUET_GOOGLE_CLIENT_ID) {
+                labGoogleClientId = JUET_GOOGLE_CLIENT_ID;
+                setupLabGoogleSDK(labGoogleClientId);
+            }
+
             try {
                 const apiBase = getApiBase();
                 const res = await fetch(\`\${apiBase}/api/auth/google-client-id\`).catch(() => null);

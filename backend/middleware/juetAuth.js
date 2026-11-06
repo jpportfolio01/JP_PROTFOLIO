@@ -17,14 +17,18 @@ function requireJuetAuth(req, res, next) {
 
   const normalized = email.trim().toLowerCase();
 
-  // Check if institutional domain restriction is active in admin settings
+  // Check if institutional domain restriction is active in env or admin settings
   let restrictJuetOnly = false;
-  try {
-    if (fs.existsSync(SETTINGS_PATH)) {
-      const settings = JSON.parse(fs.readFileSync(SETTINGS_PATH, 'utf8'));
-      restrictJuetOnly = !!settings.restrictJuetDomainOnly;
-    }
-  } catch (e) {}
+  if (process.env.RESTRICT_JUET_ONLY !== undefined) {
+    restrictJuetOnly = (process.env.RESTRICT_JUET_ONLY === 'true');
+  } else {
+    try {
+      if (fs.existsSync(SETTINGS_PATH)) {
+        const settings = JSON.parse(fs.readFileSync(SETTINGS_PATH, 'utf8'));
+        restrictJuetOnly = !!settings.restrictJuetDomainOnly;
+      }
+    } catch (e) {}
+  }
 
   if (restrictJuetOnly && !normalized.endsWith('@juetguna.in')) {
     return res.status(403).json({

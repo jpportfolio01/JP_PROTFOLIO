@@ -36,12 +36,12 @@ function saveAdminSettings(settings) {
 
 function getGitHubToken() {
   const settings = getAdminSettings();
-  return (settings.githubToken || process.env.GITHUB_TOKEN || process.env.GH_TOKEN || '').trim();
+  return (process.env.GITHUB_TOKEN || process.env.GH_TOKEN || settings.githubToken || '').trim();
 }
 
 function getRepoConfig() {
   const settings = getAdminSettings();
-  let repo = (settings.githubRepo || process.env.GITHUB_REPO || '').trim();
+  let repo = (process.env.GITHUB_REPO || settings.githubRepo || '').trim();
   if (!repo) {
     // Try to auto-detect from git remote
     try {

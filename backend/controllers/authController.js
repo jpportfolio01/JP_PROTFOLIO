@@ -19,14 +19,26 @@ function decodeGoogleJwt(jwtToken) {
   return null;
 }
 
-// Helper to load admin settings
+// Helper to load admin settings with Environment Variables priority
 function getSettings() {
+  let s = {};
   try {
     if (fs.existsSync(SETTINGS_PATH)) {
-      return JSON.parse(fs.readFileSync(SETTINGS_PATH, 'utf8'));
+      s = JSON.parse(fs.readFileSync(SETTINGS_PATH, 'utf8'));
     }
   } catch (e) {}
-  return {};
+
+  if (process.env.GOOGLE_CLIENT_ID) {
+    s.googleClientId = process.env.GOOGLE_CLIENT_ID.trim();
+  }
+  if (!s.googleClientId) {
+    s.googleClientId = '527537707643-40bp0kbvm46ahpqb19ul7k99ld3v4hc8.apps.googleusercontent.com';
+  }
+  if (process.env.RESTRICT_JUET_ONLY !== undefined) {
+    s.restrictJuetDomainOnly = (process.env.RESTRICT_JUET_ONLY === 'true');
+  }
+
+  return s;
 }
 
 exports.getGoogleClientId = (req, res) => {

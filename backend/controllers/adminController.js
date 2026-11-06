@@ -14,27 +14,36 @@ const VLAB_PROJECTS_PATH = path.join(DATA_DIR, 'vlab_projects.json');
 const SETTINGS_PATH = path.join(DATA_DIR, 'admin_settings.json');
 const GENERATE_SCRIPT_PATH = path.join(__dirname, '..', 'generate-html.js');
 
-// Helper: load admin settings (password, trigger click count)
+// Helper: load admin settings with Environment Variables as top-priority source of truth
 function loadAdminSettings() {
+  let s = {};
   try {
     if (fs.existsSync(SETTINGS_PATH)) {
-      const s = JSON.parse(fs.readFileSync(SETTINGS_PATH, 'utf8'));
-      if (process.env.ADMIN_USERNAME && !s.username) s.username = process.env.ADMIN_USERNAME;
-      if (process.env.ADMIN_PASSWORD && !s.password) s.password = process.env.ADMIN_PASSWORD;
-      return s;
+      s = JSON.parse(fs.readFileSync(SETTINGS_PATH, 'utf8'));
     }
   } catch (e) {
     console.error('Error reading admin settings:', e);
   }
-  const defaults = {
-    username: process.env.ADMIN_USERNAME || 'adminparmar',
-    password: process.env.ADMIN_PASSWORD || 'JITENDRAPARMAR',
-    triggerClickCount: 8
-  };
-  try {
-    fs.writeFileSync(SETTINGS_PATH, JSON.stringify(defaults, null, 2), 'utf8');
-  } catch (e) {}
-  return defaults;
+
+  // Environment Variables take precedence so setting them once in Render/.env works everywhere
+  s.username = (process.env.ADMIN_USERNAME || s.username || 'adminparmar').trim();
+  s.password = (process.env.ADMIN_PASSWORD || s.password || 'JITENDRAPARMAR').trim();
+  s.triggerClickCount = parseInt(process.env.TRIGGER_CLICK_COUNT || s.triggerClickCount || 8, 10);
+  s.googleClientId = (process.env.GOOGLE_CLIENT_ID || s.googleClientId || '527537707643-40bp0kbvm46ahpqb19ul7k99ld3v4hc8.apps.googleusercontent.com').trim();
+
+  if (process.env.RESTRICT_JUET_ONLY !== undefined) {
+    s.restrictJuetDomainOnly = (process.env.RESTRICT_JUET_ONLY === 'true');
+  } else {
+    s.restrictJuetDomainOnly = !!s.restrictJuetDomainOnly;
+  }
+
+  if (process.env.GITHUB_TOKEN) s.githubToken = process.env.GITHUB_TOKEN.trim();
+  if (process.env.GITHUB_REPO) s.githubRepo = process.env.GITHUB_REPO.trim();
+  if (process.env.GITHUB_BRANCH) s.githubBranch = process.env.GITHUB_BRANCH.trim();
+  if (process.env.VERCEL_DEPLOY_HOOK_URL) s.vercelDeployHookUrl = process.env.VERCEL_DEPLOY_HOOK_URL.trim();
+  if (process.env.RENDER_DEPLOY_HOOK_URL) s.renderDeployHookUrl = process.env.RENDER_DEPLOY_HOOK_URL.trim();
+
+  return s;
 }
 
 function saveAdminSettings(settings) {

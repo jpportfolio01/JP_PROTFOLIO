@@ -3,6 +3,9 @@
  * Centralized API & Deployment Configuration
  */
 
+// Official Google OAuth 2.0 Web Client ID
+var JUET_GOOGLE_CLIENT_ID = '527537707643-40bp0kbvm46ahpqb19ul7k99ld3v4hc8.apps.googleusercontent.com';
+
 // If your frontend and backend are deployed on different services:
 // Live Render backend URL:
 var JUET_BACKEND_URL = (function() {
@@ -50,5 +53,5 @@ function getApiBase() {
 })();
 
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { JUET_BACKEND_URL, getApiUrl, getApiBase };
+    module.exports = { JUET_BACKEND_URL, JUET_GOOGLE_CLIENT_ID, getApiUrl, getApiBase };
 }
