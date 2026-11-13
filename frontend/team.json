@@ -2,22 +2,20 @@
   "scholars": [
     {
   "id": "sch-1",
-  "name": "Pooja Sharma",
+  "name": "Deepali Upadhyay",
   "role": "Ph.D. Research Scholar",
   "dept": "Department of CSE, JUET Guna",
   "photo": "TEAM IMAGES/DEEPALIUPADHYAY.jpg",
-  "focus": "Natural Language Processing and Machine Learning Classification for User-Generated Content",
-  "desc": "Applying machine learning classification techniques and natural language processing (NLP) to analyze open-world, user-generated content. Research involves detecting unseen classes and extracting novel insights from streaming textual data.",
-  "background": "M.Tech in Computer Science & Engineering (Honors) • B.Tech CSE",
+   
+  "desc": "    Natural Language Processing and Machine Learning Techniques for Classification and Analysis of User-Generated Content.",
+  "background": "M.Tech in Computer Science & Engineering• B.Tech CSE",
   "tags": [
     "Natural Language Processing",
     "Machine Learning Techniques for Classification",
     "Analysis of User-Generated Content"
   ],
-  "joined": "Joined: 2023 • Full-Time",
-  "scholarUrl": "https://scholar.google.com",
-  "linkedinUrl": "https://linkedin.com",
-  "email": "pooja.sharma.phd@juetguna.in"
+  "joined": "Joined: 2026 • Full-Time",  
+  "email": "deepali.upadhyay.phd@juetguna.in"
 }
   ],
   "members": [
