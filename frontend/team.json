@@ -2,7 +2,7 @@
   "scholars": [
     {
       "id": "sch-1",
-      "name": "Pooja Sharma",
+      "name": "Deepali Upadhyay",
       "role": "Ph.D. Research Scholar",
       "dept": "Department of CSE, JUET Guna",
       "photo": "TEAM IMAGES/DEEPALIUPADHYAY.jpg",
@@ -18,7 +18,7 @@
       "joined": "Joined: 2023 • Full-Time",
       "scholarUrl": "https://scholar.google.com",
       "linkedinUrl": "https://linkedin.com",
-      "email": "pooja.sharma.phd@juetguna.in"
+      "email": "deepali.upadhyay.phd@juetguna.in"
     }
   ],
   "members": [
@@ -64,141 +64,6 @@
         "Docker",
         "Kafka"
       ]
-    },
-    {
-      "id": "mem-1",
-      "name": "Aditya Gupta",
-      "email": "211b055@juetguna.in",
-      "image": "images/team/aditya_gupta.svg",
-      "photo": "images/team/aditya_gupta.svg",
-      "links": {
-        "github": "https://github.com",
-        "linkedin": "https://linkedin.com"
-      },
-      "githubUrl": "https://github.com",
-      "linkedinUrl": "https://linkedin.com",
-      "skills": [
-        "Full-Stack",
-        "In-Memory DB",
-        "SQL Execution Engines",
-        "AlaSQL Sandbox"
-      ]
-    },
-    {
-      "id": "mem-2",
-      "name": "Neha Choudhary",
-      "email": "neha.c@juetguna.in",
-      "image": "images/team/neha_choudhary.svg",
-      "photo": "images/team/neha_choudhary.svg",
-      "links": {
-        "github": "https://github.com",
-        "linkedin": "https://linkedin.com"
-      },
-      "githubUrl": "https://github.com",
-      "linkedinUrl": "https://linkedin.com",
-      "skills": [
-        "Python",
-        "PyTorch",
-        "NLP",
-        "Open-World ML"
-      ]
-    },
-    {
-      "id": "mem-3",
-      "name": "Siddharth Jain",
-      "email": "siddharth.j@juetguna.in",
-      "image": "images/team/siddharth_jain.svg",
-      "photo": "images/team/siddharth_jain.svg",
-      "links": {
-        "github": "https://github.com",
-        "linkedin": "https://linkedin.com"
-      },
-      "githubUrl": "https://github.com",
-      "linkedinUrl": "https://linkedin.com",
-      "skills": [
-        "Java",
-        "Static Analysis",
-        "AST Parsing",
-        "Code Smells"
-      ]
-    },
-    {
-      "id": "mem-4",
-      "name": "Priya Patel",
-      "email": "priya.p@juetguna.in",
-      "image": "images/team/priya_patel.svg",
-      "photo": "images/team/priya_patel.svg",
-      "links": {
-        "github": "https://github.com",
-        "linkedin": "https://linkedin.com"
-      },
-      "githubUrl": "https://github.com",
-      "linkedinUrl": "https://linkedin.com",
-      "skills": [
-        "Computer Vision",
-        "CNNs",
-        "Deep Learning",
-        "Medical Imaging"
-      ]
-    },
-    {
-      "id": "mem-5",
-      "name": "Rohan Sharma",
-      "email": "rohan.s@juetguna.in",
-      "image": "images/team/rohan_sharma.svg",
-      "photo": "images/team/rohan_sharma.svg",
-      "links": {
-        "github": "https://github.com",
-        "linkedin": "https://linkedin.com"
-      },
-      "githubUrl": "https://github.com",
-      "linkedinUrl": "https://linkedin.com",
-      "skills": [
-        "HuggingFace",
-        "Transformers",
-        "NLP",
-        "Semantic Embeddings"
-      ]
-    },
-    {
-      "id": "mem-6",
-      "name": "Ananya Verma",
-      "email": "ananya.v@juetguna.in",
-      "image": "images/team/ananya_verma.svg",
-      "photo": "images/team/ananya_verma.svg",
-      "links": {
-        "github": "https://github.com",
-        "linkedin": "https://linkedin.com"
-      },
-      "githubUrl": "https://github.com",
-      "linkedinUrl": "https://linkedin.com",
-      "skills": [
-        "UI/UX",
-        "Modern CSS",
-        "Educational HCI",
-        "Interactive Systems"
-      ]
-    },
-    {
-      "id": "mem_1794536695282",
-      "name": "fe",
-      "email": "",
-      "image": "https://ui-avatars.com/api/?name=fe&background=3b82f6&color=fff&size=120",
-      "photo": "https://ui-avatars.com/api/?name=fe&background=3b82f6&color=fff&size=120",
-      "skills": [
-        "df"
-      ],
-      "links": {
-        "github": "",
-        "linkedin": ""
-      },
-      "githubUrl": "",
-      "linkedinUrl": "",
-      "role": "sdf",
-      "dept": "df",
-      "areaTitle": "fs",
-      "areaSummary": "df",
-      "techStack": "df"
     }
   ]
 }
