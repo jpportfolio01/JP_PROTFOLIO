@@ -9,10 +9,8 @@
       "focus": "Unseen Class Detection & Novelty Recognition in Open-World NLP",
       "desc": "Investigating Extreme Value Theory (EVT) and open-world deep representation learning for recognizing unseen classes in streaming textual data without catastrophic degradation of known concepts.",
       "background": "M.Tech in Computer Science & Engineering (Honors) • B.Tech CSE",
-      "tags": [
-        "Open-World ML",
-        "Out-of-Distribution",
-        "NLP Transformers",
+      "tags": [ 
+        "Natural Language Processing",
         "EVT Models"
       ],
       "joined": "Joined: 2023 • Full-Time",
