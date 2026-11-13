@@ -5,7 +5,7 @@
       "name": "Pooja Sharma",
       "role": "Ph.D. Research Scholar",
       "dept": "Department of CSE, JUET Guna",
-      "photo": "images/team/pooja_sharma.svg",
+      "photo": "TEAM IMAGES/DEEPALIUPADHYAY.jpg",
       "focus": "Unseen Class Detection & Novelty Recognition in Open-World NLP",
       "desc": "Investigating Extreme Value Theory (EVT) and open-world deep representation learning for recognizing unseen classes in streaming textual data without catastrophic degradation of known concepts.",
       "background": "M.Tech in Computer Science & Engineering (Honors) • B.Tech CSE",
@@ -19,26 +19,6 @@
       "scholarUrl": "https://scholar.google.com",
       "linkedinUrl": "https://linkedin.com",
       "email": "pooja.sharma.phd@juetguna.in"
-    },
-    {
-      "id": "sch-2",
-      "name": "Abhishek Kumar Soni",
-      "role": "Ph.D. Research Scholar",
-      "dept": "Department of CSE, JUET Guna",
-      "photo": "images/team/abhishek_soni.svg",
-      "focus": "Continual Deep Learning & Automated Code Smell Detection",
-      "desc": "Formulating Graph Neural Network (GNN) and AST-based neural architectures for continual software intelligence, refactoring recommendations, and anti-pattern identification across evolving code repositories.",
-      "background": "M.Tech in Software Engineering • B.Tech in Information Technology",
-      "tags": [
-        "Continual Learning",
-        "Software Smells",
-        "Code Intelligence",
-        "Graph Neural Nets"
-      ],
-      "joined": "Joined: 2024 • Institute Fellow",
-      "scholarUrl": "https://scholar.google.com",
-      "linkedinUrl": "https://linkedin.com",
-      "email": "abhishek.soni.phd@juetguna.in"
     }
   ],
   "members": [
