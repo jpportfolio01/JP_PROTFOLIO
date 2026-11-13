@@ -103,6 +103,32 @@
     "linkText": "Inquire Collaboration →"
   },
   {
+    "id": "proj-5",
+    "title": "IoT Edge Anomaly & Intrusion Detector",
+    "category": "edge",
+    "categoryName": "Edge & IoT Security",
+    "badge": "R&D Complete",
+    "badgeType": "published",
+    "iconClass": "icon-amber",
+    "icon": "fa-microchip",
+    "desc": "Lightweight intrusion detection agent designed for resource-constrained edge microcontrollers, preventing spoofing and unauthorized packet anomalies in campus sensor mesh networks.",
+    "areaTags": [
+      "Edge Computing",
+      "Network Anomaly Detection",
+      "Cyber Security"
+    ],
+    "techTags": [
+      "Python",
+      "TensorFlow Lite",
+      "MQTT",
+      "Raspberry Pi",
+      "SQLite"
+    ],
+    "footerLabel": "JUET Hardware Lab",
+    "link": "index.html#contact",
+    "linkText": "Contact Team →"
+  },
+  {
     "id": "proj-6",
     "title": "Academic At-Risk & Dropout Predictor",
     "category": "ml",
