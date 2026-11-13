@@ -457,7 +457,7 @@
             transform: translateY(-2px);
         }
 
-        /* 4. Our Team Section (Team Members with Photo, Name & Area of Work) */
+        /* 4. Our Team Section (Team Members: Photo, Name, Email, Skills, Links) */
         .team-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -473,6 +473,7 @@
             padding: 24px;
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
             transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
         }
@@ -491,105 +492,109 @@
         }
 
         .member-photo {
-            width: 72px;
-            height: 72px;
+            width: 76px;
+            height: 76px;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid #e2e8f0;
+            border: 2.5px solid #e2e8f0;
             background: #f8fafc;
             flex-shrink: 0;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+        }
+
+        .member-info {
+            flex: 1;
+            min-width: 0;
         }
 
         .member-info h4 {
-            font-size: 1.15rem;
+            font-size: 1.22rem;
             font-weight: 700;
             color: #0f172a;
-            margin-bottom: 3px;
+            margin-bottom: 4px;
         }
 
-        .member-role {
+        .member-email {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
             font-size: 0.82rem;
-            color: #4f46e5;
-            font-weight: 600;
+            color: #2563eb;
+            text-decoration: none;
+            word-break: break-all;
+            transition: color 0.2s ease;
         }
 
-        .member-dept {
-            font-size: 0.78rem;
-            color: #64748b;
+        .member-email:hover {
+            color: #1d4ed8;
+            text-decoration: underline;
         }
 
-        /* Area of Work Highlight Box - Explicitly Requested */
-        .area-of-work-box {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-left: 3px solid #2563eb;
-            border-radius: 10px;
-            padding: 12px 14px;
-            margin-bottom: 14px;
+        .member-skills-section {
+            margin: 14px 0 16px 0;
             flex: 1;
         }
 
-        .area-label {
+        .skills-label {
             font-size: 0.72rem;
-            font-weight: 800;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.6px;
-            color: #2563eb;
-            margin-bottom: 4px;
+            color: #64748b;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
         }
 
-        .area-title {
-            font-size: 0.92rem;
-            font-weight: 700;
-            color: #0f172a;
-            line-height: 1.4;
-            margin-bottom: 6px;
+        .skills-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
         }
 
-        .area-summary {
-            font-size: 0.82rem;
-            color: #475569;
-            line-height: 1.5;
+        .skill-tag {
+            font-size: 0.74rem;
+            font-weight: 600;
+            color: #1e40af;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            padding: 3px 9px;
+            border-radius: 6px;
+            line-height: 1.35;
+            transition: all 0.2s ease;
+        }
+
+        .skill-tag:hover {
+            background: #dbeafe;
+            border-color: #93c5fd;
         }
 
         .member-footer {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding-top: 12px;
+            justify-content: flex-end;
+            padding-top: 14px;
             border-top: 1px solid #f1f5f9;
-        }
-
-        .tech-pill {
-            font-size: 0.74rem;
-            font-weight: 600;
-            color: #334155;
-            background: #f1f5f9;
-            padding: 2px 8px;
-            border-radius: 4px;
         }
 
         .member-social-links {
             display: flex;
-            gap: 6px;
+            gap: 8px;
         }
 
         .member-social-btn {
-            width: 30px;
-            height: 30px;
-            border-radius: 6px;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #ffffff;
+            background: #f8fafc;
             color: #64748b;
             border: 1px solid #e2e8f0;
             text-decoration: none;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             transition: all 0.2s ease;
         }
 
@@ -597,6 +602,7 @@
             background: #2563eb;
             color: #ffffff;
             border-color: #2563eb;
+            transform: translateY(-2px);
         }
 
         /* 5. Join Lab Banner */
@@ -881,26 +887,91 @@
                 </div>
 
                 <div class="team-grid" id="teamGridContainer">
-                    <!-- Member 1 -->
+                    <!-- Member: Netraa -->
                     <div class="team-member-card">
-                        <div class="member-header">
-                            <!-- Photo -->
-                            <img src="images/team/aditya_gupta.svg" alt="Aditya Gupta" class="member-photo" onerror="this.src='https://ui-avatars.com/api/?name=Aditya+Gupta&background=3b82f6&color=fff&size=120'">
-                            <div class="member-info">
-                                <!-- Name -->
-                                <h4>Aditya Gupta</h4>
-                                <div class="member-role">Lead Student Researcher & Developer</div>
-                                <div class="member-dept">B.Tech CSE &bull; JUET Guna</div>
+                        <div class="member-top-section">
+                            <div class="member-header">
+                                <img src="TEAM IMAGES/Netraa.jpg" alt="Netraa" class="member-photo" onerror="this.src='https://ui-avatars.com/api/?name=Netraa&background=3b82f6&color=fff&size=120'">
+                                <div class="member-info">
+                                    <h4>Netraa</h4>
+                                    <a href="mailto:netraa.patel2006@gmail.com" class="member-email" title="Email netraa.patel2006@gmail.com"><i class="fas fa-envelope"></i> netraa.patel2006@gmail.com</a>
+                                </div>
+                            </div>
+                            <div class="member-skills-section">
+                                <div class="skills-label"><i class="fas fa-code"></i> Skills</div>
+                                <div class="skills-tags">
+                                    <span class="skill-tag">AI/ML</span>
+                                    <span class="skill-tag">Python</span>
+                                    <span class="skill-tag">NumPy</span>
+                                    <span class="skill-tag">Pandas</span>
+                                    <span class="skill-tag">Scikit-learn</span>
+                                    <span class="skill-tag">TensorFlow</span>
+                                    <span class="skill-tag">Git</span>
+                                </div>
                             </div>
                         </div>
-                        <!-- Area of Work (Clearly Highlighted) -->
-                        <div class="area-of-work-box">
-                            <div class="area-label"><i class="fas fa-laptop-code"></i> Area of Work</div>
-                            <div class="area-title">Intelligent Virtual Lab Architecture & In-Browser SQL Execution Engines</div>
-                            <div class="area-summary">Designed the client-side AlaSQL sandbox, real-time query validator, and automated scoring telemetry for JUET Virtual Lab.</div>
+                        <div class="member-footer">
+                            <div class="member-social-links">
+                                <a href="https://github.com/Netraa4" target="_blank" class="member-social-btn" title="GitHub"><i class="fab fa-github"></i></a>
+                                <a href="https://www.linkedin.com/in/netraapatel4?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" class="member-social-btn" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="mailto:netraa.patel2006@gmail.com" class="member-social-btn" title="Email"><i class="fas fa-envelope"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                    <!-- Member: Narayan Singh -->
+                    <div class="team-member-card">
+                        <div class="member-top-section">
+                            <div class="member-header">
+                                <img src="TEAM IMAGES/Narayan.jpg" alt="Narayan Singh" class="member-photo" onerror="this.src='https://ui-avatars.com/api/?name=Narayan+Singh&background=3b82f6&color=fff&size=120'">
+                                <div class="member-info">
+                                    <h4>Narayan Singh</h4>
+                                    <a href="mailto:Narayansinghrathaur01@gmail.com" class="member-email" title="Email Narayansinghrathaur01@gmail.com"><i class="fas fa-envelope"></i> Narayansinghrathaur01@gmail.com</a>
+                                </div>
+                            </div>
+                            <div class="member-skills-section">
+                                <div class="skills-label"><i class="fas fa-code"></i> Skills</div>
+                                <div class="skills-tags">
+                                    <span class="skill-tag">Springboot</span>
+                                    <span class="skill-tag">React.js</span>
+                                    <span class="skill-tag">Mysql</span>
+                                    <span class="skill-tag">Java</span>
+                                    <span class="skill-tag">Docker</span>
+                                    <span class="skill-tag">Kafka</span>
+                                </div>
+                            </div>
                         </div>
                         <div class="member-footer">
-                            <span class="tech-pill">Full-Stack & In-Memory DB</span>
+                            <div class="member-social-links">
+                                <a href="https://github.com/NARAYANTHAKUR01" target="_blank" class="member-social-btn" title="GitHub"><i class="fab fa-github"></i></a>
+                                <a href="https://www.linkedin.com/in/narayan-singh01/" target="_blank" class="member-social-btn" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="mailto:Narayansinghrathaur01@gmail.com" class="member-social-btn" title="Email"><i class="fas fa-envelope"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Member: Aditya Gupta -->
+                    <div class="team-member-card">
+                        <div class="member-top-section">
+                            <div class="member-header">
+                                <img src="images/team/aditya_gupta.svg" alt="Aditya Gupta" class="member-photo" onerror="this.src='https://ui-avatars.com/api/?name=Aditya+Gupta&background=3b82f6&color=fff&size=120'">
+                                <div class="member-info">
+                                    <h4>Aditya Gupta</h4>
+                                    <a href="mailto:211b055@juetguna.in" class="member-email" title="Email 211b055@juetguna.in"><i class="fas fa-envelope"></i> 211b055@juetguna.in</a>
+                                </div>
+                            </div>
+                            <div class="member-skills-section">
+                                <div class="skills-label"><i class="fas fa-code"></i> Skills</div>
+                                <div class="skills-tags">
+                                    <span class="skill-tag">Full-Stack</span>
+                                    <span class="skill-tag">In-Memory DB</span>
+                                    <span class="skill-tag">SQL Execution Engines</span>
+                                    <span class="skill-tag">AlaSQL Sandbox</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="member-footer">
                             <div class="member-social-links">
                                 <a href="https://github.com" target="_blank" class="member-social-btn" title="GitHub"><i class="fab fa-github"></i></a>
                                 <a href="https://linkedin.com" target="_blank" class="member-social-btn" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
@@ -909,26 +980,27 @@
                         </div>
                     </div>
 
-                    <!-- Member 2 -->
+                    <!-- Member: Neha Choudhary -->
                     <div class="team-member-card">
-                        <div class="member-header">
-                            <!-- Photo -->
-                            <img src="images/team/neha_choudhary.svg" alt="Neha Choudhary" class="member-photo" onerror="this.src='https://ui-avatars.com/api/?name=Neha+Choudhary&background=ec4899&color=fff&size=120'">
-                            <div class="member-info">
-                                <!-- Name -->
-                                <h4>Neha Choudhary</h4>
-                                <div class="member-role">Undergraduate Research Assistant</div>
-                                <div class="member-dept">B.Tech CSE &bull; JUET Guna</div>
+                        <div class="member-top-section">
+                            <div class="member-header">
+                                <img src="images/team/neha_choudhary.svg" alt="Neha Choudhary" class="member-photo" onerror="this.src='https://ui-avatars.com/api/?name=Neha+Choudhary&background=ec4899&color=fff&size=120'">
+                                <div class="member-info">
+                                    <h4>Neha Choudhary</h4>
+                                    <a href="mailto:neha.c@juetguna.in" class="member-email" title="Email neha.c@juetguna.in"><i class="fas fa-envelope"></i> neha.c@juetguna.in</a>
+                                </div>
+                            </div>
+                            <div class="member-skills-section">
+                                <div class="skills-label"><i class="fas fa-code"></i> Skills</div>
+                                <div class="skills-tags">
+                                    <span class="skill-tag">Python</span>
+                                    <span class="skill-tag">PyTorch</span>
+                                    <span class="skill-tag">NLP</span>
+                                    <span class="skill-tag">Open-World ML</span>
+                                </div>
                             </div>
                         </div>
-                        <!-- Area of Work (Clearly Highlighted) -->
-                        <div class="area-of-work-box">
-                            <div class="area-label"><i class="fas fa-brain"></i> Area of Work</div>
-                            <div class="area-title">Open-World Classifier Benchmarking & Out-of-Distribution Data Pipelines</div>
-                            <div class="area-summary">Curation of multi-domain open-world text datasets and statistical evaluation against baseline Softmax thresholding methods.</div>
-                        </div>
                         <div class="member-footer">
-                            <span class="tech-pill">Python & PyTorch</span>
                             <div class="member-social-links">
                                 <a href="https://github.com" target="_blank" class="member-social-btn" title="GitHub"><i class="fab fa-github"></i></a>
                                 <a href="https://linkedin.com" target="_blank" class="member-social-btn" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
@@ -937,26 +1009,27 @@
                         </div>
                     </div>
 
-                    <!-- Member 3 -->
+                    <!-- Member: Siddharth Jain -->
                     <div class="team-member-card">
-                        <div class="member-header">
-                            <!-- Photo -->
-                            <img src="images/team/siddharth_jain.svg" alt="Siddharth Jain" class="member-photo" onerror="this.src='https://ui-avatars.com/api/?name=Siddharth+Jain&background=f59e0b&color=fff&size=120'">
-                            <div class="member-info">
-                                <!-- Name -->
-                                <h4>Siddharth Jain</h4>
-                                <div class="member-role">Research Contributor & Developer</div>
-                                <div class="member-dept">B.Tech CSE &bull; JUET Guna</div>
+                        <div class="member-top-section">
+                            <div class="member-header">
+                                <img src="images/team/siddharth_jain.svg" alt="Siddharth Jain" class="member-photo" onerror="this.src='https://ui-avatars.com/api/?name=Siddharth+Jain&background=f59e0b&color=fff&size=120'">
+                                <div class="member-info">
+                                    <h4>Siddharth Jain</h4>
+                                    <a href="mailto:siddharth.j@juetguna.in" class="member-email" title="Email siddharth.j@juetguna.in"><i class="fas fa-envelope"></i> siddharth.j@juetguna.in</a>
+                                </div>
+                            </div>
+                            <div class="member-skills-section">
+                                <div class="skills-label"><i class="fas fa-code"></i> Skills</div>
+                                <div class="skills-tags">
+                                    <span class="skill-tag">Java</span>
+                                    <span class="skill-tag">Static Analysis</span>
+                                    <span class="skill-tag">AST Parsing</span>
+                                    <span class="skill-tag">Code Smells</span>
+                                </div>
                             </div>
                         </div>
-                        <!-- Area of Work (Clearly Highlighted) -->
-                        <div class="area-of-work-box">
-                            <div class="area-label"><i class="fas fa-code-branch"></i> Area of Work</div>
-                            <div class="area-title">AST Parsing, Code Smell Detection & Static Analysis Pipelines</div>
-                            <div class="area-summary">Developed abstract syntax tree parsers to detect design smells, long methods, and god classes in open-source software repos.</div>
-                        </div>
                         <div class="member-footer">
-                            <span class="tech-pill">Java & Static Analysis</span>
                             <div class="member-social-links">
                                 <a href="https://github.com" target="_blank" class="member-social-btn" title="GitHub"><i class="fab fa-github"></i></a>
                                 <a href="https://linkedin.com" target="_blank" class="member-social-btn" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
@@ -965,26 +1038,27 @@
                         </div>
                     </div>
 
-                    <!-- Member 4 -->
+                    <!-- Member: Priya Patel -->
                     <div class="team-member-card">
-                        <div class="member-header">
-                            <!-- Photo -->
-                            <img src="images/team/priya_patel.svg" alt="Priya Patel" class="member-photo" onerror="this.src='https://ui-avatars.com/api/?name=Priya+Patel&background=10b981&color=fff&size=120'">
-                            <div class="member-info">
-                                <!-- Name -->
-                                <h4>Priya Patel</h4>
-                                <div class="member-role">Student ML Researcher</div>
-                                <div class="member-dept">B.Tech CSE &bull; JUET Guna</div>
+                        <div class="member-top-section">
+                            <div class="member-header">
+                                <img src="images/team/priya_patel.svg" alt="Priya Patel" class="member-photo" onerror="this.src='https://ui-avatars.com/api/?name=Priya+Patel&background=10b981&color=fff&size=120'">
+                                <div class="member-info">
+                                    <h4>Priya Patel</h4>
+                                    <a href="mailto:priya.p@juetguna.in" class="member-email" title="Email priya.p@juetguna.in"><i class="fas fa-envelope"></i> priya.p@juetguna.in</a>
+                                </div>
+                            </div>
+                            <div class="member-skills-section">
+                                <div class="skills-label"><i class="fas fa-code"></i> Skills</div>
+                                <div class="skills-tags">
+                                    <span class="skill-tag">Computer Vision</span>
+                                    <span class="skill-tag">CNNs</span>
+                                    <span class="skill-tag">Deep Learning</span>
+                                    <span class="skill-tag">Medical Imaging</span>
+                                </div>
                             </div>
                         </div>
-                        <!-- Area of Work (Clearly Highlighted) -->
-                        <div class="area-of-work-box">
-                            <div class="area-label"><i class="fas fa-heartbeat"></i> Area of Work</div>
-                            <div class="area-title">Deep Learning & Ensemble Classifiers for Medical Diagnostics</div>
-                            <div class="area-summary">Implemented ensemble CNN and Random Forest models for automated diabetic retinopathy and medical image segmentation.</div>
-                        </div>
                         <div class="member-footer">
-                            <span class="tech-pill">Computer Vision & CNNs</span>
                             <div class="member-social-links">
                                 <a href="https://github.com" target="_blank" class="member-social-btn" title="GitHub"><i class="fab fa-github"></i></a>
                                 <a href="https://linkedin.com" target="_blank" class="member-social-btn" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
@@ -993,26 +1067,27 @@
                         </div>
                     </div>
 
-                    <!-- Member 5 -->
+                    <!-- Member: Rohan Sharma -->
                     <div class="team-member-card">
-                        <div class="member-header">
-                            <!-- Photo -->
-                            <img src="images/team/rohan_sharma.svg" alt="Rohan Sharma" class="member-photo" onerror="this.src='https://ui-avatars.com/api/?name=Rohan+Sharma&background=6366f1&color=fff&size=120'">
-                            <div class="member-info">
-                                <!-- Name -->
-                                <h4>Rohan Sharma</h4>
-                                <div class="member-role">Data Science Associate</div>
-                                <div class="member-dept">B.Tech CSE &bull; JUET Guna</div>
+                        <div class="member-top-section">
+                            <div class="member-header">
+                                <img src="images/team/rohan_sharma.svg" alt="Rohan Sharma" class="member-photo" onerror="this.src='https://ui-avatars.com/api/?name=Rohan+Sharma&background=6366f1&color=fff&size=120'">
+                                <div class="member-info">
+                                    <h4>Rohan Sharma</h4>
+                                    <a href="mailto:rohan.s@juetguna.in" class="member-email" title="Email rohan.s@juetguna.in"><i class="fas fa-envelope"></i> rohan.s@juetguna.in</a>
+                                </div>
+                            </div>
+                            <div class="member-skills-section">
+                                <div class="skills-label"><i class="fas fa-code"></i> Skills</div>
+                                <div class="skills-tags">
+                                    <span class="skill-tag">HuggingFace</span>
+                                    <span class="skill-tag">Transformers</span>
+                                    <span class="skill-tag">NLP</span>
+                                    <span class="skill-tag">Semantic Embeddings</span>
+                                </div>
                             </div>
                         </div>
-                        <!-- Area of Work (Clearly Highlighted) -->
-                        <div class="area-of-work-box">
-                            <div class="area-label"><i class="fas fa-comments"></i> Area of Work</div>
-                            <div class="area-title">NLP Corpus Extraction, Domain Adaptation & Semantic Embeddings</div>
-                            <div class="area-summary">Constructed high-density text embeddings and domain-shift benchmarks for evaluating classifier robustness on noisy text.</div>
-                        </div>
                         <div class="member-footer">
-                            <span class="tech-pill">HuggingFace & Transformers</span>
                             <div class="member-social-links">
                                 <a href="https://github.com" target="_blank" class="member-social-btn" title="GitHub"><i class="fab fa-github"></i></a>
                                 <a href="https://linkedin.com" target="_blank" class="member-social-btn" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
@@ -1021,26 +1096,27 @@
                         </div>
                     </div>
 
-                    <!-- Member 6 -->
+                    <!-- Member: Ananya Verma -->
                     <div class="team-member-card">
-                        <div class="member-header">
-                            <!-- Photo -->
-                            <img src="images/team/ananya_verma.svg" alt="Ananya Verma" class="member-photo" onerror="this.src='https://ui-avatars.com/api/?name=Ananya+Verma&background=f43f5e&color=fff&size=120'">
-                            <div class="member-info">
-                                <!-- Name -->
-                                <h4>Ananya Verma</h4>
-                                <div class="member-role">UI/UX & Interactive Systems Designer</div>
-                                <div class="member-dept">B.Tech CSE &bull; JUET Guna</div>
+                        <div class="member-top-section">
+                            <div class="member-header">
+                                <img src="images/team/ananya_verma.svg" alt="Ananya Verma" class="member-photo" onerror="this.src='https://ui-avatars.com/api/?name=Ananya+Verma&background=f43f5e&color=fff&size=120'">
+                                <div class="member-info">
+                                    <h4>Ananya Verma</h4>
+                                    <a href="mailto:ananya.v@juetguna.in" class="member-email" title="Email ananya.v@juetguna.in"><i class="fas fa-envelope"></i> ananya.v@juetguna.in</a>
+                                </div>
+                            </div>
+                            <div class="member-skills-section">
+                                <div class="skills-label"><i class="fas fa-code"></i> Skills</div>
+                                <div class="skills-tags">
+                                    <span class="skill-tag">UI/UX</span>
+                                    <span class="skill-tag">Modern CSS</span>
+                                    <span class="skill-tag">Educational HCI</span>
+                                    <span class="skill-tag">Interactive Systems</span>
+                                </div>
                             </div>
                         </div>
-                        <!-- Area of Work (Clearly Highlighted) -->
-                        <div class="area-of-work-box">
-                            <div class="area-label"><i class="fas fa-palette"></i> Area of Work</div>
-                            <div class="area-title">Interactive Virtual Lab UI/UX & Educational Human-Computer Interaction</div>
-                            <div class="area-summary">Architected responsive user interfaces, real-time database schema diagrams, and interactive query progress trackers.</div>
-                        </div>
                         <div class="member-footer">
-                            <span class="tech-pill">UI/UX & Modern CSS</span>
                             <div class="member-social-links">
                                 <a href="https://github.com" target="_blank" class="member-social-btn" title="GitHub"><i class="fab fa-github"></i></a>
                                 <a href="https://linkedin.com" target="_blank" class="member-social-btn" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
@@ -1214,31 +1290,57 @@
         function renderMembers(members) {
             const container = document.getElementById('teamGridContainer');
             if (!container || !members || members.length === 0) return;
-            container.innerHTML = members.map(m => `
-                <div class="team-member-card">
-                    <div class="member-header">
-                        <img src="${m.photo || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(m.name) + '&background=3b82f6&color=fff&size=120'}" alt="${escapeHtml(m.name)}" class="member-photo" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(m.name)}&background=3b82f6&color=fff&size=120'">
-                        <div class="member-info">
-                            <h4>${escapeHtml(m.name)}</h4>
-                            <div class="member-role">${escapeHtml(m.role || 'Student Researcher & Developer')}</div>
-                            <div class="member-dept">${escapeHtml(m.dept || 'B.Tech CSE &bull; JUET Guna')}</div>
+            container.innerHTML = members.map(m => {
+                let photoSrc = m.image || m.photo || '';
+                if (photoSrc && !photoSrc.includes('.') && !photoSrc.startsWith('http')) {
+                    photoSrc += '.jpg';
+                }
+                if (!photoSrc) {
+                    photoSrc = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(m.name) + '&background=3b82f6&color=fff&size=120';
+                }
+                const email = m.email || '';
+                const links = m.links || {};
+                const githubUrl = links.github || m.githubUrl || '';
+                const linkedinUrl = links.linkedin || m.linkedinUrl || '';
+                const googleDriveUrl = links.google_drive || m.googleDriveUrl || '';
+                
+                let skills = [];
+                if (Array.isArray(m.skills)) {
+                    skills = m.skills;
+                } else if (typeof m.skills === 'string') {
+                    skills = m.skills.split(',').map(s => s.trim()).filter(Boolean);
+                } else if (m.techStack) {
+                    skills = m.techStack.split('&').map(s => s.trim()).filter(Boolean);
+                }
+
+                return `
+                    <div class="team-member-card">
+                        <div class="member-top-section">
+                            <div class="member-header">
+                                <img src="${escapeHtml(photoSrc)}" alt="${escapeHtml(m.name)}" class="member-photo" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(m.name)}&background=3b82f6&color=fff&size=120'">
+                                <div class="member-info">
+                                    <h4>${escapeHtml(m.name)}</h4>
+                                    ${email ? `<a href="mailto:${escapeHtml(email)}" class="member-email" title="Email ${escapeHtml(email)}"><i class="fas fa-envelope"></i> ${escapeHtml(email)}</a>` : ''}
+                                </div>
+                            </div>
+                            <div class="member-skills-section">
+                                <div class="skills-label"><i class="fas fa-code"></i> Skills</div>
+                                <div class="skills-tags">
+                                    ${skills.map(s => `<span class="skill-tag">${escapeHtml(s)}</span>`).join('')}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="member-footer">
+                            <div class="member-social-links">
+                                ${githubUrl ? `<a href="${escapeHtml(githubUrl)}" target="_blank" class="member-social-btn" title="GitHub"><i class="fab fa-github"></i></a>` : ''}
+                                ${linkedinUrl ? `<a href="${escapeHtml(linkedinUrl)}" target="_blank" class="member-social-btn" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>` : ''}
+                                ${googleDriveUrl ? `<a href="${escapeHtml(googleDriveUrl)}" target="_blank" class="member-social-btn" title="Google Drive"><i class="fab fa-google-drive"></i></a>` : ''}
+                                ${email ? `<a href="mailto:${escapeHtml(email)}" class="member-social-btn" title="Email"><i class="fas fa-envelope"></i></a>` : ''}
+                            </div>
                         </div>
                     </div>
-                    <div class="area-of-work-box">
-                        <div class="area-label"><i class="fas fa-laptop-code"></i> Area of Work</div>
-                        <div class="area-title">${escapeHtml(m.areaTitle || '')}</div>
-                        <div class="area-summary">${escapeHtml(m.areaSummary || '')}</div>
-                    </div>
-                    <div class="member-footer">
-                        <span class="tech-pill">${escapeHtml(m.techStack || 'Software Systems')}</span>
-                        <div class="member-social-links">
-                            <a href="${m.githubUrl || 'https://github.com'}" target="_blank" class="member-social-btn" title="GitHub"><i class="fab fa-github"></i></a>
-                            <a href="${m.linkedinUrl || 'https://linkedin.com'}" target="_blank" class="member-social-btn" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                            <a href="mailto:${m.email || 'student@juetguna.in'}" class="member-social-btn" title="Email"><i class="fas fa-envelope"></i></a>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         function escapeHtml(text) {

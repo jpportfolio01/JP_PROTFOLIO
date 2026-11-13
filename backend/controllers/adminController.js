@@ -846,18 +846,32 @@ exports.addTeamMember = (req, res) => {
     }
 
     const team = loadTeam();
+    const skills = Array.isArray(member.skills)
+      ? member.skills
+      : (typeof member.skills === 'string' ? member.skills.split(',').map(s => s.trim()).filter(Boolean) : (member.techStack ? member.techStack.split('&').map(s => s.trim()).filter(Boolean) : []));
+
+    const image = member.image || member.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=3b82f6&color=fff&size=120`;
+    const links = member.links || {
+      github: member.githubUrl || '',
+      linkedin: member.linkedinUrl || '',
+      google_drive: member.googleDriveUrl || ''
+    };
+
     const newMember = {
       id: member.id || 'mem_' + Date.now(),
       name: member.name.trim(),
-      role: member.role || 'Student Researcher & Developer',
-      dept: member.dept || 'B.Tech CSE • JUET Guna',
-      photo: member.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=3b82f6&color=fff&size=120`,
-      areaTitle: member.areaTitle || 'Intelligent Algorithms & Software Systems',
-      areaSummary: member.areaSummary || 'Developing machine learning models and intelligent tools under Dr. Jitendra Parmar.',
-      techStack: member.techStack || 'Python & Machine Learning',
-      githubUrl: member.githubUrl || 'https://github.com',
-      linkedinUrl: member.linkedinUrl || 'https://linkedin.com',
-      email: member.email || 'student@juetguna.in'
+      email: member.email || '',
+      image,
+      photo: image,
+      skills,
+      links,
+      githubUrl: links.github || member.githubUrl || '',
+      linkedinUrl: links.linkedin || member.linkedinUrl || '',
+      role: member.role || '',
+      dept: member.dept || '',
+      areaTitle: member.areaTitle || '',
+      areaSummary: member.areaSummary || '',
+      techStack: member.techStack || (skills.length > 0 ? skills.join(' & ') : '')
     };
 
     team.members.push(newMember);
