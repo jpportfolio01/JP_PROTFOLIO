@@ -1,24 +1,24 @@
  {
   "scholars": [
     {
-      "id": "sch-1",
-      "name": "Pooja Sharma",
-      "role": "Ph.D. Research Scholar",
-      "dept": "Department of CSE, JUET Guna",
-      "photo": "TEAM IMAGES/DEEPALIUPADHYAY.jpg",
-      "focus": "Unseen Class Detection & Novelty Recognition in Open-World NLP",
-      "desc": "Investigating Extreme Value Theory (EVT) and open-world deep representation learning for recognizing unseen classes in streaming textual data without catastrophic degradation of known concepts.",
-      "background": "M.Tech in Computer Science & Engineering (Honors) • B.Tech CSE",
-      "tags": [ 
-        "Natural Language Processing",
-        "Machine Learning Techniques for Classification",
-        "Analysis of User-Generated Content"
-      ],
-      "joined": "Joined: 2023 • Full-Time",
-      "scholarUrl": "https://scholar.google.com",
-      "linkedinUrl": "https://linkedin.com",
-      "email": "pooja.sharma.phd@juetguna.in"
-    } 
+  "id": "sch-1",
+  "name": "Pooja Sharma",
+  "role": "Ph.D. Research Scholar",
+  "dept": "Department of CSE, JUET Guna",
+  "photo": "TEAM IMAGES/DEEPALIUPADHYAY.jpg",
+  "focus": "Natural Language Processing and Machine Learning Classification for User-Generated Content",
+  "desc": "Applying machine learning classification techniques and natural language processing (NLP) to analyze open-world, user-generated content. Research involves detecting unseen classes and extracting novel insights from streaming textual data.",
+  "background": "M.Tech in Computer Science & Engineering (Honors) • B.Tech CSE",
+  "tags": [
+    "Natural Language Processing",
+    "Machine Learning Techniques for Classification",
+    "Analysis of User-Generated Content"
+  ],
+  "joined": "Joined: 2023 • Full-Time",
+  "scholarUrl": "https://scholar.google.com",
+  "linkedinUrl": "https://linkedin.com",
+  "email": "pooja.sharma.phd@juetguna.in"
+}
   ],
   "members": [
     {
@@ -102,7 +102,7 @@
   {
     "name": "Rishabh Dubey",
     "email": "Rishabdubey8500@gmail.com",
-    "image": "TEAM IMAGES/RISABH DUBEY.jpg",
+    "image": "TEAM IMAGES/RISHABH DUBEY.jpg",
     "links": {
       "google_drive": "https://drive.google.com/open?id=1Ji5pEgDgClTLC0gYHJzu49oBJkEF6IOV",
       "github": "https://github.com/Rishabhdy-AL",
