@@ -198,6 +198,27 @@
         "Educational HCI",
         "Interactive Systems"
       ]
+    },
+    {
+      "id": "mem_1794536695282",
+      "name": "fe",
+      "email": "",
+      "image": "https://ui-avatars.com/api/?name=fe&background=3b82f6&color=fff&size=120",
+      "photo": "https://ui-avatars.com/api/?name=fe&background=3b82f6&color=fff&size=120",
+      "skills": [
+        "df"
+      ],
+      "links": {
+        "github": "",
+        "linkedin": ""
+      },
+      "githubUrl": "",
+      "linkedinUrl": "",
+      "role": "sdf",
+      "dept": "df",
+      "areaTitle": "fs",
+      "areaSummary": "df",
+      "techStack": "df"
     }
   ]
 }
